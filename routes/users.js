@@ -100,23 +100,30 @@ router.get('/logout', function (req, res) {
 
 //dashboard
 //overview
-router.get('/dashboard', function (req, res) {
+router.get('/dashboard', ensureAuthenticated, function (req, res) {
     res.render('dashboard', {
         active_dash: "true"
     });
 });
 
 //create trial
-router.get('/create_trial', function (req, res) {
+router.get('/create_trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial', {
         active_dash: "true"
     });
 });
 
 //settings
-router.get('/settings', function (req, res) {
+router.get('/settings', ensureAuthenticated, function (req, res) {
     res.render('settings', {
         active_settings: "true"
+    });
+});
+
+//help
+router.get('/help', ensureAuthenticated, function (req, res) {
+    res.render('help', {
+        active_dash: "true"
     });
 });
 
@@ -160,5 +167,13 @@ passport.deserializeUser(function (id, done) {
         done(err, user);
     });
 });
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.redirect('/');
+    }
+}
 
 module.exports = router;
