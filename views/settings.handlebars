@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="/node_modules/angular/angular.js"></script>
+    <script type="text/javascript" src="/js/generate_boxes.js"></script>
+</head>
+<body>
 <div id="page-content-wrapper">
     <div class="container-fluid content-main">
         <div class="row">
@@ -33,9 +42,35 @@
             </div>
         </div>
 
+
+        <div ng-app="App" class="container">
+            <div class="row">
+                <hr/>
+                <div ng-app="angularjs-starter" ng-controller="MainCtrl">
+                    <fieldset data-ng-repeat="choice in choices">
+                        <select>
+                            <option>Mobile</option>
+                            <option>Office</option>
+                            <option>Home</option>
+                        </select>
+                        <input type="text" ng-model="choice.name" name="" placeholder="Enter mobile number">
+                        <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+                    </fieldset>
+                    <button class="addfields" ng-click="addNewChoice()">Add fields</button>
+                    <div id="choicesDisplay">
+                        {{ choices }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
         <!-- container for holding trial data -->
         <div id="dashboard-content-holder">
 
         </div>
     </div>
 </div>
+
+</body>
+</html>

@@ -16,6 +16,7 @@
     "cookie-parser": "^1.4.1",
     "crypto": "~0.0.3",
     "csprng": "*",
+    "ejs":"*",
     "express": "*",
     "express-handlebars": "*",
     "express-logger": "*",

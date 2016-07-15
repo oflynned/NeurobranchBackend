@@ -15,4 +15,3 @@ app.controller('MainCtrl', function($scope) {
     };
 
 });
-app.use("/node_modules", express.static('node_modules'));
