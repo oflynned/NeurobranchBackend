@@ -7,6 +7,9 @@ var Schema = mongoose.Schema;
 
 mongoose.createConnection('localhost:27017/neurobranch_db');
 
+var trialData = require('../models/trialdata');
+var Globals = require("./Globals.js");
+
 var userDataSchema = new Schema(
     {
         trialname: String,
@@ -70,11 +73,7 @@ router.get('/', ensureAuthenticated, function (req, res) {
 
 //dashboard
 router.get('/users/dashboard', function (req, res) {
-    res.render('dashboard', {
-        user: req.user,
-        content: "trial content",
-        active_dash: "true"
-    });
+    generateDashboard(res);
 });
 
 //display username in create_trial
@@ -105,7 +104,7 @@ router.get('/users/settings', ensureAuthenticated, function (req, res) {
 });
 
 //help
-router.get('/user/help', ensureAuthenticated, function(req, res) {
+router.get('/user/help', ensureAuthenticated, function (req, res) {
     res.render('help', {
         user: req.user,
         active_dash: "true"
@@ -128,7 +127,11 @@ router.get('/get-data', function (req, res, next) {
 router.get('/get-data-q', function (req, res, next) {
     QuestionData.find()
         .then(function (docq) {
-            res.render('create_trial', {items: docq, name: req.user.name, username: req.user.username});
+            res.render('create_trial', {
+                items: docq,
+                name: req.user.name,
+                username: req.user.username
+            });
         });
 });
 
@@ -177,7 +180,7 @@ router.post('/insertq', function (req, res, next) {
     var qdata = new QuestionData(itemq);
     qdata.save();
     console.log(qdata);
-    res.redirect('/users/create_trial');
+    res.redirect('/users/dashboard');
 });
 
 
@@ -252,6 +255,32 @@ function ensureAuthenticated(req, res, next) {
     } else {
         res.redirect('/');
     }
+}
+
+function generateTile(trialName, description, image, id, row) {
+    return '<div class="col-md-4">' +
+        '<div class="thumbnail">' +
+        '<img src="' + image + '">' +
+        '<div class="caption">' +
+        '<h4>' + trialName + '</h4>' +
+        '<p>' + description + '</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+}
+function generateDashboard(res) {
+    trialData.getTrialData(function (err, data) {
+        var element = "";
+        var rowId = 0;
+        for (var i = 0; i < data.length; i++) {
+            element += generateTile(data[i]['trialname'], data[i]['description'], 'http://placehold.it/500x250/EEE',
+                data[i]['_id'], null); //row id final param
+        }
+        res.render('dashboard', {
+            active_dash: "true",
+            content: element
+        });
+    });
 }
 
 module.exports = router;
