@@ -3,7 +3,6 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
-var globals = require('./globals');
 
 //main
 router.get('/mainpage', function (req, res) {

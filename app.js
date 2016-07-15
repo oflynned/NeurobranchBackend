@@ -1,5 +1,5 @@
 //constants for ports, addresses and other non-variable items
-var Globals = require('./routes/globals');
+var Globals = require('./routes/Globals');
 
 var express = require('express');
 var path = require('path');
@@ -10,7 +10,6 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
 var mongoose = require('mongoose');
-var jwt = require('jwt-simple');
 var bodyParser = require('body-parser');
 
 mongoose.connect('mongodb://localhost/neurobranch_db');
