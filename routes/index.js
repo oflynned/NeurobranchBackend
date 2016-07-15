@@ -3,7 +3,6 @@ var router = express.Router();
 var assert = require('assert');
 
 var mongoose = require('mongoose');
-var formulate = require('mongoose-formulate');
 var Schema = mongoose.Schema;
 
 mongoose.createConnection('localhost:27017/neurobranch_db');
