@@ -43,7 +43,7 @@
         </div>
 
 
-        <div ng-app="App" class="container">
+        <div ng-app="App" class="container" action="/deleteq" method="post">
             <div class="row">
                 <hr/>
                 <div ng-app="angularjs-starter" ng-controller="MainCtrl">
@@ -53,7 +53,7 @@
                             <option>Office</option>
                             <option>Home</option>
                         </select>
-                        <input type="text" ng-model="choice.name" name="" placeholder="Enter mobile number">
+                        <input type="text" ng-model="choice.name" name="" placeholder="Enter Answer">
                         <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
                     </fieldset>
                     <button class="addfields" ng-click="addNewChoice()">Add fields</button>
@@ -62,8 +62,9 @@
                     </div>
                 </div>
             </div>
-
+            <button type="submit">DELETE</button>
         </div>
+
 
         <!-- container for holding trial data -->
         <div id="dashboard-content-holder">
