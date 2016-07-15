@@ -6,6 +6,30 @@
                 <div class="page-header">
                     <h3>Settings</h3>
                 </div>
+
+                <section class="delete col-lg-6 primary-color">
+                    <h3>Delete Data</h3>
+                    <form action="/delete" method="post">
+                        <div class="input">
+                            <label for="id">trialid</label>
+                            <input type="text" id="id" name="id">
+                        </div>
+                        <button type="submit">DELETE</button>
+                    </form>
+                </section>
+
+
+                <section class="delete col-lg-6 primary-color">
+                    <h3>Delete Question Data</h3>
+                    <form action="/deleteq" method="post">
+                        <div class="input">
+                            <label for="idq">idq</label>
+                            <input type="text" id="idq" name="idq">
+                        </div>
+                        <button type="submit">DELETE</button>
+                    </form>
+                </section>
+
             </div>
         </div>
 
