@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Neurobranch</title>
+    <link href="/public/img/ic_launcher.png" rel="icon" type="image/x-icon"/>
+
+    <!-- CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!-- self styles -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <link href="/css/authentication.css" rel="stylesheet">
+    <link href="/css/navigation.css" rel="stylesheet">
+    <link href="/css/tile.css" rel="stylesheet">
+    <link href="/css/main_content.css" rel="stylesheet">
+    <link href="/css/footer.css" rel="stylesheet">
+
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- lhs brandname -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Neurobranch</a>
+        </div>
+
+        <!-- rhs options -->
+        <div class="collapse navbar-collapse navbar-right" id="navbar">
+            <ul class="nav navbar-nav">
+                <li {{#if active_main}}class="active"{{/if}}><a href="/users/mainpage">Home</a></li>
+                {{#if user}}
+                    <li {{#if active_dash}}class="active"{{/if}}><a href="/users/dashboard">Dashboard</a>
+                    </li>{{/if}}
+                <li {{#if active_news}}class="active"{{/if}}><a href="/users/news">News</a></li>
+                {{#if user}}
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle">{{user.forename}} {{user.surname}}<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Profile</a></li>
+                            <li><a href="#">Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/user/logout">Log out</a></li>
+                        </ul>
+                    </li>
+                {{else}}
+                    <li {{#if active_login}}class="active"{{/if}}><a href="/users/login">Log In</a></li>
+                    <li {{#if active_signup}}class="active"{{/if}}><a href="/users/signup">Sign Up</a></li>
+                {{/if}}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{{#if user}}
+    {{#if active_dash}}
+        <div id="wrapper">
+            <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#"></a>
+                </li>
+                <li>
+                    <a href="/users/dashboard">Overview</a>
+                </li>
+                <li>
+                    <a href="/users/notifications">Notifications</a>
+                </li>
+                <li>
+                    <a href="/users/create_trial">New Trial</a>
+                </li>
+                <li>
+                    <a href="/users/settings">Settings</a>
+                </li>
+                <li>
+                    <a href="/users/help">Help</a>
+                </li>
+            </ul>
+        </div>
+    {{/if}}
+{{/if}}
+
+{{{ body }}}
+
+<!-- footer at base of page for additional information -->
+<footer class="footer">
+    <div class="container footer-wrapper">
+        <div id="footer-content-links" class="row text-center">
+            <div id="footer-about" class="col-md-3 col-centered">
+                <ul class="caption">About</ul>
+                <ul><a href="#">The Team</a></ul>
+                <ul><a href="#">Who we are</a></ul>
+                <ul><a href="#">What our goal is</a></ul>
+                <ul><a href="#">About GlassByte</a></ul>
+                <ul><a href="#">About Neurobranch</a></ul>
+            </div>
+            <div id="footer-contact" class="col-md-3 col-centered">
+                <ul class="caption">Contact</ul>
+                <ul><a href="#">FAQ</a></ul>
+                <ul><a href="#">Support</a></ul>
+                <ul><a href="#">Terms of Use</a></ul>
+                <ul><a href="#">Cookie Policy</a></ul>
+                <ul><a href="#">Privacy Policy</a></ul>
+            </div>
+            <div id="footer-discover" class="col-md-3">
+                <ul class="caption">Learn</ul>
+                <ul><a href="#">Category 1</a></ul>
+                <ul><a href="#">Category 2</a></ul>
+                <ul><a href="#">Category 3</a></ul>
+                <ul><a href="#">Category 4</a></ul>
+                <ul><a href="#">Category 5</a></ul>
+            </div>
+            <div id="footer-discover2" class="col-md-3">
+                <ul class="caption"></br></ul>
+                <ul><a href="#">Category 6</a></ul>
+                <ul><a href="#">Category 7</a></ul>
+                <ul><a href="#">Category 8</a></ul>
+                <ul><a href="#">Category 9</a></ul>
+                <ul><a href="#">Category 10</a></ul>
+            </div>
+        </div>
+        <div id="footer-non-list" class="tagline">
+            <p class="text-muted text-center">Neurobranch &copy; <span id="year">year</span> powered by GlassByte.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- CDN script -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- self scripts -->
+<script src="/js/year.js"></script>
+</body>
+</html>

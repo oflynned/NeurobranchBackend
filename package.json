@@ -1,0 +1,36 @@
+{
+  "name": "neurobranch_db",
+  "version": "1.0.0",
+  "description": "Neurobranch server app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexandru Sulea",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "*",
+    "body-parser": "^1.15.2",
+    "connect": "*",
+    "connect-flash": "*",
+    "cookie-parser": "^1.4.1",
+    "crypto": "~0.0.3",
+    "csprng": "*",
+    "express": "*",
+    "express-handlebars": "*",
+    "express-logger": "*",
+    "express-messages": "*",
+    "express-session": "*",
+    "express-validator": "*",
+    "gravatar": "*",
+    "handlebars-helpers": "^0.6.2",
+    "jsonfile": "^2.3.1",
+    "mongodb": "*",
+    "mongoose": "^4.5.3",
+    "nodemailer": "~1.10.0",
+    "passport": "*",
+    "passport-http": "*",
+    "passport-local": "*",
+    "redis": "^2.6.2"
+  }
+}
