@@ -74,7 +74,6 @@ var trialdataSchema = mongoose.Schema({
 });
 
 var trialData = module.exports = mongoose.model('trialdata', trialdataSchema, 'trialdata');
-//Get trialdata
 module.exports.getTrialData = function (callback, limit) {
     trialData.find(callback).limit(limit);
 };
