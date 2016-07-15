@@ -69,38 +69,48 @@ router.get('/', ensureAuthenticated, function (req, res) {
         });
 });
 
-//main
-router.get('/mainpage', function (req, res) {
-    var name = req.user.forename + " " + req.user.surname;
-    res.render('mainpage', {
-        active_main: "true",
-        name: name
-    });
-});
-
 //dashboard
 router.get('/users/dashboard', function (req, res) {
     res.render('dashboard', {
+        user: req.user,
         content: "trial content",
         active_dash: "true"
     });
 });
 
 //display username in create_trial
+router.get('/users/notifications', ensureAuthenticated, function (req, res) {
+    res.render('notifications',
+        {
+            user: req.user,
+            active_dash: "true"
+        });
+});
+
+//display username in create_trial
 router.get('/users/create_trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial',
         {
-            name: req.user.name,
-            username: req.user.username
+            user: req.user,
+            active_dash: "true"
         });
 });
+
 //display username in settings
 router.get('/users/settings', ensureAuthenticated, function (req, res) {
     res.render('settings',
         {
-            name: req.user.name,
-            username: req.user.username
+            user: req.user,
+            active_dash: "true"
         });
+});
+
+//help
+router.get('/user/help', ensureAuthenticated, function(req, res) {
+    res.render('help', {
+        user: req.user,
+        active_dash: "true"
+    })
 });
 
 //load trial data
@@ -110,8 +120,7 @@ router.get('/get-data', function (req, res, next) {
             res.render('create_trial',
                 {
                     items: doc,
-                    name: req.user.name,
-                    username: req.user.username
+                    user: req.user
                 });
         });
 });
@@ -242,7 +251,7 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     } else {
-        res.redirect('/users/mainpage');
+        res.redirect('/');
     }
 }
 
