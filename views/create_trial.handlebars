@@ -81,6 +81,106 @@
                         </form>
                     </section>
 
+
+                    <!--LOAD TRIAL DATA -->
+                    <section class="get col-lg-6 success-color">
+                        <h3>Get Data</h3>
+                        <a href="/get-data">LOAD TRIAL DATA</a>
+                        <div>
+                            {{# each items }}
+                                <article class="item">
+                                    <div>trialname: {{ this.trialname }}</div>
+                                    <div>trialid: {{ this._id }}</div>
+                                    <div>researchgroup: {{ this.researchgroup }}</div>
+                                </article>
+                            {{/each}}
+                        </div>
+                    </section>
+                    <!--UPDATE TRIAL DATA -->
+                    <!--UPDATE TRIAL DATA -->
+                    <section class="update col-lg-6 primary-color-dark">
+                        <h3>Update Trial Data</h3>
+                        <form action="/update" method="post">
+                            <div class="input">
+                                <label for="id">trialid</label>
+                                <input type="text" id="id" name="id">
+                            </div>
+                            <div class="input">
+                                <label for="trialname">TrialName</label>
+                                <input type="text" id="trialname" name="trialname">
+                            </div>
+                            <div class="input">
+                                <label for="specialisation">Specialisation</label>
+                                <input type="text" id="specialisation" name="specialisation">
+                            </div>
+                            <button type="submit">UPDATE</button>
+                        </form>
+                    </section>
+
+
+
+
+                    <!--INSERT QUESTIONS -->
+                    <h1> INSERT QUESTIONS</h1>
+                    <section class="insert danger-color">
+                        <h3>Insert Data</h3>
+                        <form action="/insertq" method="post" role="form" class="col-lg-6 danger-color">
+
+                            <div class="input">Question 1</label>
+                                <label for="question">question</label>
+                                <input type="text" id="question" name="question">
+                            </div>
+
+                            <div class="input">Question Type</label>
+                                <label for="questiontype">questiontype</label>
+                                <input type="text" id="questiontype" name="questiontype">
+                            </div>
+
+
+                            <div class="input" id="dynamicInput">
+
+                                <label for="answer">Answer</label>
+                                <input type="text" id="answer" name="answer">
+                            </div>
+
+                            <input type="button" value="Add text input" onClick="addInput('dynamicInput');">
+                            <input type="button" value="Remove text input" onClick="removeInput('dynamicInput');">
+
+                            <button type="submit">INSERT</button>
+                </div>
+                </form>
+                </section>
+                <!--LOAD QUESTION DATA -->
+                <section class="get col-lg-6 success-color">
+                    <h3>Get Data</h3>
+                    <a href="/get-data-q">LOAD QUESTION DATA</a>
+                    <div>
+                        {{# each items }}
+                            <article class="item">
+                                <div>researchgroup: {{ this.researchgroup }}</div>
+                                <div>question: {{ this._id }}</div>
+                            </article>
+                        {{/each}}
+                    </div>
+                </section>
+                <!--Update Question Data -->
+                <section class="update col-lg-6 primary-color-dark">
+                    <h3>Update Question Data</h3>
+                    <form action="/updateq" method="post">
+                        <div class="input">
+                            <label for="idq">trialid</label>
+                            <input type="text" id="idq" name="idq">
+                        </div>
+                        <div class="input">
+                            <label for="researchgroup">Researchgroup</label>
+                            <input type="text" id="researchgroup" name="researchgroup">
+                        </div>
+                        <button type="submit">UPDATE</button>
+                    </form>
+                </section>
+
+
+
                 </div>
             </div>
         </div>
