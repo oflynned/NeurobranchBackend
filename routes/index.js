@@ -156,7 +156,10 @@ router.get('/get-data-q', function (req, res, next) {
 });
 
 //insert for trials//
-router.post('/insert', function (req, res, next) {
+router.post('/insert', function (req, res, next){
+
+    console.log(req.body);
+
     var item = {
         trialname: req.body.trialname,
         trialid: req.body.trialid,
@@ -185,6 +188,7 @@ router.post('/insert', function (req, res, next) {
     console.log(data);
     res.redirect('/users/create_trial');
 });
+
 //insert for questions////more than one question//
 router.post('/insertq', function (req, res, next) {
     var itemq = {
