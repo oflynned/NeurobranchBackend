@@ -16,65 +16,7 @@ var questiondataSchema = mongoose.Schema({
             options:{
                 answer:{
                     type:String
-                },
-                answer:{
-                    type:String
-                },
-                answer:{
-                    type:String
-                },
-                answer:{
-                    type:String
                 }
-            },
-            question:{
-                type:String
-            },
-            questiontype:{
-                type:String
-            },
-
-            question:{
-                type:String
-            },
-            questiontype:{
-                type:String
-            },
-
-            question:{
-                type:String
-            },
-            questiontype:{
-                type:String
-            },
-
-
-            question:{
-                type:String
-            },
-            questiontype:{
-                type:String
-            },
-            options:{
-                answer:{
-                    type:String
-                },
-                answer:{
-                    type:String
-                },
-                answer:{
-                    type:String
-                },
-                answer:{
-                    type:String
-                }
-            },
-
-            question:{
-                type:String
-            },
-            questiontype:{
-                type:String
             }
         }
     }
