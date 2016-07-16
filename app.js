@@ -12,7 +12,7 @@ var passport = require('passport');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
-//mongoose.connect('mongodb://localhost/neurobranch_db');
+mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
 var users = require(Globals.USERS_ROUTE);
 // Models files
@@ -36,7 +36,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 
-mongoose.connect('mongodb://localhost/neurobranch_db');
 
 // Set Static Folder
 // where stuff that is publicly accesible to the browsert is put--in this instance the public available stuff is in folder public 

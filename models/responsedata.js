@@ -10,16 +10,16 @@ var responsedataSchema = mongoose.Schema({
     candidate_id: {
         type: String
     },
-    responses: [{
-        q_id: [{
+    responses: {
+        q_id: {
             questiontype: {
                 type: String
             },
             response: {
                 type: String
             }
-        }],
-    }]
+        }
+    }
 
 });
 

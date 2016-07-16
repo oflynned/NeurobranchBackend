@@ -59,6 +59,26 @@ var questionDataSchema = new Schema(
 
 var QuestionData = mongoose.model('QuestionData', questionDataSchema);
 
+var responseDataSchema = new Schema(
+    {
+        trial_id: String,
+        epoch_id: String,
+        candidate_id: String,
+        responses: {
+            q_id: {
+                questiontype: String,
+                response: String
+            }
+        }
+    },
+    {
+        collection: 'responsedata',
+        safe: true
+    }
+);
+
+var ResponseData = mongoose.model('ResponseData', responseDataSchema);
+
 router.get('/', ensureAuthenticated, function (req, res) {
     UserData.find()
         .then(function (doc) {
