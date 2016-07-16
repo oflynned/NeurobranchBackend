@@ -12,12 +12,13 @@ var passport = require('passport');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
-mongoose.connect('mongodb://localhost/neurobranch_db');
+//mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
 var users = require(Globals.USERS_ROUTE);
-
+// Models files
 var trialData = require('./models/trialdata');
 var questionData = require('./models/questiondata');
+var responseData = require('./models/responsedata');
 var userdata = require('./models/user');
 
 // Init App -- type $ node app.js
@@ -33,6 +34,9 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+
+
+mongoose.connect('mongodb://localhost/neurobranch_db');
 
 // Set Static Folder
 // where stuff that is publicly accesible to the browsert is put--in this instance the public available stuff is in folder public 
@@ -98,6 +102,26 @@ app.get('/api/questiondata', function (req, res) {
             throw err;
         }
         res.json(questiondata);
+    });
+});
+
+app.post('/api/questiondata', function (req, res) {
+    var quest = req.body;
+    questionData.addQuestionData(quest ,function (err, quest) {
+        if (err) {
+            throw err;
+        }
+        res.json(quest);
+    });
+});
+
+app.post('/api/responsedata', function (req, res) {
+    var resp = req.body;
+    responseData.addResponseData(resp ,function (err, resp) {
+        if (err) {
+            throw err;
+        }
+        res.json(resp);
     });
 });
 

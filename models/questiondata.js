@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 
 var questiondataSchema = mongoose.Schema({
-    trial: {
         researchgroup: {
             type: String,
             required: true
@@ -19,7 +18,7 @@ var questiondataSchema = mongoose.Schema({
                 }
             }
         }
-    }
+    
 });
 
 var questionData = module.exports = mongoose.model('questiondata', questiondataSchema, 'questiondata');
@@ -27,4 +26,8 @@ var questionData = module.exports = mongoose.model('questiondata', questiondataS
 //Get trialdata
 module.exports.getQuestionData = function (callback, limit) {
     questionData.find(callback).limit(limit);
+};
+//Add trialdata
+module.exports.addQuestionData = function (quest, callback) {
+    questionData.create(quest, callback);
 };
