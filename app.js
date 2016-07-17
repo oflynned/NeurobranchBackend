@@ -105,6 +105,16 @@ app.get('/api/responsedata', function(req,res){
     })
 });
 
+app.get('/api/responsedata/:_id', function(req,res){
+    responseData.getresponseDataById(req.params._id , function (err, responsebyid) {
+        if(err)
+        {
+            throw err;
+        }
+        res.json(responsebyid);
+    })
+});
+
 app.post('/api/responsedata', function(req,res){
     var response = req.body;
     responseData.addresponseData(response ,function (err, response) {

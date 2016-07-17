@@ -1,7 +1,15 @@
 var mongoose = require('mongoose');
 
 var responsedataSchema = mongoose.Schema({
-    name:{
+    trial_id:{
+        type:String,
+        required:true
+    },
+    epoch_id:{
+        type:String,
+        required:true
+    },
+    candidate_id:{
         type:String,
         required:true
     },
@@ -13,12 +21,18 @@ var responsedataSchema = mongoose.Schema({
 });
 var responseData =module.exports= mongoose.model('responsedata', responsedataSchema, 'responsedata');
 
-//get genres
+//get response
 module.exports.getresponseData= function(callback , limit){
     responseData.find(callback).limit(limit);
 }
 
-//add genre
+//get one response
+module.exports.getresponseDataById= function(id ,callback){
+    responseData.findById(id ,callback);
+}
+
+//add response
 module.exports.addresponseData = function(response , callback){
     responseData.create(response ,callback);
 }
+
