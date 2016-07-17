@@ -116,6 +116,34 @@ app.post('/api/responsedata', function(req,res){
     })
 });
 
+app.get('/trial_number', function(req, res, next) {
+    trialData.getTrialData(function (err, trialdata) {
+        if (err) {
+            throw err;
+        }
+        res.json(trialdata.length + " records in collection");
+    });
+});
+
+app.get('/api/questiondata', function (req, res) {
+    trialData.getTrialData(function (err, trialdata) {
+        if (err) {
+            throw err;
+        }
+        res.json(trialdata);
+    });
+});
+
+app.post('/api/questiondata', function (req, res) {
+    //var quest = req.body;
+    questionData.addQuestionData(function (err, quest) {
+        if (err) {
+            throw err;
+        }
+        res.json(response);
+    })
+});
+
 app.get('/api/questiondata', function (req, res) {
     questionData.getQuestionData(function (err, questiondata) {
         if (err) {
