@@ -11,6 +11,7 @@ var session = require('express-session');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var generator = require('mongoose-gen');
 
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
@@ -20,6 +21,8 @@ var trialData = require('./models/trialdata');
 var questionData = require('./models/questiondata');
 var responseData = require('./models/responsedata');
 var userdata = require('./models/user');
+
+var util = require('util');
 
 // Init App -- type $ node app.js
 var app = express();
@@ -32,9 +35,9 @@ app.set('view engine', 'handlebars');
 
 // BodyParser Middleware // for cookies
 app.use(bodyParser.json());
+app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-
 
 
 // Set Static Folder
@@ -95,38 +98,83 @@ app.get('/api/trialdata', function (req, res) {
     });
 });
 
-app.get('/api/responsedata', function(req,res){
+app.get('/api/responsedata', function (req, res) {
     responseData.getresponseData(function (err, responsedata) {
-        if(err)
-        {
+        if (err) {
             throw err;
         }
         res.json(responsedata);
     })
 });
 
-app.get('/api/responsedata/:_id', function(req,res){
-    responseData.getresponseDataById(req.params._id , function (err, responsebyid) {
-        if(err)
-        {
+app.get('/api/responsedata/:_id', function (req, res) {
+    responseData.getresponseDataById(req.params._id, function (err, responsebyid) {
+        if (err) {
             throw err;
         }
         res.json(responsebyid);
     })
 });
 
-app.post('/api/responsedata', function(req,res){
-    var response = req.body;
-    responseData.addresponseData(response ,function (err, response) {
-        if(err)
-        {
-            throw err;
+app.post('/api/responsedata', function (req, res, next) {
+    var data = "";
+
+    req.on('data', function (chunk) {
+        data += chunk;
+    });
+
+    req.on('end', function () {
+        res.writeHead(200, "OK", {'Content-Type': 'text/html'});
+        res.end();
+
+        var valueField = JSON.parse(data);
+        console.log("VALUE FIELD");
+        console.log(valueField);
+
+        var typeField = valueField;
+        for (var key in typeField) {
+            typeField[key] = {
+                type: "String"
+            };
         }
-        res.json(response);
-    })
+
+        console.log("TYPE FIELD");
+        console.log(typeField);
+
+        var ResponseSchema = new mongoose.Schema(generator.convert(typeField));
+        var ResponseModel = mongoose.model('responseData', ResponseSchema, 'responsedata');
+        responseData.addResponseData(ResponseModel, valueField, function (err) {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+        });
+    });
 });
 
-app.get('/trial_number', function(req, res, next) {
+function traverse(obj) {
+    for (var i=0; i<obj.length; i++) {
+        if (typeof obj[i] == "object" && obj[i]) {
+            console.log("1");
+            console.log(obj[i]);
+            traverse(obj[i]);
+        } else {
+            console.log("2");
+            console.log(obj[i]);
+        }
+    }
+}
+
+function isEmptyObject(obj) {
+    for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+app.get('/trial_number', function (req, res, next) {
     trialData.getTrialData(function (err, trialdata) {
         if (err) {
             throw err;
@@ -145,7 +193,7 @@ app.get('/api/questiondata', function (req, res) {
 });
 
 app.post('/api/questiondata', function (req, res) {
-    //var quest = req.body;
+    var quest = req.body;
     questionData.addQuestionData(function (err, quest) {
         if (err) {
             throw err;
@@ -174,9 +222,6 @@ app.get('/api/user', function (req, res) {
 
 app.use('/', routes); //mapped to routes which goes to index file
 app.use('/users', users);//goes to users.js
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
 
 // Set Port
 app.set('port', (process.env.PORT || Globals.PORT));

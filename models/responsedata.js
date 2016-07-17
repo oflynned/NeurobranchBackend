@@ -1,38 +1,41 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var responsedataSchema = mongoose.Schema({
-    trial_id:{
-        type:String,
-        required:true
-    },
-    epoch_id:{
-        type:String,
-        required:true
-    },
-    candidate_id:{
-        type:String,
-        required:true
-    },
-    create_date:{
-        type: Date,
-        default:Date.now
-    }
+var responseQuestionSchema = new Schema({
 
 });
-var responseData =module.exports= mongoose.model('responsedata', responsedataSchema, 'responsedata');
+
+var responseDataSchema = new Schema({
+    any: mongoose.Schema.Types.Mixed
+    /*trialid:{
+        type:String,
+        required:true
+    },
+    candidateid:{
+        type:String,
+        required:true
+    },
+    epochid:{
+        type:String,
+        required:true
+    },
+    response:[mongoose.Schema.Types.Mixed]*/
+}, {strict: false});
+
+var responseData = module.exports = mongoose.model('responsedata', responseDataSchema, 'responsedata');
 
 //get response
 module.exports.getresponseData= function(callback , limit){
     responseData.find(callback).limit(limit);
-}
+};
 
 //get one response
 module.exports.getresponseDataById= function(id ,callback){
     responseData.findById(id ,callback);
-}
+};
 
 //add response
-module.exports.addresponseData = function(response , callback){
-    responseData.create(response ,callback);
-}
+module.exports.addResponseData = function(model, value, callback){
+    model.create(value, callback);
+};
 
