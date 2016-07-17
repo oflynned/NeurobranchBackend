@@ -31,6 +31,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
 app.set('view engine', 'handlebars');
 
 // BodyParser Middleware // for cookies
+//app.use(express.static(_dirname+'/researcherside'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());

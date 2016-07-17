@@ -1,18 +1,22 @@
 var mongoose = require('mongoose');
 
 var responsedataSchema = mongoose.Schema({
-    trial_id:{
+    trialid:{
         type:String,
         required:true
     },
-    epoch_id:{
+    epochid:{
         type:String,
         required:true
     },
-    candidate_id:{
+    candidateid:{
         type:String,
         required:true
     },
+    response:{
+        
+        },
+
     create_date:{
         type: Date,
         default:Date.now
