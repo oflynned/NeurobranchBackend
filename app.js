@@ -108,7 +108,7 @@ app.get('/api/responsedata', function(req,res){
 });
 
 //GET Response data by _id
-app.get('/api/responsedata/:_id', function(req,res){
+app.get('/api/responsedata/id/:_id', function(req,res){
     responseData.getresponseDataById(req.params._id , function (err, responsebyid) {
         if(err)
         {
@@ -118,8 +118,8 @@ app.get('/api/responsedata/:_id', function(req,res){
     })
 });
 //GET Response data by trialid
-app.get('/api/responsedata/:trialid', function(req,res){
-    responseData.getresponseDataByTrialId(req.params.trialid , function (err, responsebytrialid) {
+app.get('/api/responsedata/trial/:trialid', function(req,res){
+    responseData.getresponseDataByTrialId(req.params.trialid, function (err, responsebytrialid) {
         if(err)
         {
             throw err;
@@ -128,7 +128,7 @@ app.get('/api/responsedata/:trialid', function(req,res){
     })
 });
 //GET Response data by epochid
-app.get('/api/responsedata/:epochid', function(req,res){
+app.get('/api/responsedata/epoch/:epochid', function(req,res){
     responseData.getresponseDataByEpochId(req.params.epochid , function (err, responsebyepochid) {
         if(err)
         {

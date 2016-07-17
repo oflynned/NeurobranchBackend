@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+Schema = mongoose.Schema;
+ObjectId = Schema.ObjectId;
 
 var responsedataSchema = mongoose.Schema({
     trialid:{
@@ -24,6 +26,7 @@ var responsedataSchema = mongoose.Schema({
 });
 var responseData =module.exports= mongoose.model('responsedata', responsedataSchema, 'responsedata');
 
+
 //get response
 module.exports.getresponseData= function(callback , limit){
     responseData.find(callback).limit(limit);
@@ -36,12 +39,12 @@ module.exports.getresponseDataById= function(id ,callback){
 
 //get one by epochid response
 module.exports.getresponseDataByEpochId= function(epoch ,callback){
-    responseData.findOne(epoch ,callback);
+    responseData.find({epochid: epoch} ,callback);
 }
 
 //get one by trialid response
 module.exports.getresponseDataByTrialId= function(trial ,callback){
-    responseData.findOne(trial ,callback);
+    responseData.find({trialid:trial} ,callback);
 }
 
 //add response
