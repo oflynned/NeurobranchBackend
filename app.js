@@ -139,7 +139,7 @@ app.get('/api/responsedata/epoch/:epochid', function(req,res){
 });
 
 
-//POST REsponse data
+//POST Response data
 app.post('/api/responsedata', function(req,res){
     var response = req.body;
     responseData.addresponseData(response ,function (err, response) {
