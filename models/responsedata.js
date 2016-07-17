@@ -13,9 +13,8 @@ var responsedataSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    response:{
-        
-        },
+    response:[{ type:String}],
+
 
     create_date:{
         type: Date,
@@ -30,9 +29,19 @@ module.exports.getresponseData= function(callback , limit){
     responseData.find(callback).limit(limit);
 }
 
-//get one response
+//get one by _id response
 module.exports.getresponseDataById= function(id ,callback){
     responseData.findById(id ,callback);
+}
+
+//get one by epochid response
+module.exports.getresponseDataByEpochId= function(epoch ,callback){
+    responseData.findOne(epoch ,callback);
+}
+
+//get one by trialid response
+module.exports.getresponseDataByTrialId= function(trial ,callback){
+    responseData.findOne(trial ,callback);
 }
 
 //add response
