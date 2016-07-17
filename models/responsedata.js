@@ -1,36 +1,24 @@
 var mongoose = require('mongoose');
 
 var responsedataSchema = mongoose.Schema({
-    trial_id: {
-        type: String
+    name:{
+        type:String,
+        required:true
     },
-    epoch_id: {
-        type: String
-    },
-    candidate_id: {
-        type: String
-    },
-    responses: {
-        q_id: {
-            questiontype: {
-                type: String
-            },
-            response: {
-                type: String
-            }
-        }
+    create_date:{
+        type: Date,
+        default:Date.now
     }
 
 });
+var responseData =module.exports= mongoose.model('responsedata', responsedataSchema, 'responsedata');
 
-var responseData = module.exports = mongoose.model('responsedata', responsedataSchema, 'responsedata');
-
-//Get trialdata
-module.exports.getResponseData = function (callback, limit) {
+//get genres
+module.exports.getresponseData= function(callback , limit){
     responseData.find(callback).limit(limit);
-};
+}
 
-//Add trialdata
-module.exports.addResponseData = function (resp, callback) {
-    responseData.create(resp, callback);
-};
+//add genre
+module.exports.addresponseData = function(response , callback){
+    responseData.create(response ,callback);
+}

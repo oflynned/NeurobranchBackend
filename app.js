@@ -95,32 +95,33 @@ app.get('/api/trialdata', function (req, res) {
     });
 });
 
+app.get('/api/responsedata', function(req,res){
+    responseData.getresponseData(function (err, responsedata) {
+        if(err)
+        {
+            throw err;
+        }
+        res.json(responsedata);
+    })
+});
+
+app.post('/api/responsedata', function(req,res){
+    var response = req.body;
+    responseData.addresponseData(response ,function (err, response) {
+        if(err)
+        {
+            throw err;
+        }
+        res.json(response);
+    })
+});
+
 app.get('/api/questiondata', function (req, res) {
     questionData.getQuestionData(function (err, questiondata) {
         if (err) {
             throw err;
         }
         res.json(questiondata);
-    });
-});
-
-app.post('/api/questiondata', function (req, res) {
-    var quest = req.body;
-    questionData.addQuestionData(quest ,function (err, quest) {
-        if (err) {
-            throw err;
-        }
-        res.json(quest);
-    });
-});
-
-app.post('/api/responsedata', function (req, res) {
-    var resp = req.body;
-    responseData.addResponseData(resp ,function (err, resp) {
-        if (err) {
-            throw err;
-        }
-        res.json(resp);
     });
 });
 
