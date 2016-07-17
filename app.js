@@ -11,7 +11,6 @@ var session = require('express-session');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var generator = require('mongoose-gen');
 
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
@@ -23,6 +22,7 @@ var responseData = require('./models/responsedata');
 var userdata = require('./models/user');
 
 var util = require('util');
+var generator = require('mongoose-gen');
 
 // Init App -- type $ node app.js
 var app = express();
@@ -140,6 +140,7 @@ app.get('/api/responsedata/epoch/:epochid', function (req, res) {
 
 app.post('/api/responsedata', function (req, res, next) {
     var data = "";
+
     req.on('data', function (chunk) {
         data += chunk;
     });
@@ -148,30 +149,40 @@ app.post('/api/responsedata', function (req, res, next) {
         res.writeHead(200, "OK", {'Content-Type': 'text/html'});
         res.end();
 
+        var extend = require('util')._extend;
         var valueField = JSON.parse(data);
-        console.log("VALUE FIELD");
-        console.log(valueField);
+        var typeField = extend({}, valueField);
 
-        var typeField = valueField;
         for (var key in typeField) {
             typeField[key] = {
                 type: "String"
             };
-
-            console.log("TYPE FIELD");
-            console.log(typeField);
-
-            var ResponseSchema = new mongoose.Schema(generator.convert(typeField));
-            var ResponseModel = mongoose.model('responseData', ResponseSchema, 'responsedata');
-            responseData.addresponseData(ResponseModel, valueField, function (err) {
-                if (err) {
-                    console.log(err);
-                    throw err;
-                }
-            });
         }
+
+        console.log("\n\n");
+        console.log("VALUE FIELD");
+        console.log(valueField);
+
+        console.log("\n\n");
+        console.log("TYPE FIELD");
+        console.log(typeField);
+        console.log("\n\n");
+
+        var ResponseSchema = new mongoose.Schema(generator.convert(typeField));
+        var ResponseModel = mongoose.model('res' + Date.now(), ResponseSchema, 'res');
+
+        addResponseData(ResponseModel, valueField, function (err) {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+        });
     });
 });
+
+addResponseData = function(model, value, callback){
+    model.create(value, callback);
+};
 
 function traverse(obj) {
     for (var i = 0; i < obj.length; i++) {

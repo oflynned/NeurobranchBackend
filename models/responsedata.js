@@ -24,7 +24,7 @@ var responsedataSchema = mongoose.Schema({
     }
 });
 
-var responseData = module.exports = mongoose.model('responsedata', responsedataSchema, 'responsedata');
+var responseData = module.exports = mongoose.model('res', responsedataSchema, 'res');
 
 //get response
 module.exports.getresponseData= function(callback , limit){
@@ -44,10 +44,5 @@ module.exports.getresponseDataByEpochId= function(epoch ,callback){
 //get one by trialid response
 module.exports.getresponseDataByTrialId= function(trial ,callback){
     responseData.find({trialid:trial} ,callback);
-};
-
-//add response
-module.exports.addResponseData = function(model, value, callback){
-    model.create(value, callback);
 };
 
