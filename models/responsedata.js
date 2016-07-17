@@ -1,37 +1,49 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+Schema = mongoose.Schema;
+ObjectId = Schema.ObjectId;
 
-var responseQuestionSchema = new Schema({
+var responsedataSchema = mongoose.Schema({
+    trialid: {
+        type: String,
+        required: true
+    },
+    epochid: {
+        type: String,
+        required: true
+    },
+    candidateid: {
+        type: String,
+        required: true
+    },
+    response: [{type: String}],
 
+
+    create_date: {
+        type: Date,
+        default: Date.now
+    }
 });
 
-var responseDataSchema = new Schema({
-    any: mongoose.Schema.Types.Mixed
-    /*trialid:{
-        type:String,
-        required:true
-    },
-    candidateid:{
-        type:String,
-        required:true
-    },
-    epochid:{
-        type:String,
-        required:true
-    },
-    response:[mongoose.Schema.Types.Mixed]*/
-}, {strict: false});
-
-var responseData = module.exports = mongoose.model('responsedata', responseDataSchema, 'responsedata');
+var responseData = module.exports = mongoose.model('responsedata', responsedataSchema, 'responsedata');
 
 //get response
 module.exports.getresponseData= function(callback , limit){
     responseData.find(callback).limit(limit);
 };
 
-//get one response
+//get one by _id response
 module.exports.getresponseDataById= function(id ,callback){
     responseData.findById(id ,callback);
+};
+
+//get one by epochid response
+module.exports.getresponseDataByEpochId= function(epoch ,callback){
+    responseData.find({epochid: epoch} ,callback);
+};
+
+//get one by trialid response
+module.exports.getresponseDataByTrialId= function(trial ,callback){
+    responseData.find({trialid:trial} ,callback);
 };
 
 //add response

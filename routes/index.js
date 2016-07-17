@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var assert = require('assert');
+var multer = require('multer');
+var upload = multer({dest: 'public/uploads/'});
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -156,7 +158,7 @@ router.get('/get-data-q', function (req, res, next) {
 });
 
 //insert for trials//
-router.post('/insert', function (req, res, next){
+router.post('/insert',upload.any(), function (req, res, next){
 
     console.log(req.body);
 
@@ -187,6 +189,7 @@ router.post('/insert', function (req, res, next){
     data.save();
     console.log(data);
     res.redirect('/users/create_trial');
+
 });
 
 //insert for questions////more than one question//
@@ -271,6 +274,8 @@ router.post('/deleteq', function (req, res, next) {
     console.log("Removed---> ", idq);
     res.redirect('/');
 });
+
+
 
 
 function ensureAuthenticated(req, res, next) {

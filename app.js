@@ -34,6 +34,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
 app.set('view engine', 'handlebars');
 
 // BodyParser Middleware // for cookies
+//app.use(express.static(_dirname+'/researcherside'));
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -84,11 +85,11 @@ app.use(function (req, res, next) {
     res.locals.user = req.user || null;
     next();
 });
-
+//GET main page
 app.get('/', function (req, res, next) {
     res.render('mainpage');
 });
-
+// GET TRial Data
 app.get('/api/trialdata', function (req, res) {
     trialData.getTrialData(function (err, trialdata) {
         if (err) {
@@ -98,6 +99,7 @@ app.get('/api/trialdata', function (req, res) {
     });
 });
 
+//GET Response Data
 app.get('/api/responsedata', function (req, res) {
     responseData.getresponseData(function (err, responsedata) {
         if (err) {
@@ -107,7 +109,7 @@ app.get('/api/responsedata', function (req, res) {
     })
 });
 
-app.get('/api/responsedata/:_id', function (req, res) {
+app.get('/api/responsedata/id/:_id', function (req, res) {
     responseData.getresponseDataById(req.params._id, function (err, responsebyid) {
         if (err) {
             throw err;
@@ -116,9 +118,28 @@ app.get('/api/responsedata/:_id', function (req, res) {
     })
 });
 
+//GET Response data by trialid
+app.get('/api/responsedata/trial/:trialid', function (req, res) {
+    responseData.getresponseDataByTrialId(req.params.trialid, function (err, responsebytrialid) {
+        if (err) {
+            throw err;
+        }
+        res.json(responsebytrialid);
+    })
+});
+
+//GET Response data by epochid
+app.get('/api/responsedata/epoch/:epochid', function (req, res) {
+    responseData.getresponseDataByEpochId(req.params.epochid, function (err, responsebyepochid) {
+        if (err) {
+            throw err;
+        }
+        res.json(responsebyepochid);
+    })
+});
+
 app.post('/api/responsedata', function (req, res, next) {
     var data = "";
-
     req.on('data', function (chunk) {
         data += chunk;
     });
@@ -136,24 +157,24 @@ app.post('/api/responsedata', function (req, res, next) {
             typeField[key] = {
                 type: "String"
             };
+
+            console.log("TYPE FIELD");
+            console.log(typeField);
+
+            var ResponseSchema = new mongoose.Schema(generator.convert(typeField));
+            var ResponseModel = mongoose.model('responseData', ResponseSchema, 'responsedata');
+            responseData.addresponseData(ResponseModel, valueField, function (err) {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+            });
         }
-
-        console.log("TYPE FIELD");
-        console.log(typeField);
-
-        var ResponseSchema = new mongoose.Schema(generator.convert(typeField));
-        var ResponseModel = mongoose.model('responseData', ResponseSchema, 'responsedata');
-        responseData.addResponseData(ResponseModel, valueField, function (err) {
-            if (err) {
-                console.log(err);
-                throw err;
-            }
-        });
     });
 });
 
 function traverse(obj) {
-    for (var i=0; i<obj.length; i++) {
+    for (var i = 0; i < obj.length; i++) {
         if (typeof obj[i] == "object" && obj[i]) {
             console.log("1");
             console.log(obj[i]);
@@ -174,6 +195,7 @@ function isEmptyObject(obj) {
     return true;
 }
 
+//get number of trials in collection
 app.get('/trial_number', function (req, res, next) {
     trialData.getTrialData(function (err, trialdata) {
         if (err) {
@@ -183,15 +205,7 @@ app.get('/trial_number', function (req, res, next) {
     });
 });
 
-app.get('/api/questiondata', function (req, res) {
-    trialData.getTrialData(function (err, trialdata) {
-        if (err) {
-            throw err;
-        }
-        res.json(trialdata);
-    });
-});
-
+//POST question data
 app.post('/api/questiondata', function (req, res) {
     var quest = req.body;
     questionData.addQuestionData(function (err, quest) {
@@ -201,7 +215,7 @@ app.post('/api/questiondata', function (req, res) {
         res.json(response);
     })
 });
-
+// GET question data
 app.get('/api/questiondata', function (req, res) {
     questionData.getQuestionData(function (err, questiondata) {
         if (err) {
@@ -210,7 +224,7 @@ app.get('/api/questiondata', function (req, res) {
         res.json(questiondata);
     });
 });
-
+//GET user data
 app.get('/api/user', function (req, res) {
     userdata.getUser(function (err, userdata) {
         if (err) {
