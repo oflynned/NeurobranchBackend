@@ -28,6 +28,7 @@
     "jsonfile": "^2.3.1",
     "mongodb": "*",
     "mongoose": "^4.5.3",
+    "mongoose-gen": "^2.1.1",
     "multer": "^1.1.0",
     "nodemailer": "~1.10.0",
     "passport": "*",

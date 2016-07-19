@@ -21,6 +21,9 @@ var questionData = require('./models/questiondata');
 var responseData = require('./models/responsedata');
 var userdata = require('./models/user');
 
+var util = require('util');
+var generator = require('mongoose-gen');
+
 // Init App -- type $ node app.js
 var app = express();
 
@@ -36,7 +39,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-
 
 
 // Set Static Folder
@@ -96,62 +98,116 @@ app.get('/api/trialdata', function (req, res) {
         res.json(trialdata);
     });
 });
+
 //GET Response Data
-app.get('/api/responsedata', function(req,res){
+app.get('/api/responsedata', function (req, res) {
     responseData.getresponseData(function (err, responsedata) {
-        if(err)
-        {
+        if (err) {
             throw err;
         }
         res.json(responsedata);
     })
 });
 
-//GET Response data by _id
-app.get('/api/responsedata/id/:_id', function(req,res){
-    responseData.getresponseDataById(req.params._id , function (err, responsebyid) {
-        if(err)
-        {
+app.get('/api/responsedata/id/:_id', function (req, res) {
+    responseData.getresponseDataById(req.params._id, function (err, responsebyid) {
+        if (err) {
             throw err;
         }
         res.json(responsebyid);
     })
 });
+
 //GET Response data by trialid
-app.get('/api/responsedata/trial/:trialid', function(req,res){
+app.get('/api/responsedata/trial/:trialid', function (req, res) {
     responseData.getresponseDataByTrialId(req.params.trialid, function (err, responsebytrialid) {
-        if(err)
-        {
+        if (err) {
             throw err;
         }
         res.json(responsebytrialid);
     })
 });
+
 //GET Response data by epochid
-app.get('/api/responsedata/epoch/:epochid', function(req,res){
-    responseData.getresponseDataByEpochId(req.params.epochid , function (err, responsebyepochid) {
-        if(err)
-        {
+app.get('/api/responsedata/epoch/:epochid', function (req, res) {
+    responseData.getresponseDataByEpochId(req.params.epochid, function (err, responsebyepochid) {
+        if (err) {
             throw err;
         }
         res.json(responsebyepochid);
     })
 });
 
+app.post('/api/responsedata', function (req, res, next) {
+    var data = "";
 
-//POST Response data
-app.post('/api/responsedata', function(req,res){
-    var response = req.body;
-    responseData.addresponseData(response ,function (err, response) {
-        if(err)
-        {
-            throw err;
+    req.on('data', function (chunk) {
+        data += chunk;
+    });
+
+    req.on('end', function () {
+        res.writeHead(200, "OK", {'Content-Type': 'text/html'});
+        res.end();
+
+        var extend = require('util')._extend;
+        var valueField = JSON.parse(data);
+        var typeField = extend({}, valueField);
+
+        for (var key in typeField) {
+            typeField[key] = {
+                type: "String"
+            };
         }
-        res.json(response);
-    })
+
+        console.log("\n\n");
+        console.log("VALUE FIELD");
+        console.log(valueField);
+
+        console.log("\n\n");
+        console.log("TYPE FIELD");
+        console.log(typeField);
+        console.log("\n\n");
+
+        var ResponseSchema = new mongoose.Schema(generator.convert(typeField));
+        var ResponseModel = mongoose.model('res' + Date.now(), ResponseSchema, 'res');
+
+        addResponseData(ResponseModel, valueField, function (err) {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+        });
+    });
 });
-//GET trial number
-app.get('/trial_number', function(req, res, next) {
+
+addResponseData = function(model, value, callback){
+    model.create(value, callback);
+};
+
+function traverse(obj) {
+    for (var i = 0; i < obj.length; i++) {
+        if (typeof obj[i] == "object" && obj[i]) {
+            console.log("1");
+            console.log(obj[i]);
+            traverse(obj[i]);
+        } else {
+            console.log("2");
+            console.log(obj[i]);
+        }
+    }
+}
+
+function isEmptyObject(obj) {
+    for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+//get number of trials in collection
+app.get('/trial_number', function (req, res, next) {
     trialData.getTrialData(function (err, trialdata) {
         if (err) {
             throw err;
@@ -159,9 +215,10 @@ app.get('/trial_number', function(req, res, next) {
         res.json(trialdata.length + " records in collection");
     });
 });
+
 //POST question data
 app.post('/api/questiondata', function (req, res) {
-    //var quest = req.body;
+    var quest = req.body;
     questionData.addQuestionData(function (err, quest) {
         if (err) {
             throw err;
@@ -190,9 +247,6 @@ app.get('/api/user', function (req, res) {
 
 app.use('/', routes); //mapped to routes which goes to index file
 app.use('/users', users);//goes to users.js
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
 
 // Set Port
 app.set('port', (process.env.PORT || Globals.PORT));
