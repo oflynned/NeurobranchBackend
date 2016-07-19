@@ -63,11 +63,11 @@ var QuestionData = mongoose.model('QuestionData', questionDataSchema);
 
 var responseDataSchema = new Schema(
     {
-        trial_id: String,
-        epoch_id: String,
-        candidate_id: String,
+        trialid: String,
+        epochid: String,
+        candidateid: String,
         responses: {
-            q_id: {
+            qid: {
                 questiontype: String,
                 response: String
             }
