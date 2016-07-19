@@ -1,77 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-    <script src="/node_modules/angular/angular.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+    <script type="text/javascript" src="/js/script.js"></script>
+
 
 </head>
+
 <body>
-<div id="page-content-wrapper">
-    <div class="container-fluid content-main">
-        <div class="row">
-            <div class="col-lg-12">
-                <!-- title -->
-                <div class="page-header">
-                    <h3>Settings</h3>
-                </div>
 
-                <section class="delete col-lg-6 primary-color">
-                    <h3>Delete Data</h3>
-                    <form action="/delete" method="post">
-                        <div class="input">
-                            <label for="id">trialid</label>
-                            <input type="text" id="id" name="id">
-                        </div>
-                        <button type="submit">DELETE</button>
-                    </form>
-                </section>
-
-
-                <section class="delete col-lg-6 primary-color">
-                    <h3>Delete Question Data</h3>
-                    <form action="/deleteq" method="post">
-                        <div class="input">
-                            <label for="idq">idq</label>
-                            <input type="text" id="idq" name="idq">
-                        </div>
-                        <button type="submit">DELETE</button>
-                    </form>
-                </section>
-
-            </div>
+<section class="delete col-lg-6 primary-color">
+    <h3>Delete Data</h3>
+    <form action="/delete" method="post">
+        <div class="input">
+            <label for="id">trialid</label>
+            <input type="text" id="id" name="id">
         </div>
+        <button type="submit">DELETE</button>
+    </form>
+</section>
 
 
-        <div ng-app="App" class="container" action="/deleteq" method="post">
-            <div class="row">
-                <hr/>
-                <div ng-app="angularjs-starter" ng-controller="MainCtrl">
-                    <fieldset data-ng-repeat="choice in choices">
-                        <select>
-                            <option>Mobile</option>
-                            <option>Office</option>
-                            <option>Home</option>
-                        </select>
-                        <input type="text" ng-model="choice.name" name="" placeholder="Enter Answer">
-                        <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
-                    </fieldset>
-                    <button class="addfields" ng-click="addNewChoice()">Add fields</button>
-                    <div id="choicesDisplay">
-                        {{ choices }}
-                    </div>
-                </div>
-            </div>
-            <button type="submit">DELETE</button>
+<section class="delete col-lg-6 primary-color">
+    <h3>Delete Question Data</h3>
+    <form action="/deleteq" method="post">
+        <div class="input">
+            <label for="idq">idq</label>
+            <input type="text" id="idq" name="idq">
         </div>
+        <button type="submit">DELETE</button>
+    </form>
+</section>
 
-
-        <!-- container for holding trial data -->
-        <div id="dashboard-content-holder">
-
+<div ng-app="App" class="container">
+    <div class="row">
+        <hr/>
+        <div ng-app="angularjs-starter" ng-controller="MainCtrl">
+            <fieldset data-ng-repeat="choice in choices">
+                <select>
+                    <option>Mobile</option>
+                    <option>Office</option>
+                    <option>Home</option>
+                </select>
+                <input type="text" ng-model="choice.name" name="" placeholder="Enter mobile number">
+                <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+            </fieldset>
+            <button class="addfields" ng-click="addNewChoice()">Add fields</button>
+            <div id="choicesDisplay">
+                {{ choices }}
+            </div>
         </div>
     </div>
 </div>
 
+
 </body>
+<!-- scripts -->
 </html>
