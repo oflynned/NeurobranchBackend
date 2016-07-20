@@ -3,6 +3,10 @@
     padding-top: 50px;
 }
 
+.content-main-about {
+    padding-top: 100px;
+}
+
 .carousel .item {
     width: 100%; /*slider width*/
     max-height: 600px; /*slider height*/

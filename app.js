@@ -149,29 +149,17 @@ app.post('/api/responsedata', function (req, res, next) {
         res.writeHead(200, "OK", {'Content-Type': 'text/html'});
         res.end();
 
-        var extend = require('util')._extend;
         var valueField = JSON.parse(data);
-        var typeField = extend({}, valueField);
 
-        for (var key in typeField) {
-            typeField[key] = {
-                type: "String"
-            };
-        }
+        var typeField = clone(valueField);
+        traverseNodes(typeField);
+        var responseSchema = new mongoose.Schema(generator.convert(typeField));
+        var responseModel = mongoose.model(res + Date.now(), responseSchema, 'res');
 
-        console.log("\n\n");
-        console.log("VALUE FIELD");
-        console.log(valueField);
+        var reversedValueField = clone(valueField);
+        traverseDataNodes(reversedValueField);
 
-        console.log("\n\n");
-        console.log("TYPE FIELD");
-        console.log(typeField);
-        console.log("\n\n");
-
-        var ResponseSchema = new mongoose.Schema(generator.convert(typeField));
-        var ResponseModel = mongoose.model('res' + Date.now(), ResponseSchema, 'res');
-
-        addResponseData(ResponseModel, valueField, function (err) {
+        addResponseData(responseModel, reversedValueField, function (err) {
             if (err) {
                 console.log(err);
                 throw err;
@@ -180,22 +168,62 @@ app.post('/api/responsedata', function (req, res, next) {
     });
 });
 
-addResponseData = function(model, value, callback){
-    model.create(value, callback);
-};
+function clone(obj) {
+    var copy;
 
-function traverse(obj) {
-    for (var i = 0; i < obj.length; i++) {
-        if (typeof obj[i] == "object" && obj[i]) {
-            console.log("1");
-            console.log(obj[i]);
-            traverse(obj[i]);
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+
+    // Handle Date
+    if (obj instanceof Date) {
+        copy = new Date();
+        copy.setTime(obj.getTime());
+        return copy;
+    }
+
+    // Handle Array
+    if (obj instanceof Array) {
+        copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = clone(obj[i]);
+        }
+        return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+        copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+        }
+        return copy;
+    }
+
+    throw new Error("Unable to copy obj! Its type isn't supported.");
+}
+function traverseNodes(o,func) {
+    for (var i in o) {
+        if (o[i] !== null && typeof(o[i]) == "object") {
+            traverseNodes(o[i], func);
         } else {
-            console.log("2");
-            console.log(obj[i]);
+            o[i] = {
+                type: "String"
+            }
         }
     }
 }
+
+function traverseDataNodes(p,func) {
+    for (var i in p) {
+        if (p[i] !== null && typeof(p[i])=="object") {
+            traverseDataNodes(p[i],func);
+        }
+    }
+}
+
+addResponseData = function(model, value, callback){
+    model.create(value, callback);
+};
 
 function isEmptyObject(obj) {
     for (var key in obj) {
