@@ -14,8 +14,7 @@ var Globals = require("./Globals.js");
 //_id used to reference back trial, question relation to specify question schema relation
 var userDataSchema = new Schema(
     {
-        /*questionrelation:[{type:Schema.Types.ObjectId, ref:'QuestionData'}],*/
-        /*_id:Number,*/
+        questionrelation:[{type:Schema.Types.ObjectId, ref:'QuestionData'}],
         trialname: String,
         trialid: String,
         description: String,
@@ -43,17 +42,16 @@ var userDataSchema = new Schema(
     }
 );
 var UserData = mongoose.model('UserData', userDataSchema);
-//creator used to reference scema that created the question
+//creator used to reference schema that created the question
 var questionDataSchema = new Schema(
     {
-       /* trialrelation:{type:Number, ref:'UserData'},*/
+        trialrelation:{type:Number, ref:'UserData'},
         questions: [{
             question: String,
             questiontype: String,
             options: {
                 answer: [String]
             }
-
         }]
     },
     {
@@ -164,6 +162,7 @@ router.post('/insert',upload.any(), function (req, res, next){
     console.log(req.body);
 
     var item = {
+        questionrelation: req.body.questionrelation,
         trialname: req.body.trialname,
         trialid: req.body.trialid,
         description: req.body.description,
@@ -231,7 +230,7 @@ router.post('/updateq', function (req, res, next) {
     });
     res.redirect('/');
 });
-/* querry for question relation  to trial
+/* querry for question relation  to trial*/
 /*QuestionData.findOne({title: title}).populate('trialrelation').exec(function (err , qr ) {
     if(err)
         return __handleError(err);
