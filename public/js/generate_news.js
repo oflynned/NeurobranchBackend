@@ -1,8 +1,8 @@
 /**
  * Created by edmond.o.flynn on 12/07/2016.
  */
-let URL = 'http://www.glassbyte.com/neurobranch_mock_data/front_news.json';
-let LOCAL_URL = 'data/front_news.json';
+var URL = 'http://www.glassbyte.com/neurobranch_mock_data/front_news.json';
+var LOCAL_URL = 'data/front_news.json';
 
 var getElementsPerRow = function (size) {
     return 12 / size;

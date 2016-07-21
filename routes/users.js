@@ -127,6 +127,40 @@ router.get('/help', ensureAuthenticated, function (req, res) {
     });
 });
 
+//footer links
+router.get('/goals', function(req, res) {
+    res.render('goals');
+});
+
+router.get('/aboutneurobranch', function(req, res) {
+    res.render('aboutneurobranch');
+});
+
+router.get('/aboutglassbyte', function(req, res) {
+    res.render('aboutglassbyte');
+});
+
+router.get('/faq', function(req, res) {
+    res.render('faq');
+});
+
+router.get('/support', function(req, res) {
+    res.render('support');
+});
+
+router.get('/termsofuse', function(req, res) {
+    res.render('termsofuse');
+});
+
+router.get('/cookiepolicy', function(req, res) {
+    res.render('cookiepolicy');
+});
+
+router.get('/privacypolicy', function(req, res) {
+    res.render('privacypolicy');
+});
+
+
 //receiving responses
 router.post('/response', function (req, res) {
     //convert json to a variable number of arguments from array
