@@ -2,6 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
 
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
     <script type="text/javascript" src="/js/script.js"></script>
 </head>
@@ -14,200 +15,221 @@
     <script type="text/javascript" src="/js/addInput.js"></script>
     <script type="text/javascript" scr="/js/generate_boxes.js"></script>
     <div class="container-fluid content-main">
-
+        <!-- TRial stuff here -->
         <div class="row">
-            <div class="col-lg-12">
-                <!-- title -->
-                <div class="page-header">
-                    <h3>New Trial</h3>
-                </div>
-                <section class="insert danger-color">
-                    <h3>Insert Trial Data</h3>
-                    <form action="/insert" method="post" role="form" class="col-lg-6 danger-color">
-                        <div class="form-group ">
-                            <label for="trialname">TrialName</label>
-                            <input type="text" id="trialname" name="trialname">
-                        </div>
-                        <div class="input">
-                            <label for="description">Description</label>
-                            <input type="text" id="description" name="description">
-                        </div>
+            <div>
+                <h1> New Trial</h1>
+            </div>
+            <div class=" col-lg-6 col-md-12 col-md-offset-4 center-form">
 
-                        <div class="input">
-                            <label for="trialtype">Trial Type</label>
-                            <input type="text" id="trialtype" name="trialtype">
-                        </div>
-                        <div class="input">
-                            <label for="researchgroup"> Research Group</label>
-                            <input type="text" id="researchgroup" name="researchgroup">
-                        </div>
+                <h3>Insert Trial Data</h3>
+                <form action="/insert" method="post" role="form" class="col-lg-6 danger-color">
+                    <div class="form-group ">
+                        <label for="trialname">TrialName</label>
+                        <input type="text" id="trialname" name="trialname">
+                    </div>
+                    <div class="input">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" name="description">
+                    </div>
 
-                        <div class="input">
-                            <label for="researchername"> Researcher name</label>
-                            <input type="text" id="researchername" name="researchername">
-                        </div>
+                    <div class="input">Trial Type</label>
+                        <label for="trialtype">trialtype</label>
+                        <select name="trialtype" id="trialtype">
+                            <option value="pharmaceutical">Pharma</option>
+                            <option value="biomedicaldevice">Bio-Device</option>
+                            <option value="consumable">Food</option>
+                            <option value="behavioural">Behavioural</option>
+                        </select>
+                    </div>
 
-                        <div class="input">
-                            <label for="organisation">Organisation</label>
-                            <input type="text" id="organisation" name="organisation">
-                        </div>
-                        <div class="input">
-                            <label for="specialisation">Specialisation</label>
-                            <input type="text" id="specialisation" name="specialisation">
-                        </div>
+                    <div class="input">
+                        <label for="researchgroup"> Research Group</label>
+                        <input type="text" id="researchgroup" name="researchgroup">
+                    </div>
 
-                        <div class="input">
-                            <label for="starttime">StartTime</label>
-                            <input type="text" id="starttime" name="starttime">
-                        </div>
-                        <div class="input">
-                            <label for="endtime">EndTime</label>
-                            <input type="text" id="endtime" name="endtime">
-                        </div>
-                        <div class="input">
-                            <label for="timeperiodfrequency">TimePeriodFrequency</label>
-                            <input type="text" id="timeperiodfrequency" name="timeperiodfrequency">
-                        </div>
+                    <div class="input">
+                        <label for="specialisation">Specialisation</label>
+                        <input type="text" id="specialisation" name="specialisation">
+                    </div>
 
-                        <div class="input">
-                            <label for="notificationfrequency">NotificationFrequency</label>
-                            <input type="text" id="notificationfrequency" name="notificationfrequency">
-                        </div>
-                        <div class="input">
-                            <label for="imageresource">ImageResource</label>
-                            <input type="text" id="imageresource" name="imageresource">
-                        </div>
+                    <div class="input">
+                        <label for="starttime">StartTime</label>
+                        <input type="text" id="starttime" name="starttime">
+                    </div>
+                    <div class="input">
+                        <label for="endtime">EndTime</label>
+                        <input type="text" id="endtime" name="endtime">
+                    </div>
+                    <div class="input">
+                        <label for="timeperiodfrequency">TimePeriodFrequency</label>
+                        <input type="text" id="timeperiodfrequency" name="timeperiodfrequency">
+                    </div>
 
-                        <div class="input">
-                            <label for="minage">Min Age</label>
-                            <input type="text" id="minage" name="minage">
-                        </div>
+                    <div class="input">
+                        <label for="notificationfrequency">NotificationFrequency</label>
+                        <input type="text" id="notificationfrequency" name="notificationfrequency">
+                    </div>
+                    <div class="input">
+                        <label for="imageresource">ImageResource</label>
+                        <input type="file" id="imageresource" name="imageresource">
+                    </div>
 
-                        <div class="input">
-                            <label for="condition">Condition</label>
-                            <input type="text" id="condition" name="condition">
-                        </div>
+                    <div class="input">
+                        <label for="minage">Min Age</label>
+                        <input type="text" id="minage" name="minage">
+                    </div>
 
-                        <div class="input">
-                            <label for="prereqtype">Prereq type</label>
-                            <input type="text" id="prereqtype" name="prereqtype">
-                        </div>
+                    <div class="input">
+                        <label for="condition">Condition</label>
+                        <input type="text" id="condition" name="condition">
+                    </div>
 
-                        <button type="submit">INSERT</button>
-                    </form>
-                </section>
+
+                    <div ng-app="App" class="input">
+                            <hr/>
+                            <div ng-app="angularjs-starter" ng-controller="MainCtrl">
+                                <fieldset data-ng-repeat="choice in choices">
+                                    <label for="prereqtype">Pre requisition</label>
+                                    <input type="text" ng-model="choice.name" id="prereqtype" name="prereqtype"
+                                           placeholder="Enter Checkbox Option">
+                                    <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+                                </fieldset>
+                                <button type="button" class="addfields" ng-click="addNewChoice()">Add fields
+                                </button>
+                                <div id="choicesDisplay">
+                                    {{ choices }}
+                                </div>
+                            </div>
+                    </div>
+
+                    <button type="submit">INSERT</button>
+                </form>
 
 
                 <!--LOAD TRIAL DATA -->
-                <section class="get col-lg-6 success-color">
-                    <h3>Get Data</h3>
-                    <a href="/get-data">LOAD TRIAL DATA</a>
-                    <div>
-                        {{# each items }}
-                            <article class="item">
-                                <div>trialname: {{ this.trialname }}</div>
-                                <div>trialid: {{ this._id }}</div>
-                                <div>researchgroup: {{ this.researchgroup }}</div>
-                            </article>
-                        {{/each}}
-                    </div>
-                </section>
+
+                <!--h3>Get Data</h3>
+                <a href="/get-data">LOAD TRIAL DATA</a>
+                <div>
+                    {{# each items }}
+                        <article class="item">
+                            <div>trialname: {{ this.trialname }}</div>
+                            <div>trialid: {{ this._id }}</div>
+                            <div>researchgroup: {{ this.researchgroup }}</div>
+                        </article>
+                    {{/each}}
+                </div-->
+
 
                 <!--UPDATE TRIAL DATA -->
-                <section class="update col-lg-6 primary-color-dark">
-                    <h3>Update Trial Data</h3>
-                    <form action="/update" method="post">
-                        <div class="input">
-                            <label for="id">trialid</label>
-                            <input type="text" id="id" name="id">
-                        </div>
-                        <div class="input">
-                            <label for="trialname">TrialName</label>
-                            <input type="text" id="trialname" name="trialname">
-                        </div>
-                        <div class="input">
-                            <label for="specialisation">Specialisation</label>
-                            <input type="text" id="specialisation" name="specialisation">
-                        </div>
-                        <button type="submit">UPDATE</button>
-                    </form>
-                </section>
 
-
-                <!--INSERT QUESTIONS -->
-                <h1> INSERT QUESTIONS</h1>
-                <section class="insert danger-color">
-                    <h3>Insert Data</h3>
-                    <form action="/insertq" method="post" role="form" class="col-lg-6 danger-color">
-
-                        <div class="input">Question 1</label>
-                            <label for="question">question</label>
-                            <input type="text" id="question" name="question">
-                        </div>
-
-                        <div class="input">Question Type</label>
-                            <label for="questiontype">questiontype</label>
-                            <select name="questiontype" id="questiontype">
-                                <option value="text">Text</option>
-                                <option value="scroll">Scroll</option>
-                                <option value="checkbox">Checkbox</option>
-                                <option value="picture">Picture</option>
-                            </select>
-                        </div>
-
-
-                        <div ng-app="App" class="container">
-                            <div class="row">
-                                <hr/>
-                                <div ng-app="angularjs-starter" ng-controller="MainCtrl">
-                                    <fieldset data-ng-repeat="choice in choices">
-                                        <input type="text" ng-model="choice.name" id="answer" name="answer"
-                                               placeholder="Enter Checkbox Option">
-                                        <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
-                                    </fieldset>
-                                    <button type="button" class="addfields" ng-click="addNewChoice()">Add fields
-                                    </button>
-                                    <div id="choicesDisplay">
-                                        {{ choices }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit">INSERT</button>
-
-                    </form>
-                </section>
-                <!--LOAD QUESTION DATA -->
-                <section class="get col-lg-6 success-color">
-                    <h3>Get Data</h3>
-                    <a href="/get-data-q">LOAD QUESTION DATA</a>
-                    <div>
-                        {{# each items }}
-                            <article class="item">
-                                <div>researchgroup: {{ this.researchgroup }}</div>
-                                <div>question: {{ this._id }}</div>
-                            </article>
-                        {{/each}}
+                <!--h3>Update Trial Data</h3>
+                <form action="/update" method="post">
+                    <div class="input">
+                        <label for="id">trialid</label>
+                        <input type="text" id="id" name="id">
                     </div>
-                </section>
-                <!--Update Question Data -->
-                <section class="update col-lg-6 primary-color-dark">
-                    <h3>Update Question Data</h3>
-                    <form action="/updateq" method="post">
-                        <div class="input">
-                            <label for="idq">trialid</label>
-                            <input type="text" id="idq" name="idq">
-                        </div>
-                        <div class="input">
-                            <label for="researchgroup">Researchgroup</label>
-                            <input type="text" id="researchgroup" name="researchgroup">
-                        </div>
-                        <button type="submit">UPDATE</button>
-                    </form>
-                </section>
+                    <div class="input">
+                        <label for="trialname">TrialName</label>
+                        <input type="text" id="trialname" name="trialname">
+                    </div>
+                    <div class="input">
+                        <label for="specialisation">Specialisation</label>
+                        <input type="text" id="specialisation" name="specialisation">
+                    </div>
+                    <button type="submit">UPDATE</button>
+                </form-->
+
 
             </div>
         </div>
+
+        <div class="row">
+            <div class=" col-lg-6 col-md-12 col-md-offset-4 center-form">
+                <!--INSERT QUESTIONS -->
+                <h1> INSERT QUESTIONS</h1>
+
+                <h3>Insert Data</h3>
+                <form action="/insertq" method="post" role="form" class="col-lg-6 danger-color">
+
+                    <div class="input">Question 1</label>
+                        <label for="question">question</label>
+                        <input type="text" id="question" name="question">
+                    </div>
+
+                    <div class="input">Question Type</label>
+                        <label for="questiontype">questiontype</label>
+                        <select name="questiontype" id="questiontype">
+                            <option value="text">Text</option>
+                            <option value="scroll">Scroll</option>
+                            <option value="checkbox">Checkbox</option>
+                            <option value="picture">Picture</option>
+                        </select>
+                    </div>
+
+
+                    <div ng-app="App" class="container">
+                        <div class="row">
+                            <hr/>
+                            <div ng-app="angularjs-starter" ng-controller="MainCtrl">
+                                <fieldset data-ng-repeat="choice in choices">
+                                    <input type="text" ng-model="choice.name" id="answer" name="answer"
+                                           placeholder="Enter Checkbox Option">
+                                    <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+                                </fieldset>
+                                <button type="button" class="addfields" ng-click="addNewChoice()">Add fields
+                                </button>
+                                <div id="choicesDisplay">
+                                    {{ choices }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit">INSERT</button>
+                </form>
+
+                <!--LOAD QUESTION DATA -->
+
+                <!--h3>Get Data</h3>
+            <a href="/get-data-q">LOAD QUESTION DATA</a>
+            <!--div>
+                {{# each items }}
+                    <article class="item">
+                        <div>researchgroup: {{ this.researchgroup }}</div>
+                        <div>question: {{ this._id }}</div>
+                    </article>
+                {{/each}}
+            </div-->
+
+                <!--Update Question Data -->
+
+                <!--h3>Update Question Data</h3>
+                <form action="/updateq" method="post">
+                    <div class="input">
+                        <label for="idq">trialid</label>
+                        <input type="text" id="idq" name="idq">
+                    </div>
+                    <div class="input">
+                        <label for="researchgroup">Researchgroup</label>
+                        <input type="text" id="researchgroup" name="researchgroup">
+                    </div>
+                    <button type="submit">UPDATE</button>
+                </form-->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class=" col-lg-6 col-md-12 col-md-offset-4 center-form">
+                <h2>Calendar</h2>
+                <a>Please specify the days for which you wish the trial to be active</a>
+
+
+
+
+            </div>
+        </div>
+
     </div>
 </div>
 

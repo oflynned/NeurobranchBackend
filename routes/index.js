@@ -162,7 +162,7 @@ router.post('/insert',upload.any(), function (req, res, next){
     console.log(req.body);
 
     var item = {
-        questionrelation: req.body.questionrelation,
+        questionrelation: req.body._id,
         trialname: req.body.trialname,
         trialid: req.body.trialid,
         description: req.body.description,
@@ -184,6 +184,9 @@ router.post('/insert',upload.any(), function (req, res, next){
             prereqtype: req.body.prereqtype
         }
     };
+    console.log('////////////////////');
+    console.log(item);
+    console.log('////////////////////');
 
     var data = new UserData(item);
     data.save();
@@ -197,7 +200,7 @@ router.post('/insert',upload.any(), function (req, res, next){
 router.post('/insertq', function (req, res, next) {
     var itemq = {
         questions: {
-            /*trialrelation:userDataSchema._id,*/
+            trialrelation:userDataSchema._id,
             question: req.body.question,
             questiontype: req.body.questiontype,
             options: {
@@ -206,6 +209,9 @@ router.post('/insertq', function (req, res, next) {
         }
     /*   need to look over again   */
     };
+    console.log('********************');
+    console.log(itemq);
+    console.log('*********************');
     var qdata = new QuestionData(itemq);
     qdata.save();
     console.log(qdata);
