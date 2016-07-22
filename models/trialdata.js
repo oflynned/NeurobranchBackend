@@ -77,3 +77,7 @@ var trialData = module.exports = mongoose.model('trialdata', trialdataSchema, 't
 module.exports.getTrialData = function (callback, limit) {
     trialData.find(callback).limit(limit);
 };
+
+module.exports.getRandomTrial = function(limit, callback){
+    trialData.find().skip(Math.floor(Math.random() * trialData.count())).limit(limit).exec(callback);
+};

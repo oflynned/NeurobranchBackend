@@ -3,13 +3,53 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
+var trialData = require('../models/trialdata');
+
+var MAX_LENGTH = 200;
+
+function trimString(input, length) {
+    var trimmedString = input.substr(0, length);
+    return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "...";
+}
 
 //main
 router.get('/mainpage', function (req, res) {
-    res.render('mainpage', {
-        active_main: "true"
-    });
+    generateFrontNews(res);
 });
+
+function generateRow(rowId, content) {
+    return '<div class="row flex-row">' +
+            content +
+            '</div>'
+}
+
+function generateTile(trialName, description, image) {
+    return '<div class="col-md-4">' +
+        '<div class="thumbnail">' +
+        '<img src="' + image + '">' +
+        '<div class="caption">' +
+        '<h4>' + trialName + '</h4>' +
+        '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+}
+
+function generateFrontNews(res) {
+    trialData.getRandomTrial(3, function(err, data) {
+        var element = "";
+        var rowId = 0;
+        for (var i = 0; i < data.length; i++) {
+            element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
+        }
+        element = generateRow(null, element);
+        res.render('mainpage', {
+            active_dash: "true",
+            active_main: "true",
+            news_content: element
+        });
+    })
+}
 
 //news
 router.get('/news', function (req, res) {
@@ -158,12 +198,6 @@ router.get('/cookiepolicy', function(req, res) {
 
 router.get('/privacypolicy', function(req, res) {
     res.render('privacypolicy');
-});
-
-
-//receiving responses
-router.post('/response', function (req, res) {
-    //convert json to a variable number of arguments from array
 });
 
 passport.use(new LocalStrategy(

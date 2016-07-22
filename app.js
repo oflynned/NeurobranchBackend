@@ -138,6 +138,15 @@ app.get('/api/responsedata/epoch/:epochid', function (req, res) {
     })
 });
 
+
+app.get('/api/randomrecords', function(req, res, next) {
+    trialData.getRandomTrial(3, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+
 app.post('/api/responsedata', function (req, res, next) {
     var data = "";
 

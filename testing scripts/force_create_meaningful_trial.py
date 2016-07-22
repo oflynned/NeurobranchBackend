@@ -25,7 +25,7 @@ def random_name():
 
 dest = str(sys.argv[1])
 iterations = int(sys.argv[2])
-url = 'http://ec2-54-229-150-246.eu-west-1.compute.amazonaws.com/insert'
+url = 'http://localhost:3000/insert' #'http://ec2-54-229-150-246.eu-west-1.compute.amazonaws.com/insert'
 
 trial_type = ['pharma', 'biodevice', 'food']
 organisations = ['TCD', 'UCD', 'DCU', 'UCC', 'UL', 'Queens University', 'RCSI', 'Tallaght Hospital', 'Adelaide']

@@ -236,6 +236,7 @@ router.post('/updateq', function (req, res, next) {
     });
     res.redirect('/');
 });
+
 /* querry for question relation  to trial*/
 /*QuestionData.findOne({title: title}).populate('trialrelation').exec(function (err , qr ) {
     if(err)
@@ -289,9 +290,6 @@ router.post('/deleteq', function (req, res, next) {
     res.redirect('/');
 });
 
-
-
-
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
@@ -300,7 +298,7 @@ function ensureAuthenticated(req, res, next) {
     }
 }
 
-function generateTile(trialName, description, image, id, row) {
+function generateTile(trialName, description, image) {
     return '<div class="col-md-4">' +
         '<div class="thumbnail">' +
         '<img src="' + image + '">' +
@@ -311,6 +309,7 @@ function generateTile(trialName, description, image, id, row) {
         '</div>' +
         '</div>'
 }
+
 function generateDashboard(res) {
     trialData.getTrialData(function (err, data) {
         var element = "";
