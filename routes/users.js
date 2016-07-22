@@ -44,7 +44,6 @@ function generateFrontNews(res) {
         }
         element = generateRow(null, element);
         res.render('mainpage', {
-            active_dash: "true",
             active_main: "true",
             news_content: element
         });

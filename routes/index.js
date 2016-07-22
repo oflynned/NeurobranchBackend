@@ -298,13 +298,26 @@ function ensureAuthenticated(req, res, next) {
     }
 }
 
+function generateRow(id, content) {
+    return '<div class="row flex-row" id="' + id + '">' +
+            content +
+            '</div>';
+}
+
+var MAX_LENGTH = 300;
+
+function trimString(input, length) {
+    var trimmedString = input.substr(0, length);
+    return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "...";
+}
+
 function generateTile(trialName, description, image) {
-    return '<div class="col-md-4">' +
+    return '<div class="col-md-3">' +
         '<div class="thumbnail">' +
         '<img src="' + image + '">' +
         '<div class="caption">' +
         '<h4>' + trialName + '</h4>' +
-        '<p>' + description + '</p>' +
+        '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
         '</div>' +
         '</div>' +
         '</div>'
@@ -314,13 +327,18 @@ function generateDashboard(res) {
     trialData.getTrialData(function (err, data) {
         var element = "";
         var rowId = 0;
+        var container = "";
         for (var i = 0; i < data.length; i++) {
-            element += generateTile(data[i]['trialname'], data[i]['description'], 'http://placehold.it/500x250/EEE',
-                data[i]['_id'], null); //row id final param
+            if(i%4 == 0 && i>0) {
+                container += generateRow(rowId, element);
+                rowId++;
+                element = "";
+            }
+            element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
         }
         res.render('dashboard', {
             active_dash: "true",
-            content: element
+            content: container
         });
     });
 }
