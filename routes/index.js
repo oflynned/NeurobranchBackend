@@ -119,7 +119,7 @@ router.get('/users/create_trial', ensureAuthenticated, function (req, res) {
 router.get('/users/create_question', ensureAuthenticated, function (req, res) {
     UserData.find()
         .then(function (doc) {
-            res.render('create_trial',
+            res.render('create_question',
                 {
                     items: doc,
                     user: req.user
