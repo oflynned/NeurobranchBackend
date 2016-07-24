@@ -115,6 +115,18 @@ router.get('/users/create_trial', ensureAuthenticated, function (req, res) {
         });
 });
 
+//display username in create_question
+router.get('/users/create_question', ensureAuthenticated, function (req, res) {
+    UserData.find()
+        .then(function (doc) {
+            res.render('create_question',
+                {
+                    items: doc,
+                    user: req.user
+                });
+        });
+});
+
 //display username in settings
 router.get('/users/settings', ensureAuthenticated, function (req, res) {
     res.render('settings',
@@ -191,7 +203,15 @@ router.post('/insert', upload.any(), function (req, res, next) {
     var data = new UserData(item);
     data.save();
     console.log(data);
-    res.redirect('/users/create_trial');
+   /* UserData.find()
+        .then(function (doc) {
+            res.redirect('/users/create_question',
+                {
+                    items: doc,
+                    user: req.user
+                });
+        });*/
+    res.redirect('/users/create_question');
 
 });
 
@@ -220,7 +240,6 @@ router.post('/insertq', function (req, res, next) {
 
 
 ///question update
-
 router.post('/updateq', function (req, res, next) {
     var idq = req.body.idq;
 
@@ -237,7 +256,7 @@ router.post('/updateq', function (req, res, next) {
     res.redirect('/');
 });
 
-/* querry for question relation  to trial*/
+/* query for question relation  to trial*/
 /*QuestionData.findOne({title: title}).populate('trialrelation').exec(function (err , qr ) {
  if(err)
  return __handleError(err);
