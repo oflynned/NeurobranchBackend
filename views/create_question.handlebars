@@ -2,7 +2,6 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
 
-
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
     <script type="text/javascript" src="/js/script.js"></script>
 </head>
@@ -20,6 +19,16 @@
             <div class=" col-lg-6 col-md-12 col-md-offset-4 center-form">
                 <!--INSERT QUESTIONS -->
                 <h1> INSERT QUESTIONS</h1>
+                <h3> Questions for </h3>
+                <div>
+                {{# each items }}
+                    <article class="item">
+                        <div>trialname: {{ this.trialname }}</div>
+                        <div>trialid: {{ this._id }}</div>
+                        <div>researchgroup: {{ this.researchgroup }}</div>
+                    </article>
+                {{/each}}
+                </div>
 
                 <h3>Insert Data</h3>
                 <form action="/insertq" method="post" role="form" class="col-lg-6 danger-color">
