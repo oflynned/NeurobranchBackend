@@ -14,13 +14,13 @@ function trimString(input, length) {
 
 //main
 router.get('/mainpage', function (req, res) {
-    generateFrontNews(res);
+    generateFrontNews(4, res);
 });
 
 function generateRow(rowId, content) {
     return '<div class="row flex-row" id="' + rowId + '">' +
-            content +
-            '</div>'
+        content +
+        '</div>'
 }
 
 function generateTile(trialName, description, image) {
@@ -35,21 +35,21 @@ function generateTile(trialName, description, image) {
         '</div>'
 }
 
-function generateFrontNews(res) {
-    trialData.getRandomTrial(8, function(err, data) {
+function generateFrontNews(limit, res) {
+    trialData.getRandomTrial(limit, function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
-        var i=0;
+        var i = 0;
         for (i; i < data.length; i++) {
-            if(i%4 == 0 && i>0) {
+            if (i % 4 == 0 && i > 0) {
                 container += generateRow(rowId, element);
                 rowId++;
                 element = "";
             }
             element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
 
-            if(i==data.length-1)
+            if (i == data.length - 1)
                 container += generateRow(rowId, element);
         }
         res.render('mainpage', {
@@ -154,6 +154,54 @@ router.get('/dashboard', ensureAuthenticated, function (req, res) {
     });
 });
 
+router.get('/trials/:trialid', function (req, res) {
+    trialData.getTrialById(req.params.trialid, function (err, trialAttributes) {
+        if (err) {
+            throw err;
+        }
+
+        //convert epoch
+        var start = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        start.setUTCSeconds(trialAttributes.starttime);
+
+        var end = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        end.setUTCSeconds(trialAttributes.endtime);
+
+        res.render('trial', {
+            trialName: trialAttributes.trialname,
+            trialDescription: trialAttributes.description,
+            trialType: trialAttributes.trialtype,
+            organisation: trialAttributes.organisation,
+            specialisation: trialAttributes.specialisation,
+            startTime: start,
+            endTime: end,
+            notificationFrequency: trialAttributes.notificationfrequency,
+            imageResource: trialAttributes.imageresource,
+            active_dash: "true"
+        });
+    })
+});
+
+Date.prototype.customFormat = function(formatString){
+    var YYYY,YY,MMMM,MMM,MM,M,DDDD,DDD,DD,D,hhhh,hhh,hh,h,mm,m,ss,s,ampm,AMPM,dMod,th;
+    YY = ((YYYY=this.getFullYear())+"").slice(-2);
+    MM = (M=this.getMonth()+1)<10?('0'+M):M;
+    MMM = (MMMM=["January","February","March","April","May","June","July","August","September","October","November","December"][M-1]).substring(0,3);
+    DD = (D=this.getDate())<10?('0'+D):D;
+    DDD = (DDDD=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][this.getDay()]).substring(0,3);
+    th=(D>=10&&D<=20)?'th':((dMod=D%10)==1)?'st':(dMod==2)?'nd':(dMod==3)?'rd':'th';
+    formatString = formatString.replace("#YYYY#",YYYY).replace("#YY#",YY).replace("#MMMM#",MMMM).replace("#MMM#",MMM).replace("#MM#",MM).replace("#M#",M).replace("#DDDD#",DDDD).replace("#DDD#",DDD).replace("#DD#",DD).replace("#D#",D).replace("#th#",th);
+    h=(hhh=this.getHours());
+    if (h==0) h=24;
+    if (h>12) h-=12;
+    hh = h<10?('0'+h):h;
+    hhhh = hhh<10?('0'+hhh):hhh;
+    AMPM=(ampm=hhh<12?'am':'pm').toUpperCase();
+    mm=(m=this.getMinutes())<10?('0'+m):m;
+    ss=(s=this.getSeconds())<10?('0'+s):s;
+    return formatString.replace("#hhhh#",hhhh).replace("#hhh#",hhh).replace("#hh#",hh).replace("#h#",h).replace("#mm#",mm).replace("#m#",m).replace("#ss#",ss).replace("#s#",s).replace("#ampm#",ampm).replace("#AMPM#",AMPM);
+};
+
 //create trial
 router.get('/create_trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial', {
@@ -176,35 +224,35 @@ router.get('/help', ensureAuthenticated, function (req, res) {
 });
 
 //footer links
-router.get('/goals', function(req, res) {
+router.get('/goals', function (req, res) {
     res.render('goals');
 });
 
-router.get('/aboutneurobranch', function(req, res) {
+router.get('/aboutneurobranch', function (req, res) {
     res.render('aboutneurobranch');
 });
 
-router.get('/aboutglassbyte', function(req, res) {
+router.get('/aboutglassbyte', function (req, res) {
     res.render('aboutglassbyte');
 });
 
-router.get('/faq', function(req, res) {
+router.get('/faq', function (req, res) {
     res.render('faq');
 });
 
-router.get('/support', function(req, res) {
+router.get('/support', function (req, res) {
     res.render('support');
 });
 
-router.get('/termsofuse', function(req, res) {
+router.get('/termsofuse', function (req, res) {
     res.render('termsofuse');
 });
 
-router.get('/cookiepolicy', function(req, res) {
+router.get('/cookiepolicy', function (req, res) {
     res.render('cookiepolicy');
 });
 
-router.get('/privacypolicy', function(req, res) {
+router.get('/privacypolicy', function (req, res) {
     res.render('privacypolicy');
 });
 

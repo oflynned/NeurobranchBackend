@@ -26,3 +26,14 @@
         display: flex;
     }
 }
+
+.parent {
+    display: table;
+    table-layout: fixed;
+}
+
+.child {
+    display:table-cell;
+    vertical-align:middle;
+    text-align:center;
+}
