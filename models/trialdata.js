@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-
+var random = require('mongoose-query-random');
 
 var trialdataSchema = mongoose.Schema({
         trialname: {
@@ -79,5 +79,5 @@ module.exports.getTrialData = function (callback, limit) {
 };
 
 module.exports.getRandomTrial = function(limit, callback){
-    trialData.find().skip(Math.floor(Math.random() * trialData.count())).limit(limit).exec(callback);
+    trialData.find().random(limit, true, callback);
 };

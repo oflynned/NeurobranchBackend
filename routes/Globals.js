@@ -3,7 +3,7 @@
  */
 
 //accessing addresses
-exports.PORT = 3000;
+exports.PORT = 80;
 exports.DB_PORT = 27017;
 exports.ADDRESS = "localhost";
 

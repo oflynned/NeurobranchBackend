@@ -18,13 +18,13 @@ router.get('/mainpage', function (req, res) {
 });
 
 function generateRow(rowId, content) {
-    return '<div class="row flex-row">' +
+    return '<div class="row flex-row" id="' + rowId + '">' +
             content +
             '</div>'
 }
 
 function generateTile(trialName, description, image) {
-    return '<div class="col-md-4">' +
+    return '<div class="col-md-3">' +
         '<div class="thumbnail">' +
         '<img src="' + image + '">' +
         '<div class="caption">' +
@@ -36,16 +36,25 @@ function generateTile(trialName, description, image) {
 }
 
 function generateFrontNews(res) {
-    trialData.getRandomTrial(3, function(err, data) {
+    trialData.getRandomTrial(8, function(err, data) {
         var element = "";
         var rowId = 0;
-        for (var i = 0; i < data.length; i++) {
+        var container = "";
+        var i=0;
+        for (i; i < data.length; i++) {
+            if(i%4 == 0 && i>0) {
+                container += generateRow(rowId, element);
+                rowId++;
+                element = "";
+            }
             element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
+
+            if(i==data.length-1)
+                container += generateRow(rowId, element);
         }
-        element = generateRow(null, element);
         res.render('mainpage', {
             active_main: "true",
-            news_content: element
+            news_content: container
         });
     })
 }

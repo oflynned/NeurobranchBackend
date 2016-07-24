@@ -1,13 +1,11 @@
-from urlparse import urlparse
+import datetime
+import random
+import sys
+import time
 from urllib import urlencode
 from urllib2 import Request, urlopen
+
 from loremipsum import *
-import sys
-import random
-import time
-import _json
-import json
-import datetime
 
 
 def get_random_dates(start, end):
@@ -25,10 +23,22 @@ def random_name():
 
 dest = str(sys.argv[1])
 iterations = int(sys.argv[2])
-url = 'http://localhost:3000/insert' #'http://ec2-54-229-150-246.eu-west-1.compute.amazonaws.com/insert'
 
-trial_type = ['pharma', 'biodevice', 'food']
-organisations = ['TCD', 'UCD', 'DCU', 'UCC', 'UL', 'Queens University', 'RCSI', 'Tallaght Hospital', 'Adelaide']
+print str(dest)
+print str(dest) == "local"
+print str(dest) == "aws"
+
+if str(dest) == "local":
+    url = 'http://localhost:80/insert'
+else:
+    url = 'http://ec2-54-229-150-246.eu-west-1.compute.amazonaws.com/insert'
+
+trial_type = ['pharma', 'biodevice', 'food', 'behavioural']
+organisations = ['Trinity College Dublin', 'University College Dublin', 'Dublin City University',
+                 'University College Cork', 'University of Limerick',
+                 'Royal College of Surgeons Ireland', 'Beaumont Hospital', 'Bon Secours Hospital',
+                 'Mater Misercordiae University Hospital', 'Coombe Women\'s Hospital', 'The Rotunda Maternity Hospital',
+                 'Adelaide and Meath Hospital, Dublin, incorporating the National Children\'s Hospital']
 
 ONE_MONTH = long(1000 * 60 * 60 * 24 * 30 * 6)
 current_time = long(time.time() * 1000)

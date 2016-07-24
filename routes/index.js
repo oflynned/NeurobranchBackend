@@ -307,8 +307,16 @@ function generateRow(id, content) {
 var MAX_LENGTH = 300;
 
 function trimString(input, length) {
-    var trimmedString = input.substr(0, length);
-    return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "...";
+    if(input != null) {
+        var trimmedString = input.substr(0, length);
+        trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+        if(trimmedString.charAt(trimmedString.length  -1) == ".") {
+            return trimmedString +  "..";
+        } else {
+            return trimmedString + "...";
+        }
+    }
+    return "";
 }
 
 function generateTile(trialName, description, image) {
@@ -324,7 +332,7 @@ function generateTile(trialName, description, image) {
 }
 
 function generateDashboard(res) {
-    trialData.getTrialData(function (err, data) {
+    trialData.getRandomTrial(100, function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
