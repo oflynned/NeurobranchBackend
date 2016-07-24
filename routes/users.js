@@ -161,6 +161,13 @@ router.get('/create_trial', ensureAuthenticated, function (req, res) {
     });
 });
 
+//create questions
+router.get('/create_question', ensureAuthenticated, function (req, res) {
+    res.render('create_question', {
+        active_dash: "true"
+    });
+});
+
 //settings
 router.get('/settings', ensureAuthenticated, function (req, res) {
     res.render('settings', {

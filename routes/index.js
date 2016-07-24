@@ -191,7 +191,7 @@ router.post('/insert',upload.any(), function (req, res, next){
     var data = new UserData(item);
     data.save();
     console.log(data);
-    res.redirect('/users/create_trial');
+    res.redirect('/users/create_question');
 
 });
 

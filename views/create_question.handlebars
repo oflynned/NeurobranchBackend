@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+    <script type="text/javascript" src="/js/script.js"></script>
+</head>
+<body>
+
+
+<div id="page-content-wrapper">
+
+    <script src="/node_modules/angular/angular.js"></script>
+    <script type="text/javascript" src="/js/addInput.js"></script>
+    <script type="text/javascript" scr="/js/generate_boxes.js"></script>
+    <div class="container-fluid content-main">
+        <!-- TRial stuff here -->
+        <div class="row">
+            <div class=" col-lg-6 col-md-12 col-md-offset-4 center-form">
+                <!--INSERT QUESTIONS -->
+                <h1> INSERT QUESTIONS</h1>
+
+                <h3>Insert Data</h3>
+                <form action="/insertq" method="post" role="form" class="col-lg-6 danger-color">
+
+                    <div class="input">Question 1</label>
+                        <label for="question">question</label>
+                        <input type="text" id="question" name="question">
+                    </div>
+
+                    <div class="input">Question Type</label>
+                        <label for="questiontype">questiontype</label>
+                        <select name="questiontype" id="questiontype">
+                            <option value="text">Text</option>
+                            <option value="scroll">Scroll</option>
+                            <option value="checkbox">Checkbox</option>
+                            <option value="picture">Picture</option>
+                        </select>
+                    </div>
+
+
+                    <div ng-app="App" class="container">
+                        <div class="row">
+                            <hr/>
+                            <div ng-app="angularjs-starter" ng-controller="MainCtrl">
+                                <fieldset data-ng-repeat="choice in choices">
+                                    <input type="text" ng-model="choice.name" id="answer" name="answer"
+                                           placeholder="Enter Checkbox Option">
+                                    <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+                                </fieldset>
+                                <button type="button" class="addfields" ng-click="addNewChoice()">Add fields
+                                </button>
+                                <div id="choicesDisplay">
+                                    {{ choices }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit">INSERT</button>
+                </form>
+
+                <!--LOAD QUESTION DATA -->
+
+                <!--h3>Get Data</h3>
+            <a href="/get-data-q">LOAD QUESTION DATA</a>
+            <!--div>
+                {{# each items }}
+                    <article class="item">
+                        <div>researchgroup: {{ this.researchgroup }}</div>
+                        <div>question: {{ this._id }}</div>
+                    </article>
+                {{/each}}
+            </div-->
+
+                <!--Update Question Data -->
+
+                <!--h3>Update Question Data</h3>
+                <form action="/updateq" method="post">
+                    <div class="input">
+                        <label for="idq">trialid</label>
+                        <input type="text" id="idq" name="idq">
+                    </div>
+                    <div class="input">
+                        <label for="researchgroup">Researchgroup</label>
+                        <input type="text" id="researchgroup" name="researchgroup">
+                    </div>
+                    <button type="submit">UPDATE</button>
+                </form-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<!-- scripts -->
+</html>
