@@ -7,8 +7,6 @@
     <script type="text/javascript" src="/js/script.js"></script>
 </head>
 <body>
-
-
 <div id="page-content-wrapper">
 
     <script src="/node_modules/angular/angular.js"></script>
@@ -17,24 +15,23 @@
     <div class="container-fluid content-main">
         <!-- TRial stuff here -->
         <div class="row">
-            <div>
-                <h1> New Trial</h1>
-            </div>
-            <div class=" col-lg-6 col-md-12 col-md-offset-4 center-form">
+            <div class="col-sm-6 col-md-4 col-md-offset-4 center-form">
+                <div class="account-wall center-form">
+                    <img class="profile-img" src="/img/Neurobranch1.jpg"
+                         alt="">
 
-                <h3>Insert Trial Data</h3>
-                <form action="/insert" method="post" role="form" class="col-lg-6 danger-color">
+                <form action="/insert" method="post" role="form" class="form-signin">
                     <div class="form-group ">
-                        <label for="trialname">TrialName</label>
-                        <input type="text" id="trialname" name="trialname">
+                        <label for="trialname">Trial Name</label>
+                        <input type="text" id="trialname" name="trialname" placeholder="Trial Name">
                     </div>
                     <div class="input">
                         <label for="description">Description</label>
-                        <input type="text" id="description" name="description">
+                        <input type="text" id="description" name="description" placeholder="Trial Description">
                     </div>
 
-                    <div class="input">Trial Type</label>
-                        <label for="trialtype">trialtype</label>
+                    <div class="input"></label>
+                        <label for="trialtype">Trial Type</label>
                         <select name="trialtype" id="trialtype">
                             <option value="pharmaceutical">Pharma</option>
                             <option value="biomedicaldevice">Bio-Device</option>
@@ -45,35 +42,35 @@
 
                     <div class="input">
                         <label for="researchgroup"> Research Group</label>
-                        <input type="text" id="researchgroup" name="researchgroup">
+                        <input type="text" id="researchgroup" name="researchgroup" placeholder="Research Group">
                     </div>
 
                     <div class="input">
                         <label for="specialisation">Specialisation</label>
-                        <input type="text" id="specialisation" name="specialisation">
+                        <input type="text" id="specialisation" name="specialisation" placeholder="Specialisation">
                     </div>
 
                     <div class="input">
-                        <label for="starttime">StartTime</label>
+                        <label for="starttime">Start Time</label>
                         <input type="datetime-local" id="starttime" name="starttime">
                     </div>
                     <div class="input">
-                        <label for="endtime">EndTime</label>
+                        <label for="endtime">End Time</label>
                         <input type="datetime-local" id="endtime" name="endtime">
                     </div>
                     <div class="input">
-                        <label for="timeperiodfrequency">TimePeriodFrequency</label>
+                        <label for="timeperiodfrequency">Time Period Frequency</label>
                         <input type="number" min="5" max="30" step="1" value ="1" id="timeperiodfrequency" name="timeperiodfrequency">
                     </div>
 
 
                     <div class="input">
-                        <label for="notificationfrequency">NotificationFrequency</label>
+                        <label for="notificationfrequency">Notification Frequency</label>
                         <input type="number" min="5" max="30" step="1" value ="1" id="notificationfrequency" name="notificationfrequency">
                     </div>
                     <div class="input">
-                        <label for="imageresource">ImageResource</label>
-                        <input type="file" id="imageresource" name="imageresource">
+                        <label for="imageresource">Trial Image</label>
+                        <input type="file" id="imageresource" name="imageresource" placeholder="Trial Image">
                     </div>
 
                     <div class="input">
@@ -86,27 +83,22 @@
                         <input type="text" id="condition" name="condition">
                     </div>
 
-
                     <div ng-app="App" class="input">
                             <hr/>
                             <div ng-app="angularjs-starter" ng-controller="MainCtrl">
                                 <fieldset data-ng-repeat="choice in choices">
-                                    <label for="prereqtype">Pre requisition</label>
+                                    <label for="prereqtype">Inclusion Criteria</label>
                                     <input type="text" ng-model="choice.name" id="prereqtype" name="prereqtype"
-                                           placeholder="Enter Checkbox Option">
+                                           placeholder="Enter Inclusion Option">
                                     <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
                                 </fieldset>
-                                <button type="button" class="addfields" ng-click="addNewChoice()">Add fields
-                                </button>
-                                <div id="choicesDisplay">
-                                    {{ choices }}
-                                </div>
+                                <button type="button" class="addfields" ng-click="addNewChoice()">+</button>
                             </div>
                     </div>
 
                     <button type="submit">INSERT</button>
                 </form>
-
+                </div>
 
                 <!--LOAD TRIAL DATA -->
 
