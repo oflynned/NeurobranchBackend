@@ -14,7 +14,7 @@ var Globals = require("./Globals.js");
 //_id used to reference back trial, question relation to specify question schema relation
 var userDataSchema = new Schema(
     {
-        questionrelation:[{type:Schema.Types.ObjectId, ref:'QuestionData'}],
+        questionrelation: [{type: Schema.Types.ObjectId, ref: 'QuestionData'}],
         trialname: String,
         trialid: String,
         description: String,
@@ -45,7 +45,7 @@ var UserData = mongoose.model('UserData', userDataSchema);
 //creator used to reference schema that created the question
 var questionDataSchema = new Schema(
     {
-        trialrelation:{type:Number, ref:'UserData'},
+        trialrelation: {type: Number, ref: 'UserData'},
         questions: [{
             question: String,
             questiontype: String,
@@ -94,7 +94,7 @@ router.get('/', ensureAuthenticated, function (req, res) {
 
 //dashboard
 router.get('/users/dashboard', function (req, res) {
-    generateDashboard(res);
+    generateDashboard(50, res);
 });
 
 //display username in create_trial
@@ -169,7 +169,7 @@ router.get('/get-data-q', function (req, res, next) {
 });
 
 //insert for trials//
-router.post('/insert',upload.any(), function (req, res, next){
+router.post('/insert', upload.any(), function (req, res, next) {
 
     console.log(req.body);
 
@@ -220,14 +220,14 @@ router.post('/insert',upload.any(), function (req, res, next){
 router.post('/insertq', function (req, res, next) {
     var itemq = {
         questions: {
-            trialrelation:userDataSchema._id,
+            trialrelation: userDataSchema._id,
             question: req.body.question,
             questiontype: req.body.questiontype,
             options: {
                 answer: req.body.answer
             }
         }
-    /*   need to look over again   */
+        /*   need to look over again   */
     };
     console.log('********************');
     console.log(itemq);
@@ -255,6 +255,14 @@ router.post('/updateq', function (req, res, next) {
     });
     res.redirect('/');
 });
+
+/* query for question relation  to trial*/
+/*QuestionData.findOne({title: title}).populate('trialrelation').exec(function (err , qr ) {
+ if(err)
+ return __handleError(err);
+ console.log("trial associated with question is  %s", qr.trialrelation.trialname);
+ });*/
+
 
 router.post('/update', function (req, res, next) {
 
@@ -311,18 +319,18 @@ function ensureAuthenticated(req, res, next) {
 
 function generateRow(id, content) {
     return '<div class="row flex-row" id="' + id + '">' +
-            content +
-            '</div>';
+        content +
+        '</div>';
 }
 
 var MAX_LENGTH = 300;
 
 function trimString(input, length) {
-    if(input != null) {
+    if (input != null) {
         var trimmedString = input.substr(0, length);
         trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
-        if(trimmedString.charAt(trimmedString.length  -1) == ".") {
-            return trimmedString +  "..";
+        if (trimmedString.charAt(trimmedString.length - 1) == ".") {
+            return trimmedString + "..";
         } else {
             return trimmedString + "...";
         }
@@ -330,25 +338,25 @@ function trimString(input, length) {
     return "";
 }
 
-function generateTile(trialName, description, image) {
+function generateTile(trialName, description, image, trialid) {
     return '<div class="col-md-3">' +
         '<div class="thumbnail">' +
         '<img src="' + image + '">' +
         '<div class="caption">' +
-        '<h4>' + trialName + '</h4>' +
+        '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
         '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
         '</div>' +
         '</div>' +
         '</div>'
 }
 
-function generateDashboard(res) {
-    trialData.getRandomTrial(100, function (err, data) {
+function generateDashboard(limit, res) {
+    trialData.getRandomTrial(limit, function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
         for (var i = 0; i < data.length; i++) {
-            if(i%4 == 0 && i>0) {
+            if (i % 4 == 0 && i > 0) {
                 container += generateRow(rowId, element);
                 rowId++;
                 element = "";
@@ -360,6 +368,7 @@ function generateDashboard(res) {
             content: container
         });
     });
+
 }
 
 module.exports = router;
