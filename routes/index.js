@@ -207,8 +207,16 @@ router.post('/insert', upload.any(), function ( req, res, err) {
 
     data.save(function (err) {
        if (err) return __handleError(err);
+
+        var question1 = new QuestionData({
+            trialrelation:data._id
+        });
+
+        question1.save();
+
     });
     console.log(data);
+    res.redirect('/users/create_question');
 
    /* UserData.find()
         .then(function (doc) {
@@ -218,8 +226,6 @@ router.post('/insert', upload.any(), function ( req, res, err) {
                     user: req.user
                 });
         });*/
-    res.redirect('/users/create_question');
-
 });
 
 //insert for questions////more than one question//
