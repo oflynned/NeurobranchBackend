@@ -41,8 +41,7 @@ var userDataSchema = new Schema(
         safe: true
     }
 );
-var UserData = mongoose.model('UserData', userDataSchema);
-//creator used to reference schema that created the question
+
 var questionDataSchema = new Schema(
     {
         trialrelation: {type: Number, ref: 'UserData'},
@@ -59,7 +58,11 @@ var questionDataSchema = new Schema(
         safe: true
     }
 );
+
 var QuestionData = mongoose.model('QuestionData', questionDataSchema);
+var UserData = mongoose.model('UserData', userDataSchema);
+//creator used to reference schema that created the question
+
 
 var responseDataSchema = new Schema(
     {
@@ -169,7 +172,7 @@ router.get('/get-data-q', function (req, res, next) {
 });
 
 //insert for trials//
-router.post('/insert', upload.any(), function (req, res, next) {
+router.post('/insert', upload.any(), function ( req, res, err) {
 
     console.log(req.body);
 
@@ -201,8 +204,12 @@ router.post('/insert', upload.any(), function (req, res, next) {
     console.log('////////////////////');
 
     var data = new UserData(item);
-    data.save();
+
+    data.save(function (err) {
+       if (err) return __handleError(err);
+    });
     console.log(data);
+
    /* UserData.find()
         .then(function (doc) {
             res.redirect('/users/create_question',
