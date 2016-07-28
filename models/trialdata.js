@@ -70,16 +70,23 @@ var trialdataSchema = mongoose.Schema({
                 required: true
             }
         }
-
 });
 
 var trialData = module.exports = mongoose.model('trialdata', trialdataSchema, 'trialdata');
 
-module.exports.getTrialData = function (callback, limit) {
-    trialData.find(callback).limit(limit);
+module.exports.getTrialsBelongingToUser = function(callback) {
+    trialData.find({'researchername':researchername}, callback).sort({$natural:-1})
 };
 
-module.exports.getTrialById= function(trialid, callback){
+module.exports.getTrialsByUserId = function (callback, limit) {
+    trialData.find(callback).sort({$natural:-1}).limit(limit);
+};
+
+module.exports.getTrialData = function (callback, limit) {
+    trialData.find(callback).skip(trialData - limit).sort({$natural:-1}).limit(limit);
+};
+
+module.exports.getTrialById = function(trialid, callback){
     trialData.findOne({'_id':trialid}, callback);
 };
 

@@ -51,7 +51,7 @@
 }
 .profile-img
 {
-    height: 128px;
+    height: 192px;
     margin: 0 auto 0;
     display: block;
     -moz-border-radius: 50%;
@@ -78,4 +78,56 @@
 
 .btn {
     margin-top: 15px;
+}
+
+.description-box {
+    resize: vertical;
+    height: 100%;
+}
+
+.description-box-fill {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-signin
+{
+    max-width: inherit;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-create-trial-fields {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.form-create-trial .form-create-trial-heading, .form-create-trial .checkbox
+{
+    margin-bottom: 10px;
+}
+.form-create-trial .checkbox
+{
+    font-weight: normal;
+}
+.form-create-trial .form-control
+{
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.form-create-trial .form-control:focus
+{
+    z-index: 2;
+}
+.form-create-trial input[type="text"], input[type="password"], input[type="email"]
+{
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }

@@ -83,21 +83,9 @@ var responseDataSchema = new Schema(
 );
 var ResponseData = mongoose.model('ResponseData', responseDataSchema);
 
-router.get('/', ensureAuthenticated, function (req, res) {
-    UserData.find()
-        .then(function (doc) {
-            res.render('index',
-                {
-                    items: doc,
-                    user: req.user,
-                    active_main: "true"
-                });
-        });
-});
-
 //dashboard
 router.get('/users/dashboard', function (req, res) {
-    generateDashboard(50, res);
+    generateDashboard(res);
 });
 
 //display username in create_trial
@@ -363,25 +351,28 @@ function generateTile(trialName, description, image, trialid) {
         '</div>'
 }
 
-function generateDashboard(limit, res) {
-    trialData.getRandomTrial(limit, function (err, data) {
+function generateDashboard(res) {
+    trialData.getTrialsByUserId(function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
-        for (var i = 0; i < data.length; i++) {
+        var i = 0;
+        for (i; i < data.length; i++) {
             if (i % 4 == 0 && i > 0) {
                 container += generateRow(rowId, element);
                 rowId++;
                 element = "";
             }
             element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
+
+            if (i == data.length - 1)
+                container += generateRow(rowId, element);
         }
         res.render('dashboard', {
-            active_dash: "true",
-            content: container
-        });
+            active_main: "true",
+            news_content: container
+        }, 8);
     });
-
 }
 
 module.exports = router;
