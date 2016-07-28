@@ -74,12 +74,12 @@ var trialdataSchema = mongoose.Schema({
 
 var trialData = module.exports = mongoose.model('trialdata', trialdataSchema, 'trialdata');
 
-module.exports.getTrialsBelongingToUser = function(callback) {
-    trialData.find({'researchername':researchername}, callback).sort({$natural:-1})
+module.exports.getTrialsBelongingToUser = function(username, callback) {
+    trialData.find({'researchername':username}, callback).sort({$natural:-1})
 };
 
-module.exports.getTrialsByUserId = function (callback, limit) {
-    trialData.find(callback).sort({$natural:-1}).limit(limit);
+module.exports.getTrialsByUsername = function (callback) {
+    trialData.find(callback).sort({$natural:-1});
 };
 
 module.exports.getTrialData = function (callback, limit) {

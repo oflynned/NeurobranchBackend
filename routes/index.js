@@ -340,7 +340,7 @@ function trimString(input, length) {
 }
 
 function generateTile(trialName, description, image, trialid) {
-    return '<div class="col-md-3">' +
+    return '<div class="col-sm-4 col-md-3 col-xl-2">' +
         '<div class="thumbnail">' +
         '<img src="' + image + '">' +
         '<div class="caption">' +
@@ -352,11 +352,12 @@ function generateTile(trialName, description, image, trialid) {
 }
 
 function generateDashboard(res) {
-    trialData.getTrialsByUserId(function (err, data) {
+    trialData.getTrialsByUsername(function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
         var i = 0;
+
         for (i; i < data.length; i++) {
             if (i % 4 == 0 && i > 0) {
                 container += generateRow(rowId, element);
@@ -370,8 +371,8 @@ function generateDashboard(res) {
         }
         res.render('dashboard', {
             active_main: "true",
-            news_content: container
-        }, 8);
+            content: container
+        });
     });
 }
 
