@@ -199,6 +199,23 @@ router.post('/insert', upload.any(), function ( req, res, err) {
             prereqtype: req.body.prereqtype
         }
     };
+
+    var itemq = {
+        questions: {
+            trialrelation: item.trialname,
+            /*trialrelation: userDataSchema._id,*/
+            question: req.body.question,
+            questiontype: req.body.questiontype,
+            options: {
+                answer: req.body.answer
+            }
+        }
+    };
+
+    var qdata = new QuestionData(itemq);
+    qdata.save();
+    console.log(qdata);
+
     console.log('////////////////////');
     console.log(item);
     console.log('////////////////////');
@@ -211,46 +228,11 @@ router.post('/insert', upload.any(), function ( req, res, err) {
         var question1 = new QuestionData({
             trialrelation:data._id
         });
-
         question1.save();
-
     });
     console.log(data);
-    res.redirect('/users/create_question');
-
-   /* UserData.find()
-        .then(function (doc) {
-            res.redirect('/users/create_question',
-                {
-                    items: doc,
-                    user: req.user
-                });
-        });*/
-});
-
-//insert for questions////more than one question//
-//also acssociating the trial _id to the question
-router.post('/insertq', function (req, res, next) {
-    var itemq = {
-        questions: {
-            trialrelation: userDataSchema._id,
-            question: req.body.question,
-            questiontype: req.body.questiontype,
-            options: {
-                answer: req.body.answer
-            }
-        }
-        /*   need to look over again   */
-    };
-    console.log('********************');
-    console.log(itemq);
-    console.log('*********************');
-    var qdata = new QuestionData(itemq);
-    qdata.save();
-    console.log(qdata);
     res.redirect('/users/dashboard');
 });
-
 
 ///question update
 router.post('/updateq', function (req, res, next) {
@@ -381,7 +363,5 @@ function generateDashboard(limit, res) {
             content: container
         });
     });
-
 }
-
 module.exports = router;
