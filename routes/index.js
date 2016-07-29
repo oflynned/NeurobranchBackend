@@ -6,7 +6,6 @@ var upload = multer({dest: 'public/uploads/'});
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
 mongoose.createConnection('localhost:27017/neurobranch_db');
 
 var trialData = require('../models/trialdata');
@@ -59,29 +58,23 @@ var questionDataSchema = new Schema(
     }
 );
 
-var QuestionData = mongoose.model('QuestionData', questionDataSchema);
-var UserData = mongoose.model('UserData', userDataSchema);
-//creator used to reference schema that created the question
-
-
 var responseDataSchema = new Schema(
     {
         trialid: String,
         epochid: String,
         candidateid: String,
-        responses: {
-            qid: {
-                questiontype: String,
-                response: String
-            }
-        }
+        response: [{type: String}]
     },
     {
         collection: 'responsedata',
         safe: true
     }
+
 );
-var ResponseData = mongoose.model('ResponseData', responseDataSchema);
+
+var QuestionData = mongoose.model('QuestionData', questionDataSchema);
+var UserData = mongoose.model('UserData', userDataSchema);
+var ResponseData = mongoose.model('ResponseData' , responseDataSchema);
 
 router.get('/', ensureAuthenticated, function (req, res) {
     UserData.find()
@@ -212,6 +205,25 @@ router.post('/insert', upload.any(), function ( req, res, err) {
         }
     };
 
+    var itemr ={
+        trialid: {
+            type: String,
+            required: true
+        },
+        epochid: {
+            type: String,
+            required: true
+        },
+        candidateid: {
+            type: String,
+            required: true
+        },
+        response: [{type: String}],
+
+
+
+    };
+
     var qdata = new QuestionData(itemq);
     qdata.save();
     console.log(qdata);
@@ -250,14 +262,6 @@ router.post('/updateq', function (req, res, next) {
     });
     res.redirect('/');
 });
-
-/* query for question relation  to trial*/
-/*QuestionData.findOne({title: title}).populate('trialrelation').exec(function (err , qr ) {
- if(err)
- return __handleError(err);
- console.log("trial associated with question is  %s", qr.trialrelation.trialname);
- });*/
-
 
 router.post('/update', function (req, res, next) {
 
