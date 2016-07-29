@@ -44,7 +44,7 @@ var userDataSchema = new Schema(
 
 var questionDataSchema = new Schema(
     {
-        trialrelation: {type: Number, ref: 'UserData'},
+        trialrelation: String,
         questions: [{
             question: String,
             questiontype: String,
