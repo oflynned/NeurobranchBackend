@@ -167,8 +167,6 @@ router.get('/get-data-q', function (req, res, next) {
 //insert for trials//
 router.post('/insert', upload.any(), function ( req, res, err) {
 
-    console.log(req.body);
-
     var item = {
         questionrelation: req.body._id,
         trialname: req.body.trialname,
@@ -205,35 +203,20 @@ router.post('/insert', upload.any(), function ( req, res, err) {
         }
     };
 
-    var itemr ={
-        trialid: {
-            type: String,
-            required: true
-        },
-        epochid: {
-            type: String,
-            required: true
-        },
-        candidateid: {
-            type: String,
-            required: true
-        },
-        response: [{type: String}],
-
-
-
+    var itemr = {
+        trialid: itemq.trialrelation,
+        epochid: req.body.epochid,
+        candidateid: req.body.candidateid,
+        response: [{type: String}]
     };
+
+    var rdata= new ResponseData(itemr);
+    rdata.save();
 
     var qdata = new QuestionData(itemq);
     qdata.save();
-    console.log(qdata);
-
-    console.log('////////////////////');
-    console.log(item);
-    console.log('////////////////////');
 
     var data = new UserData(item);
-
     data.save(function (err) {
        if (err) return __handleError(err);
 
@@ -242,7 +225,6 @@ router.post('/insert', upload.any(), function ( req, res, err) {
         });
         question1.save();
     });
-    console.log(data);
     res.redirect('/users/dashboard');
 });
 
