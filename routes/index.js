@@ -23,8 +23,11 @@ mongoose.Promise = global.Promise;
 mongoose.createConnection('localhost:27017/neurobranch_db');
 
 //schemas
-var candidateData = mongoose.model('CandidateAccounts', candidateAccountSchema);
-/*var conditionsData = mongoose.model('', conditionsSchema);
+var candidateAccount = mongoose.model('CandidateAccounts', candidateAccountSchema);
+var researcherAccount = mongoose.model('ResearcherAccounts', researcherAccountsSchema);
+var conditionsData = mongoose.model('Conditions', conditionsSchema);
+
+/*
  var epochData = mongoose.model('' , epochSchema);
  var exclusionsData = mongoose.model('' , exclusionSchema);
  var inclusionsData = mongoose.model('' , inclusionSchema);
@@ -35,29 +38,98 @@ var candidateData = mongoose.model('CandidateAccounts', candidateAccountSchema);
  var trialData = mongoose.model('' , trialSchema);
  var verifiedCandidatesData = mongoose.model('' , verifiedCandidatesSchema);*/
 
-//debug functions!
-router.get('/users/create-user', function (req, res) {
+// debug functions!
+
+// candidates
+router.get('/debug/create-candidate', function () {
     var mockData = {
         email: Date.now() + '@email.com',
         password: 'test'
     };
-
-    candidateData.createCandidate(new candidateData(mockData));
-    res.redirect('/users/get-users');
+    candidateAccount.createCandidate(new candidateAccount(mockData));
 });
 
-router.get('/users/get-users', function (req, res) {
-    candidateData.getCandidates(function(err, result) {
+router.get('/debug/get-candidates', function (req, res) {
+    candidateAccount.getCandidates(function(err, result) {
         if(err) throw err;
         res.json(result);
     });
+});
+
+router.get('/debug/get-candidates/:id', function (req, res) {
+    console.log(req.params);
+    candidateAccount.getCandidateById(req.params.id, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+// researchers
+router.get('/debug/create-researcher', function () {
+    var mockData = {
+        forename: Date.now(),
+        surname: Date.now(),
+        username: Date.now(),
+        email: Date.now(),
+        password: Date.now(),
+        institute: Date.now(),
+        datecreated: Date.now()
+    };
+    researcherAccount.createResearcher(new researcherAccount(mockData));
+});
+
+router.get('/debug/get-researchers', function (req, res) {
+    researcherAccount.getResearcher(function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+router.get('/debug/get-researchers/:id', function (req, res) {
+    console.log(req.params);
+    researcherAccount.getResearcherById(req.params.id, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+// conditions
+router.get('/debug/create-condition/:count', function (req) {
+    var conditions={};
+    for(var i=0; i<req.params.count; i++) {
+        var item = i;
+        conditions["condition" + item] = item;
+    }
+
+    var mockData = {
+        userid: '579f8f80863639bf202c6f42',
+        conditions
+    };
+    console.log(mockData);
+    //conditionsData.createCondition(new conditionsData(mockData));
+});
+
+router.get('/debug/edit-condition', function () {
 
 });
 
+router.get('/debug/get-conditions', function (req, res) {
+    conditionsData.getConditions(function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+router.get('/debug/get-conditions/:id', function (req, res) {
+    console.log(req.params);
+    conditionsData.getConditionById(req.params.id, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
 
 //-------------------------------------------------------------------
 // unsanitized
-
 
 //dashboard
 router.get('/users/dashboard', function (req, res) {

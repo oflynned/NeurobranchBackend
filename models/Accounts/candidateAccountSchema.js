@@ -14,6 +14,7 @@ var candidateAccountSchema = mongoose.Schema({
         unique: true,
         safe: true
     }
+    //conditions: [conditions]
 });
 
 var candidate = module.exports = mongoose.model('CandidateAccounts', candidateAccountSchema);
@@ -26,10 +27,6 @@ module.exports.getCandidates = function (callback) {
     candidate.find(callback).sort({$natural:-1});
 };
 
-module.exports.getAmountOfCandidates = function(callback) {
-    return candidate.find(callback).length;
-};
-
 module.exports.createCandidate = function (newCandidate, callback) {
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(newCandidate.password, salt, function (err, hash) {
@@ -39,15 +36,15 @@ module.exports.createCandidate = function (newCandidate, callback) {
     });
 };
 
-module.exports.getUserById = function (id, callback) {
+module.exports.getCandidateById = function (id, callback) {
     candidate.findOne({_id: id}, callback);
 };
 
-module.exports.getUserByEmail = function (email, callback) {
+module.exports.getCandidateByEmail = function (email, callback) {
     candidate.findOne({email: email}, callback);
 };
 
-module.exports.comparePassword = function (candidatePassword, hash, callback) {
+module.exports.comparePasswords = function (candidatePassword, hash, callback) {
     bcrypt.compare(candidatePassword, hash, function (err, isMatch) {
         if (err) throw err;
         callback(null, isMatch);
