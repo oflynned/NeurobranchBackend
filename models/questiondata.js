@@ -18,8 +18,6 @@ var questiondataSchema = mongoose.Schema({
                 }
             }
         }
-
-    
 });
 
 var questionData = module.exports = mongoose.model('questiondata', questiondataSchema, 'questiondata');

@@ -13,7 +13,7 @@ function trimString(input, length) {
 }
 
 //main
-router.get('/mainpage', function (req, res) {
+router.get('/index', function (req, res) {
     generateFrontNews(4, res);
 });
 
@@ -52,7 +52,7 @@ function generateFrontNews(limit, res) {
             if (i == data.length - 1)
                 container += generateRow(rowId, element);
         }
-        res.render('mainpage', {
+        res.render('index', {
             active_main: "true",
             news_content: container
         });

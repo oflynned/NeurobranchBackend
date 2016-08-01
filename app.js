@@ -87,7 +87,7 @@ app.use(function (req, res, next) {
 });
 //GET main page
 app.get('/', function (req, res, next) {
-    res.render('mainpage');
+    res.render('index');
 });
 // GET TRial Data
 app.get('/api/trialdata', function (req, res) {

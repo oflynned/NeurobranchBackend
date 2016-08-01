@@ -58,23 +58,9 @@ var questionDataSchema = new Schema(
     }
 );
 
-var responseDataSchema = new Schema(
-    {
-        trialid: String,
-        epochid: String,
-        candidateid: String,
-        response: [{type: String}]
-    },
-    {
-        collection: 'responsedata',
-        safe: true
-    }
-
-);
-
 var QuestionData = mongoose.model('QuestionData', questionDataSchema);
 var UserData = mongoose.model('UserData', userDataSchema);
-var ResponseData = mongoose.model('ResponseData' , responseDataSchema);
+
 
 router.get('/', ensureAuthenticated, function (req, res) {
     UserData.find()
@@ -203,9 +189,6 @@ router.post('/insert', upload.any(), function ( req, res, err) {
             }
         }
     };
-
-    var rdata= new ResponseData(itemr);
-    rdata.save();
 
     var qdata = new QuestionData(itemq);
     qdata.save();
