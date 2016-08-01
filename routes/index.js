@@ -93,7 +93,7 @@ router.get('/debug/get-researchers/:id', function (req, res) {
     });
 });
 
-// conditions
+// inclusion
 router.get('/debug/create-condition/:candidateid/:count', function (req) {
     var conditions={};
     for(var i=0; i<req.params.count; i++) {
@@ -118,17 +118,17 @@ router.get('/debug/edit-condition/:id/:count', function (req, res) {
         doc.conditions = conditions;
         doc.save();
     });
-    res.redirect('/debug/get-conditions');
+    res.redirect('/debug/get-inclusion');
 });
 
-router.get('/debug/get-conditions', function (req, res) {
+router.get('/debug/get-inclusion', function (req, res) {
     conditionsData.getConditions(function(err, result) {
         if(err) throw err;
         res.json(result);
     });
 });
 
-router.get('/debug/get-conditions/:id', function (req, res) {
+router.get('/debug/get-inclusion/:id', function (req, res) {
     conditionsData.getConditionById(req.params.id, function(err, result) {
         if(err) throw err;
         res.json(result.conditions);

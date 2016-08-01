@@ -129,7 +129,7 @@ app.get('/api/responsedata/trial/:trialid', function (req, res) {
 });
 
 //GET Response data by epochid
-app.get('/api/responsedata/epoch/:epochid', function (req, res) {
+app.get('/api/responsedata/inclusion/:epochid', function (req, res) {
     responseData.getresponseDataByEpochId(req.params.epochid, function (err, responsebyepochid) {
         if (err) {
             throw err;

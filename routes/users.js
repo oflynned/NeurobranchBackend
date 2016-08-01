@@ -160,11 +160,11 @@ router.get('/trials/:trialid', function (req, res) {
             throw err;
         }
 
-        //convert epoch
-        var start = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        //convert inclusion
+        var start = new Date(0); // The 0 there is the key, which sets the date to the inclusion
         start.setUTCSeconds(trialAttributes.starttime);
 
-        var end = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        var end = new Date(0); // The 0 there is the key, which sets the date to the inclusion
         end.setUTCSeconds(trialAttributes.endtime);
 
         res.render('trial', {
