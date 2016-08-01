@@ -41,12 +41,14 @@ var conditionsData = mongoose.model('Conditions', conditionsSchema);
 // debug functions!
 
 // candidates
-router.get('/debug/create-candidate', function () {
+router.post('/debug/create-candidate', function (req, res) {
+    console.log(req.body);
     var mockData = {
-        email: Date.now() + '@email.com',
-        password: 'test'
+        email: req.body.email,
+        password: req.body.password
     };
     candidateAccount.createCandidate(new candidateAccount(mockData));
+    res.redirect("/");
 });
 
 router.get('/debug/get-candidates', function (req, res) {
@@ -65,7 +67,7 @@ router.get('/debug/get-candidates/:id', function (req, res) {
 });
 
 // researchers
-router.get('/debug/create-researcher', function () {
+router.get('/debug/create-researcher', function (req, res) {
     var mockData = {
         forename: Date.now(),
         surname: Date.now(),

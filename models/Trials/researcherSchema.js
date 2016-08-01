@@ -8,7 +8,7 @@ var researcherSchema = mongoose.Schema({
     researcherdata: {}
 });
 
-var researcherData = module.exports = mongoose.model('Inclusions', researcherSchema);
+var researcherData = module.exports = mongoose.model('Researchers', researcherSchema);
 
 module.exports.getExclusions = function (callback) {
     researcherData.find(callback).sort({$natural:-1});

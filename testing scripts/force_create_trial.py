@@ -39,7 +39,7 @@ def random_name():
 def create_candidate_account():
     for i in range(0, iterations):
         post_fields = {
-            'email': str(i) + "@email.com",
+            'email': "99@email.com",
             'password': str(i)
         }
         print(url)
@@ -50,10 +50,11 @@ def create_candidate_account():
 
 create_candidate_account()
 
+"""
 if url is not None:
     if iterations > 0:
         if creation_type == "create_user_acc":
             create_candidate_account()
     else:
         print("iterations not well defined")
-
+"""

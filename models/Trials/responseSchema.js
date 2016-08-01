@@ -11,7 +11,7 @@ var responseSchema = mongoose.Schema({
     responses: {}
 });
 
-var response = module.exports = mongoose.model('Inclusions', responseSchema);
+var response = module.exports = mongoose.model('Responses', responseSchema);
 
 module.exports.getExclusions = function (callback) {
     response.find(callback).sort({$natural:-1});
