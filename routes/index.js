@@ -1,80 +1,63 @@
 var express = require('express');
 var router = express.Router();
 var assert = require('assert');
+
+var Globals = require("./Globals.js");
 var multer = require('multer');
 var upload = multer({dest: 'public/uploads/'});
 
+var candidateAccountSchema = require('../models/Accounts/candidateAccountSchema');
+var conditionsSchema = require('../models/Accounts/conditionsSchema');
+var epochSchema = require('../models/Trials/epochSchema');
+var exclusionSchema = require('../models/Trials/exclusionSchema');
+var inclusionSchema = require('../models/Trials/inclusionSchema');
+var requestedCandidatesSchema = require('../models/Validation/requestedCandidateSchema');
+var researcherAccountsSchema = require('../models/Accounts/researcherAccountSchema');
+var researcherSchema = require('../models/Trials/researcherSchema');
+var responseSchema = require('../models/Trials/responseSchema');
+var trialSchema = require('../models/Trials/trialSchema');
+var verifiedCandidatesSchema = require('../models/Validation/verifiedCandidateSchema');
+
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+mongoose.Promise = global.Promise;
 mongoose.createConnection('localhost:27017/neurobranch_db');
 
-var trialData = require('../models/trialdata');
-var Globals = require("./Globals.js");
-//_id used to reference back trial, question relation to specify question schema relation
-var userDataSchema = new Schema(
-    {
-        questionrelation: [{type: Schema.Types.ObjectId, ref: 'QuestionData'}],
-        trialname: String,
-        trialid: String,
-        description: String,
-        trialtype: String,
-        researcher: [{
-            researchgroup: String,
-            researchername: String
-        }],
-        organisation: String,
-        specialisation: String,
-        starttime: String,
-        endtime: String,
-        timeperiodfrequency: String,
-        notificationfrequency: String,
-        imageresource: String,
-        prerequisites: [{
-            minage: String,
-            condition: String,
-            prereqtype: String
-        }]
-    },
-    {
-        collection: 'trialdata',
-        safe: true
-    }
-);
+//schemas
+var candidateData = mongoose.model('CandidateAccounts', candidateAccountSchema);
+/*var conditionsData = mongoose.model('', conditionsSchema);
+ var epochData = mongoose.model('' , epochSchema);
+ var exclusionsData = mongoose.model('' , exclusionSchema);
+ var inclusionsData = mongoose.model('' , inclusionSchema);
+ var requestedCandidatesData = mongoose.model('' , requestedCandidatesSchema);
+ var researcherAccountsData = mongoose.model('' , researcherAccountsSchema);
+ var researcherData = mongoose.model('' , researcherSchema);
+ var responseData = mongoose.model('' , responseSchema);
+ var trialData = mongoose.model('' , trialSchema);
+ var verifiedCandidatesData = mongoose.model('' , verifiedCandidatesSchema);*/
 
-var questionDataSchema = new Schema(
-    {
-        trialrelation: String,
-        questions: [{
-            question: String,
-            questiontype: String,
-            options: {
-                answer: [String]
-            }
-        }]
-    },
-    {
-        collection: 'questiondata',
-        safe: true
-    }
-);
+//debug functions!
+router.get('/users/create-user', function (req, res) {
+    var mockData = {
+        email: Date.now() + '@email.com',
+        password: 'test'
+    };
 
-var responseDataSchema = new Schema(
-    {
-        trialid: String,
-        epochid: String,
-        candidateid: String,
-        response: [{type: String}]
-    },
-    {
-        collection: 'responsedata',
-        safe: true
-    }
+    candidateData.createCandidate(new candidateData(mockData));
+    res.redirect('/users/get-users');
+});
 
-);
+router.get('/users/get-users', function (req, res) {
+    candidateData.getCandidates(function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
 
-var QuestionData = mongoose.model('QuestionData', questionDataSchema);
-var UserData = mongoose.model('UserData', userDataSchema);
-var ResponseData = mongoose.model('ResponseData' , responseDataSchema);
+});
+
+
+//-------------------------------------------------------------------
+// unsanitized
+
 
 //dashboard
 router.get('/users/dashboard', function (req, res) {
@@ -97,6 +80,69 @@ router.get('/users/create_trial', ensureAuthenticated, function (req, res) {
             user: req.user,
             active_dash: "true"
         });
+});
+
+//insert for trials//
+router.post('/insert', function (req, res, err) {
+
+    var item = {
+        questionrelation: req.body._id,
+        trialname: req.body.trialname,
+        trialid: req.body.trialid,
+        description: req.body.description,
+        trialtype: req.body.trialtype,
+        researcher: {
+            researchgroup: req.body.researchgroup,
+            researchername: req.body.researchername
+        },
+        organisation: req.body.organisation,
+        specialisation: req.body.specialisation,
+        starttime: req.body.starttime,
+        endtime: req.body.endtime,
+        timeperiodfrequency: req.body.timeperiodfrequency,
+        notificationfrequency: req.body.notificationfrequency,
+        imageresource: req.body.imageresource,
+        prerequisites: {
+            minage: req.body.minage,
+            condition: req.body.condition,
+            prereqtype: req.body.prereqtype
+        }
+    };
+
+    var itemq = {
+        questions: {
+            trialrelation: item.trialname,
+            question: req.body.question,
+            questiontype: req.body.questiontype,
+            options: {
+                answer: req.body.answer
+            }
+        }
+    };
+
+    var itemr = {
+        trialid: itemq.trialrelation,
+        epochid: req.body.epochid,
+        candidateid: req.body.candidateid,
+        response: [{type: String}]
+    };
+
+    var rdata = new ResponseData(itemr);
+    rdata.save();
+
+    var qdata = new QuestionData(itemq);
+    qdata.save();
+
+    var data = new UserData(item);
+    data.save(function (err) {
+        if (err) return __handleError(err);
+
+        var question1 = new QuestionData({
+            trialrelation: data._id
+        });
+        question1.save();
+    });
+    res.redirect('/users/dashboard');
 });
 
 //display username in create_question
@@ -150,70 +196,6 @@ router.get('/get-data-q', function (req, res, next) {
                 username: req.user.username
             });
         });
-});
-
-//insert for trials//
-router.post('/insert', upload.any(), function ( req, res, err) {
-
-    var item = {
-        questionrelation: req.body._id,
-        trialname: req.body.trialname,
-        trialid: req.body.trialid,
-        description: req.body.description,
-        trialtype: req.body.trialtype,
-        researcher: {
-            researchgroup: req.body.researchgroup,
-            researchername: req.body.researchername
-        },
-        organisation: req.body.organisation,
-        specialisation: req.body.specialisation,
-        starttime: req.body.starttime,
-        endtime: req.body.endtime,
-        timeperiodfrequency: req.body.timeperiodfrequency,
-        notificationfrequency: req.body.notificationfrequency,
-        imageresource: req.body.imageresource,
-        prerequisites: {
-            minage: req.body.minage,
-            condition: req.body.condition,
-            prereqtype: req.body.prereqtype
-        }
-    };
-
-    var itemq = {
-        questions: {
-            trialrelation: item.trialname,
-            /*trialrelation: userDataSchema._id,*/
-            question: req.body.question,
-            questiontype: req.body.questiontype,
-            options: {
-                answer: req.body.answer
-            }
-        }
-    };
-
-    var itemr = {
-        trialid: itemq.trialrelation,
-        epochid: req.body.epochid,
-        candidateid: req.body.candidateid,
-        response: [{type: String}]
-    };
-
-    var rdata= new ResponseData(itemr);
-    rdata.save();
-
-    var qdata = new QuestionData(itemq);
-    qdata.save();
-
-    var data = new UserData(item);
-    data.save(function (err) {
-       if (err) return __handleError(err);
-
-        var question1 = new QuestionData({
-            trialrelation:data._id
-        });
-        question1.save();
-    });
-    res.redirect('/users/dashboard');
 });
 
 ///question update

@@ -16,10 +16,10 @@ mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
 var users = require(Globals.USERS_ROUTE);
 // Models files
-var trialData = require('./models/trialdata');
-var questionData = require('./models/questiondata');
-var responseData = require('./models/responsedata');
-var userdata = require('./models/user');
+var trialData = require('./models/Old/trialdata');
+var questionData = require('./models/Old/questiondata');
+var responseData = require('./models/Old/responsedata');
+var userdata = require('./models/Old/user');
 
 var util = require('util');
 var generator = require('mongoose-gen');

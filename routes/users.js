@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var User = require('../models/user');
-var trialData = require('../models/trialdata');
+var User = require('../models/Old/user');
+var trialData = require('../models/Old/trialdata');
 
 var MAX_LENGTH = 200;
 
@@ -57,29 +57,6 @@ function generateFrontNews(limit, res) {
             news_content: container
         });
     }, limit);
-
-    /*
-    trialData.getRandomTrial(limit, function (err, data) {
-        var element = "";
-        var rowId = 0;
-        var container = "";
-        var i = 0;
-        for (i; i < data.length; i++) {
-            if (i % 4 == 0 && i > 0) {
-                container += generateRow(rowId, element);
-                rowId++;
-                element = "";
-            }
-            element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
-
-            if (i == data.length - 1)
-                container += generateRow(rowId, element);
-        }
-        res.render('mainpage', {
-            active_main: "true",
-            news_content: container
-        });
-    })*/
 }
 
 //news
