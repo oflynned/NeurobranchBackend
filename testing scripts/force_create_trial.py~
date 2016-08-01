@@ -55,5 +55,5 @@ if url is not None:
         if creation_type == "create_user_acc":
             create_candidate_account()
     else:
-        print("iterations not well defined")
+        print "iterations not well defined"
 
