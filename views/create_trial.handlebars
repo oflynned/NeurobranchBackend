@@ -128,7 +128,40 @@
                                 <button type="button" class="addfields" ng-click="addNewChoice()">+</button>
                             </div>
                         </div>
+<<<<<<< HEAD
                         -->
+=======
+                        <!-- QUESTIONS-->
+
+                        <div class="input">Question 1</label>
+                            <label for="question">question</label>
+                            <input type="text" id="question" name="question">
+                        </div>
+
+                        <div class="input">Question Type</label>
+                            <label for="questiontype">questiontype</label>
+                            <select name="questiontype" id="questiontype">
+                                <option value="text">Text</option>
+                                <option value="scroll">Scroll</option>
+                                <option value="checkbox">Checkbox</option>
+                                <option value="picture">Picture</option>
+                            </select>
+                        </div>
+
+                        <div ng-app="App" class="container">
+                            <div class="row">
+                                <hr/>
+                                <div ng-app="angularjs-starter" ng-controller="MainCtrl">
+                                    <fieldset data-ng-repeat="choice in choices">
+                                        <input type="text" ng-model="choice.name" id="answer" name="answer"
+                                               placeholder="Enter Checkbox Option">
+                                        <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+                                    </fieldset>
+                                    <button type="button" class="addfields" ng-click="addNewChoice()">+</button>
+                                </div>
+                            </div>
+                        </div>
+>>>>>>> schemas
 
                     </form>
                 </div>

@@ -6,7 +6,6 @@ var upload = multer({dest: 'public/uploads/'});
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
 mongoose.createConnection('localhost:27017/neurobranch_db');
 
 var trialData = require('../models/trialdata');
@@ -44,7 +43,7 @@ var userDataSchema = new Schema(
 
 var questionDataSchema = new Schema(
     {
-        trialrelation: {type: Number, ref: 'UserData'},
+        trialrelation: String,
         questions: [{
             question: String,
             questiontype: String,
@@ -59,29 +58,23 @@ var questionDataSchema = new Schema(
     }
 );
 
-var QuestionData = mongoose.model('QuestionData', questionDataSchema);
-var UserData = mongoose.model('UserData', userDataSchema);
-//creator used to reference schema that created the question
-
-
 var responseDataSchema = new Schema(
     {
         trialid: String,
         epochid: String,
         candidateid: String,
-        responses: {
-            qid: {
-                questiontype: String,
-                response: String
-            }
-        }
+        response: [{type: String}]
     },
     {
         collection: 'responsedata',
         safe: true
     }
+
 );
-var ResponseData = mongoose.model('ResponseData', responseDataSchema);
+
+var QuestionData = mongoose.model('QuestionData', questionDataSchema);
+var UserData = mongoose.model('UserData', userDataSchema);
+var ResponseData = mongoose.model('ResponseData' , responseDataSchema);
 
 //dashboard
 router.get('/users/dashboard', function (req, res) {
@@ -162,8 +155,6 @@ router.get('/get-data-q', function (req, res, next) {
 //insert for trials//
 router.post('/insert', upload.any(), function ( req, res, err) {
 
-    console.log(req.body);
-
     var item = {
         questionrelation: req.body._id,
         trialname: req.body.trialname,
@@ -187,58 +178,43 @@ router.post('/insert', upload.any(), function ( req, res, err) {
             prereqtype: req.body.prereqtype
         }
     };
-    console.log('////////////////////');
-    console.log(item);
-    console.log('////////////////////');
 
-    var data = new UserData(item);
-
-    data.save(function (err) {
-       if (err) return __handleError(err);
-
-        var question1 = new QuestionData({
-            trialrelation:data._id
-        });
-
-        question1.save();
-
-    });
-    console.log(data);
-    res.redirect('/users/create_question');
-
-   /* UserData.find()
-        .then(function (doc) {
-            res.redirect('/users/create_question',
-                {
-                    items: doc,
-                    user: req.user
-                });
-        });*/
-});
-
-//insert for questions////more than one question//
-//also acssociating the trial _id to the question
-router.post('/insertq', function (req, res, next) {
     var itemq = {
         questions: {
-            trialrelation: userDataSchema._id,
+            trialrelation: item.trialname,
+            /*trialrelation: userDataSchema._id,*/
             question: req.body.question,
             questiontype: req.body.questiontype,
             options: {
                 answer: req.body.answer
             }
         }
-        /*   need to look over again   */
     };
-    console.log('********************');
-    console.log(itemq);
-    console.log('*********************');
+
+    var itemr = {
+        trialid: itemq.trialrelation,
+        epochid: req.body.epochid,
+        candidateid: req.body.candidateid,
+        response: [{type: String}]
+    };
+
+    var rdata= new ResponseData(itemr);
+    rdata.save();
+
     var qdata = new QuestionData(itemq);
     qdata.save();
-    console.log(qdata);
+
+    var data = new UserData(item);
+    data.save(function (err) {
+       if (err) return __handleError(err);
+
+        var question1 = new QuestionData({
+            trialrelation:data._id
+        });
+        question1.save();
+    });
     res.redirect('/users/dashboard');
 });
-
 
 ///question update
 router.post('/updateq', function (req, res, next) {
@@ -256,14 +232,6 @@ router.post('/updateq', function (req, res, next) {
     });
     res.redirect('/');
 });
-
-/* query for question relation  to trial*/
-/*QuestionData.findOne({title: title}).populate('trialrelation').exec(function (err , qr ) {
- if(err)
- return __handleError(err);
- console.log("trial associated with question is  %s", qr.trialrelation.trialname);
- });*/
-
 
 router.post('/update', function (req, res, next) {
 
@@ -375,5 +343,4 @@ function generateDashboard(res) {
         });
     });
 }
-
 module.exports = router;
