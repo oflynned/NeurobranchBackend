@@ -168,6 +168,7 @@ router.get('/get-data-q', function (req, res, next) {
 router.post('/insert', upload.any(), function ( req, res, err) {
 
     var item = {
+        /*remove quertion relaltion*/
         questionrelation: req.body._id,
         trialname: req.body.trialname,
         trialid: req.body.trialid,
@@ -201,13 +202,6 @@ router.post('/insert', upload.any(), function ( req, res, err) {
                 answer: req.body.answer
             }
         }
-    };
-
-    var itemr = {
-        trialid: itemq.trialrelation,
-        epochid: req.body.epochid,
-        candidateid: req.body.candidateid,
-        response: [{type: String}]
     };
 
     var rdata= new ResponseData(itemr);
