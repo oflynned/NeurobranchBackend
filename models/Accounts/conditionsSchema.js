@@ -4,10 +4,10 @@
 var mongoose = require('mongoose');
 
 var conditionSchema = mongoose.Schema({
-    userid: {
+    userid: [{
         type: String,
-        safe: true
-    },
+        ref: 'CandidateAccounts'
+    }],
     conditions: {}
 });
 
@@ -26,5 +26,5 @@ module.exports.createCondition = function (condition, callback) {
 };
 
 module.exports.getConditionById = function (id, callback) {
-    conditions.findOne({_id: id}, callback);
+    conditions.findOne({userid: id}, callback);
 };

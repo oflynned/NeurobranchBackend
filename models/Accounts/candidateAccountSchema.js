@@ -14,7 +14,6 @@ var candidateAccountSchema = mongoose.Schema({
         unique: true,
         safe: true
     }
-    //conditions: [conditions]
 });
 
 var candidate = module.exports = mongoose.model('CandidateAccounts', candidateAccountSchema);

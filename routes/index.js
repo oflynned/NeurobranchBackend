@@ -94,7 +94,7 @@ router.get('/debug/get-researchers/:id', function (req, res) {
 });
 
 // conditions
-router.get('/debug/create-condition/:count', function (req) {
+router.get('/debug/create-condition/:candidateid/:count', function (req) {
     var conditions={};
     for(var i=0; i<req.params.count; i++) {
         var item = i;
@@ -102,15 +102,23 @@ router.get('/debug/create-condition/:count', function (req) {
     }
 
     var mockData = {
-        userid: '579f8f80863639bf202c6f42',
+        userid: req.params.candidateid,
         conditions
     };
-    console.log(mockData);
-    //conditionsData.createCondition(new conditionsData(mockData));
+    conditionsData.createCondition(new conditionsData(mockData));
 });
 
-router.get('/debug/edit-condition', function () {
+router.get('/debug/edit-condition/:id/:count', function (req, res) {
+    var conditions={};
+    for(var i=0; i<req.params.count; i++) {
+        conditions["condition" + i] = Math.floor(Math.random() * 100).toString();
+    }
 
+    conditionsData.getConditionById(req.params.id, function (err, doc) {
+        doc.conditions = conditions;
+        doc.save();
+    });
+    res.redirect('/debug/get-conditions');
 });
 
 router.get('/debug/get-conditions', function (req, res) {
@@ -121,10 +129,9 @@ router.get('/debug/get-conditions', function (req, res) {
 });
 
 router.get('/debug/get-conditions/:id', function (req, res) {
-    console.log(req.params);
     conditionsData.getConditionById(req.params.id, function(err, result) {
         if(err) throw err;
-        res.json(result);
+        res.json(result.conditions);
     });
 });
 
