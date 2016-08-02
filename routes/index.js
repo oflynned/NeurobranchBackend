@@ -27,16 +27,15 @@ var candidateAccount = mongoose.model('CandidateAccounts', candidateAccountSchem
 var researcherAccount = mongoose.model('ResearcherAccounts', researcherAccountsSchema);
 var conditionsData = mongoose.model('Conditions', conditionsSchema);
 
-/*
- var epochData = mongoose.model('' , epochSchema);
- var exclusionsData = mongoose.model('' , exclusionSchema);
- var inclusionsData = mongoose.model('' , inclusionSchema);
- var requestedCandidatesData = mongoose.model('' , requestedCandidatesSchema);
- var researcherAccountsData = mongoose.model('' , researcherAccountsSchema);
- var researcherData = mongoose.model('' , researcherSchema);
- var responseData = mongoose.model('' , responseSchema);
- var trialData = mongoose.model('' , trialSchema);
- var verifiedCandidatesData = mongoose.model('' , verifiedCandidatesSchema);*/
+var epochData = mongoose.model('Epochs' , epochSchema);
+var exclusionsData = mongoose.model('Exclusions' , exclusionSchema);
+var inclusionsData = mongoose.model('Inclusions' , inclusionSchema);
+var requestedCandidatesData = mongoose.model('RequestedCandidates' , requestedCandidatesSchema);
+var researcherAccountsData = mongoose.model('ResearcherAccounts' , researcherAccountsSchema);
+var researcherData = mongoose.model('Researchers' , researcherSchema);
+var responseData = mongoose.model('Responses' , responseSchema);
+var trialData = mongoose.model('Trials' , trialSchema);
+var verifiedCandidatesData = mongoose.model('VerifiedCandidates' , verifiedCandidatesSchema);
 
 // debug functions!
 
@@ -120,11 +119,48 @@ router.get('/debug/edit-condition/:id/:count', function (req, res) {
         doc.conditions = conditions;
         doc.save();
     });
-    res.redirect('/debug/get-inclusion');
+    res.redirect('/debug/get-conditions');
 });
 
-router.get('/debug/get-inclusion', function (req, res) {
-    conditionsData.getConditions(function(err, result) {
+router.get('/debug/get-conditions', function (req, res) {
+    conditionsData.getConditions(function (err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+
+router.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
+    var inclusions = {};
+    for(var i=0; i<req.params.count; i++) {
+        inclusions["inclusion" + i] = Math.floor(Math.random() * 100).toString();
+    }
+
+    var inclusionData = {
+        trialid: req.params.trialid,
+        inclusions
+    };
+
+    inclusionsData.createInclusions(new inclusionsData(inclusionData));
+    res.redirect('/debug/get-inclusions');
+});
+
+router.get('/debug/edit-inclusions/:userid/:count', function (req, res) {
+    var inclusions = {};
+    for(var i=0; i<req.params.count; i++) {
+        inclusions[i] = Math.floor(Math.random() * 100).toString();
+    }
+
+    inclusionsData.getInclusionsById(req.param.userid, function(err, doc) {
+        if(err) throw err;
+        doc.inclusions = inclusions;
+        doc.save();
+    });
+    res.redirect('/debug/get-inclusions');
+});
+
+router.get('/debug/get-inclusions', function (req, res) {
+    inclusionsData.getInclusions(function(err, result) {
         if(err) throw err;
         res.json(result);
     });
