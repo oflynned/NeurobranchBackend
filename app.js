@@ -52,6 +52,7 @@ app.use(session({
     secret: Globals.SECRET,
     saveUninitialized: true,
     resave: true
+
 }));
 
 // Passport init-- to be able to use passport author
@@ -89,31 +90,24 @@ app.use(function (req, res, next) {
 });
 //GET main page
 app.get('/', function (req, res, next) {
+    if (typeof req.session.views === 'undefined') {
+        req.session.views = 0;
+    }
     res.render('index');
 });
 
-app.get('/', function initViewsCount(req, res, next) {
-    if (typeof req.session.views === 'undefined') {
-        req.session.views = 0;
-        return res.end('Welcome to the file session demo. Refresh page!');
-    }
-    return next();
-});
 app.get('/', function incrementViewsCount(req, res, next) {
     console.assert(typeof req.session.views === 'number',
         'missing views count in the session', req.session);
     req.session.views++;
     return next();
 });
+
 app.use(function printSession(req, res, next) {
-    console.log('req.session', req.session);
+    console.log('req.session', req.session , req.session.views);
     return next();
 });
-app.get('/', function sendPageWithCounter(req, res) {
-    res.setHeader('Content-Type', 'text/html');
-    res.write('<p>views: ' + req.session.views + '</p>\n');
-    res.end();
-});
+
 
 
 // GET TRial Data
