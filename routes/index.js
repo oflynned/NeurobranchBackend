@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var assert = require('assert');
 var multer = require('multer');
+var cookie = require('cookie');
 var upload = multer({dest: 'public/uploads/'});
 
 var mongoose = require('mongoose');

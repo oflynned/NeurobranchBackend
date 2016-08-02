@@ -73,7 +73,6 @@ router.get('/', ensureAuthenticated, function (req, res) {
         });
 });
 
-
 //display username in create_trial
 router.get('/users/create_trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial',

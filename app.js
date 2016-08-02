@@ -3,6 +3,7 @@ var Globals = require('./routes/Globals');
 
 var express = require('express');
 var path = require('path');
+var cookie = require('cookie');
 var cookieParser = require('cookie-parser');
 var exphbs = require('express-handlebars');
 var expressValidator = require('express-validator');
@@ -47,6 +48,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Express Session
 app.use(session({
+    name: 'TEST COOKIE',
     secret: Globals.SECRET,
     saveUninitialized: true,
     resave: true
