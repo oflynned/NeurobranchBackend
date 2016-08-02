@@ -96,15 +96,13 @@ app.get('/', function (req, res, next) {
     res.render('index');
 });
 
-app.get('/', function incrementViewsCount(req, res, next) {
+app.use(function printSession(req, res, next) {
+    console.log('req.session', req.session , req.session.views);
+    console.log('++++++++++++++++++');
     console.assert(typeof req.session.views === 'number',
         'missing views count in the session', req.session);
     req.session.views++;
-    return next();
-});
 
-app.use(function printSession(req, res, next) {
-    console.log('req.session', req.session , req.session.views);
     return next();
 });
 
