@@ -4,7 +4,6 @@
 var mongoose = require('mongoose');
 
 var trialSchema = mongoose.Schema({
-    trialid: String,
     title: String,
     briefdescription: String,
     detaileddescription: String,
@@ -15,23 +14,29 @@ var trialSchema = mongoose.Schema({
     datepublished: String,
     dateactive: String,
     candidatequota: String,
-    state: String
+    state: String,
 });
 
 var trialData = module.exports = mongoose.model('Trials', trialSchema);
 
-module.exports.getExclusions = function (callback) {
+module.exports.getTrials = function (callback) {
     trialData.find(callback).sort({$natural:-1});
 };
 
-module.exports.getExclusionsWithLimit = function (limit, callback) {
+module.exports.getTrialsWithLimit = function (limit, callback) {
     trialData.find(callback).skip(trialData - limit).sort({$natural:-1}).limit(limit);
 };
 
-module.exports.createExclusions = function (trialData, callback) {
+module.exports.createTrials = function (trialData, callback) {
     trialData.save(callback);
 };
 
 module.exports.getTrialById = function (id, callback) {
     trialData.findOne({_id: id}, callback);
 };
+
+module.exports.getTrialsByResearcherId = function (userid, callback) {
+    trialData.findOne({userid: userid}, callback);
+};
+
+

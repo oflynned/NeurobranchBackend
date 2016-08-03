@@ -49,14 +49,12 @@
     font-weight: 400;
     display: block;
 }
-.profile-img
+.form-image
 {
-    height: 192px;
-    margin: 0 auto 0;
+    height: 128px;
+    margin: 0 auto 20px;
     display: block;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    border-radius: 50%;
+
 }
 .need-help
 {
@@ -105,6 +103,8 @@
 
 .form-create-trial .form-create-trial-heading, .form-create-trial .checkbox
 {
+    margin-left: 15px;
+    margin-right: 15px;
     margin-bottom: 10px;
 }
 .form-create-trial .checkbox
@@ -130,4 +130,13 @@
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.form-create-trial-margin {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.form-create-trial-margin-section {
+    margin-top: 15px;
 }

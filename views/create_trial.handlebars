@@ -17,69 +17,63 @@
         <div class="row">
             <div class="col-sm-6 col-md-6 col-md-offset-3 center-form">
                 <div class="account-wall center-form">
-                    <img class="profile-img" src="/img/neuro_trans.png"
+                    <img class="form-image" src="/img/neurobranch_logo.png"
                          alt="">
 
                     <form action="/insert" method="post" role="form">
-                        <div class="form-create-trial">
-                            <div class="form-create-trial-fields">
-                                <div class="row flex-row">
-                                    <div class="col-sm-6 col-md-6">
-                                        <!-- name of trial -->
-                                        <div class="form-group">
-                                            <input class="form-control" type="text" id="trialname" name="trialname"
-                                                   placeholder="Trial Name">
-                                        </div>
+                        <div class="form-create-trial form-create-trial-margin">
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="title" name="title"
+                                       placeholder="Trial Title">
+                            </div>
+                            <div class="form-group">
+                                            <textarea class="form-control description-box" rows="2"
+                                                      id="briefdescription"
+                                                      name="briefdescription"
+                                                      placeholder="Brief Description"></textarea>
+                            </div>
+                            <div class="form-group">
+                                            <textarea class="form-control description-box" rows="10"
+                                                      id="longdescription"
+                                                      name="longdescription" placeholder="Long Description"></textarea>
+                            </div>
 
-                                        <div class="form-group">
-                                            <textarea class="form-control description-box" rows="12" id="description"
-                                                      name="description" placeholder="Trial Description"></textarea>
-                                        </div>
-                                    </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
+                                    <select class="form-control" name="trialtype" id="trialtype">
+                                        <option value="def_trialtype_placeholder" disabled selected>Trial Type</option>
+                                        <option value="pharmaceutical">Pharma</option>
+                                        <option value="biomedicaldevice">Bio-Device</option>
+                                        <option value="consumable">Food</option>
+                                        <option value="behavioural">Behavioural</option>
+                                    </select>
+                                </div>
 
-                                    <div class="col-sm-6 col-md-6">
-                                        <div>
-                                            <div class="form-group">
-                                                <input type="text" class="form-control" id="specialisation"
-                                                       name="specialisation"
-                                                       placeholder="Broad Research Field">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <input type="text" class="form-control" id="specialisation"
-                                                       name="specialisation"
-                                                       placeholder="Specific Research Field">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <select class="form-control" name="trialtype" id="trialtype">
-                                                    <option value="pharmaceutical">Pharma</option>
-                                                    <option value="biomedicaldevice">Bio-Device</option>
-                                                    <option value="consumable">Food</option>
-                                                    <option value="behavioural">Behavioural</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <div class="form-group center-text">
-                                                <label for="starttime">Start Time</label>
-                                                <input class="form-control center-text" type="datetime-local"
-                                                       id="starttime"
-                                                       name="starttime">
-                                            </div>
-
-                                            <div class="form-group center-text">
-                                                <label for="endtime">End Time</label>
-                                                <input class="form-control center-text" type="datetime-local"
-                                                       id="endtime"
-                                                       name="endtime">
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-6 col-md-6">
+                                    <select class="form-control" name="condition" id="condition">
+                                        <option value="def_condition_placeholder" disabled selected>Condition Type
+                                        </option>
+                                        <option value="pharmaceutical">Cancer</option>
+                                    </select>
                                 </div>
                             </div>
 
+                            <div class="row center-text form-create-trial-margin-section">
+                                <div class="col-sm-6 col-md-6">
+                                        <label for="starttime">Start Time</label>
+                                        <input class="form-control center-text" type="datetime-local"
+                                               id="starttime"
+                                               name="starttime">
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6">
+                                        <label for="endtime">End Time</label>
+                                        <input class="form-control center-text" type="datetime-local"
+                                               id="endtime"
+                                               name="endtime">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-4 center-text center-form">
                                     <button class="btn btn-lg btn-primary btn-block" type="submit">
@@ -88,125 +82,11 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <!--
-                        <div class="input">
-                            <label for="timeperiodfrequency">Time Period Frequency</label>
-                            <input type="number" min="5" max="30" step="1" value="1" id="timeperiodfrequency"
-                                   name="timeperiodfrequency">
-                        </div>
-                        <div class="input">
-                            <label for="notificationfrequency">Notification Frequency</label>
-                            <input type="number" min="5" max="30" step="1" value="1" id="notificationfrequency"
-                                   name="notificationfrequency">
-                        </div>
-                        <div class="input">
-                            <label for="imageresource">Trial Image</label>
-                            <input type="file" id="imageresource" name="imageresource" placeholder="Trial Image">
-                        </div>
-
-                        <div class="input">
-                            <label for="minage">Min Age</label>
-                            <input type="number" min="5" max="100" step="1" value="5" id="minage" name="minage">
-                        </div>
-
-                        <div class="input">
-                            <label for="condition">Condition</label>
-                            <input type="text" id="condition" name="condition">
-                        </div>
-
-                        <div ng-app="App" class="input">
-                            <hr/>
-                            <div ng-app="angularjs-starter" ng-controller="MainCtrl">
-                                <fieldset data-ng-repeat="choice in choices">
-                                    <label for="prereqtype">Inclusion Criteria</label>
-                                    <input type="text" ng-model="choice.name" id="prereqtype" name="prereqtype"
-                                           placeholder="Enter Inclusion Option">
-                                    <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
-                                </fieldset>
-                                <button type="button" class="addfields" ng-click="addNewChoice()">+</button>
-                            </div>
-                        </div>
-<<<<<<< HEAD
-                        -->
-=======
-                        <!-- QUESTIONS-->
-
-                        <div class="input">Question 1</label>
-                            <label for="question">question</label>
-                            <input type="text" id="question" name="question">
-                        </div>
-
-                        <div class="input">Question Type</label>
-                            <label for="questiontype">questiontype</label>
-                            <select name="questiontype" id="questiontype">
-                                <option value="text">Text</option>
-                                <option value="scroll">Scroll</option>
-                                <option value="checkbox">Checkbox</option>
-                                <option value="picture">Picture</option>
-                            </select>
-                        </div>
-
-                        <div ng-app="App" class="container">
-                            <div class="row">
-                                <hr/>
-                                <div ng-app="angularjs-starter" ng-controller="MainCtrl">
-                                    <fieldset data-ng-repeat="choice in choices">
-                                        <input type="text" ng-model="choice.name" id="answer" name="answer"
-                                               placeholder="Enter Checkbox Option">
-                                        <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
-                                    </fieldset>
-                                    <button type="button" class="addfields" ng-click="addNewChoice()">+</button>
-                                </div>
-                            </div>
-                        </div>
->>>>>>> schemas
-
                     </form>
                 </div>
-
-                <!--LOAD TRIAL DATA -->
-                <!--h3>Get Data</h3>
-                <a href="/get-data">LOAD TRIAL DATA</a>
-                <div>
-                    {{# each items }}
-                        <article class="item">
-                            <div>trialname: {{ this.trialname }}</div>
-                            <div>trialid: {{ this._id }}</div>
-                            <div>researchgroup: {{ this.researchgroup }}</div>
-                        </article>
-                    {{/each}}
-                </div-->
-                <!--UPDATE TRIAL DATA -->
-                <!--h3>Update Trial Data</h3>
-                <form action="/update" method="post">
-                    <div class="input">
-                        <label for="id">trialid</label>
-                        <input type="text" id="id" name="id">
-                    </div>
-                    <div class="input">
-                        <label for="trialname">TrialName</label>
-                        <input type="text" id="trialname" name="trialname">
-                    </div>
-                    <div class="input">
-                        <label for="specialisation">Specialisation</label>
-                        <input type="text" id="specialisation" name="specialisation">
-                    </div>
-                    <button type="submit">UPDATE</button>
-                </form-->
-
             </div>
         </div>
     </div>
-
-</div>
 </div>
 </body>
 </html>
-
-<script>
-    $(document).on('ready', function () {
-        $("#image-upload").fileinput({showCaption: false});
-    });
-</script>

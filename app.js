@@ -1,4 +1,3 @@
-//constants for ports, addresses and other non-variable items
 var Globals = require('./routes/Globals');
 
 var express = require('express');
@@ -15,69 +14,31 @@ var bodyParser = require('body-parser');
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
 var users = require(Globals.USERS_ROUTE);
-// Models files
-var trialData = require('./models/Old/trialdata');
-var questionData = require('./models/Old/questiondata');
-var responseData = require('./models/Old/responsedata');
-var userdata = require('./models/Old/user');
 
 var util = require('util');
 var generator = require('mongoose-gen');
-
-// Init App -- type $ node app.js
 var app = express();
 
-// View Engine
 app.set('views', path.join(__dirname, 'views'));
-// handlebars supports html
 app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
 app.set('view engine', 'handlebars');
 
-// BodyParser Middleware // for cookies
-//app.use(express.static(_dirname+'/researcherside'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
-
-// Set Static Folder
-// where stuff that is publicly accesible to the browsert is put--in this instance the public available stuff is in folder public 
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Express Session
 app.use(session({
     secret: Globals.SECRET,
     saveUninitialized: true,
     resave: true
 }));
-
-// Passport init-- to be able to use passport author
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Express Validator
-app.use(expressValidator({
-    errorFormatter: function (param, msg, value) {
-        var namespace = param.split('.'),
-            root = namespace.shift(),
-            formParam = root;
-
-        while (namespace.length) {
-            formParam += '[' + namespace.shift() + ']';
-        }
-        return {
-            param: formParam,
-            msg: msg,
-            value: value
-        };
-    }
-}));
-
-// Connect Flash
 app.use(flash());
-
-// Global Vars
 app.use(function (req, res, next) {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
@@ -85,59 +46,189 @@ app.use(function (req, res, next) {
     res.locals.user = req.user || null;
     next();
 });
-//GET main page
 app.get('/', function (req, res, next) {
     res.render('mainpage');
 });
-// GET TRial Data
-app.get('/api/trialdata', function (req, res) {
-    trialData.getTrialData(function (err, trialdata) {
-        if (err) {
-            throw err;
-        }
-        res.json(trialdata);
+
+var candidateAccountSchema = require('./models/Accounts/candidateAccountSchema');
+var conditionsSchema = require('./models/Accounts/conditionsSchema');
+var epochSchema = require('./models/Trials/epochSchema');
+var exclusionSchema = require('./models/Trials/exclusionSchema');
+var inclusionSchema = require('./models/Trials/inclusionSchema');
+var requestedCandidatesSchema = require('./models/Validation/requestedCandidateSchema');
+var researcherAccountsSchema = require('./models/Accounts/researcherAccountSchema');
+var researcherSchema = require('./models/Trials/researcherSchema');
+var responseSchema = require('./models/Trials/responseSchema');
+var trialSchema = require('./models/Trials/trialSchema');
+var verifiedCandidatesSchema = require('./models/Validation/verifiedCandidateSchema');
+
+//schemas
+var candidateAccount = mongoose.model('CandidateAccounts', candidateAccountSchema);
+var researcherAccount = mongoose.model('ResearcherAccounts', researcherAccountsSchema);
+var conditionsData = mongoose.model('Conditions', conditionsSchema);
+
+var epochData = mongoose.model('Epochs' , epochSchema);
+var exclusionsData = mongoose.model('Exclusions' , exclusionSchema);
+var inclusionsData = mongoose.model('Inclusions' , inclusionSchema);
+var requestedCandidatesData = mongoose.model('RequestedCandidates' , requestedCandidatesSchema);
+var researcherAccountsData = mongoose.model('ResearcherAccounts' , researcherAccountsSchema);
+var researcherData = mongoose.model('Researchers' , researcherSchema);
+var responseData = mongoose.model('Responses' , responseSchema);
+var trialData = mongoose.model('Trials' , trialSchema);
+var verifiedCandidatesData = mongoose.model('VerifiedCandidates' , verifiedCandidatesSchema);
+
+// candidates
+app.post('/api/create-candidate', function (req) {
+    candidateAccount.createCandidate(new candidateAccount(req.body));
+});
+
+app.get('/api/get-candidates', function (req, res) {
+    candidateAccount.getCandidates(function(err, result) {
+        if(err) throw err;
+        res.json(result);
     });
 });
 
-//GET Response Data
-app.get('/api/responsedata', function (req, res) {
-    responseData.getresponseData(function (err, responsedata) {
-        if (err) {
-            throw err;
-        }
-        res.json(responsedata);
+app.get('/api/get-candidates/:id', function (req, res) {
+    candidateAccount.getCandidateById(req.params.id, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+app.get('/api/get-candidates/:email', function (req, res) {
+    candidateAccount.getCandidateByEmail(req.params.email, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+// researchers
+app.post('/api/create-researcher', function (req, res) {
+    researcherAccount.createResearcher(new researcherAccount(req.body));
+    res.redirect("/users/login");
+});
+
+app.get('/api/get-researchers', function (req, res) {
+    researcherAccount.getResearcher(function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+app.get('/api/get-researchers/id/:id', function (req, res) {
+    researcherAccount.getResearcherById(req.params.id, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+app.get('/api/get-researchers/email/:email', function (req, res) {
+    researcherAccount.getResearcherByEmail(req.params.email, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+app.get('/api/get-researchers/username/:username', function (req, res) {
+    researcherAccount.getResearcherByUsername(req.params.username, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+// conditions
+app.get('/debug/create-condition/:candidateid/:count', function (req) {
+    var conditions={};
+    for(var i=0; i<req.params.count; i++) {
+        var item = i;
+        conditions["condition" + item] = item;
+    }
+
+    var mockData = {
+        userid: req.params.candidateid,
+        conditions
+    };
+    conditionsData.createCondition(new conditionsData(mockData));
+});
+
+app.get('/debug/edit-condition/:id/:count', function (req, res) {
+    var conditions={};
+    for(var i=0; i<req.params.count; i++) {
+        conditions["condition" + i] = Math.floor(Math.random() * 100).toString();
+    }
+
+    conditionsData.getConditionById(req.params.id, function (err, doc) {
+        doc.conditions = conditions;
+        doc.save();
+    });
+    res.redirect('/debug/get-conditions');
+});
+
+app.get('/api/get-conditions', function (req, res) {
+    conditionsData.getConditions(function (err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+app.get('/api/get-conditions/:userid', function(req, res) {
+    conditionsData.getConditionById(req.params.userid, function (err, result) {
+        if(err) throw err;
+        res.json(result.conditions);
     })
 });
 
-app.get('/api/responsedata/id/:_id', function (req, res) {
-    responseData.getresponseDataById(req.params._id, function (err, responsebyid) {
-        if (err) {
-            throw err;
-        }
-        res.json(responsebyid);
-    })
+// inclusions
+app.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
+    var inclusions = {};
+    for(var i=0; i<req.params.count; i++) {
+        inclusions["inclusion" + i] = Math.floor(Math.random() * 100).toString();
+    }
+
+    var inclusionData = {
+        trialid: req.params.trialid,
+        inclusions
+    };
+
+    inclusionsData.createInclusions(new inclusionsData(inclusionData));
+    res.redirect('/debug/get-inclusions');
 });
 
-//GET Response data by trialid
-app.get('/api/responsedata/trial/:trialid', function (req, res) {
-    responseData.getresponseDataByTrialId(req.params.trialid, function (err, responsebytrialid) {
-        if (err) {
-            throw err;
-        }
-        res.json(responsebytrialid);
-    })
+app.post('/api/create-inclusion', function (req, res) {
+    inclusionsData.createInclusions(new inclusionsData(req.body));
+    res.redirect('/debug/get-inclusions');
 });
 
-//GET Response data by epochid
-app.get('/api/responsedata/inclusion/:epochid', function (req, res) {
-    responseData.getresponseDataByEpochId(req.params.epochid, function (err, responsebyepochid) {
-        if (err) {
-            throw err;
-        }
-        res.json(responsebyepochid);
-    })
+app.get('/debug/edit-inclusions/:userid/:count', function (req, res) {
+    var inclusions = {};
+    for(var i=0; i<req.params.count; i++) {
+        inclusions[i] = Math.floor(Math.random() * 100).toString();
+    }
+
+    inclusionsData.getInclusionsById(req.param.userid, function(err, doc) {
+        if(err) throw err;
+        doc.inclusions = inclusions;
+        doc.save();
+    });
+    res.redirect('/debug/get-inclusions');
 });
 
+app.get('/api/get-inclusions', function (req, res) {
+    inclusionsData.getInclusions(function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+app.get('/api/get-inclusion/:userid', function (req, res) {
+    conditionsData.getConditionById(req.params.userid, function(err, result) {
+        if(err) throw err;
+        res.json(result.conditions);
+    });
+});
+
+// -------------------------------------------------------
 
 app.get('/api/randomrecords', function(req, res, next) {
     trialData.getRandomTrial(3, function(err, result) {
@@ -221,7 +312,6 @@ function traverseNodes(o,func) {
         }
     }
 }
-
 function traverseDataNodes(p,func) {
     for (var i in p) {
         if (p[i] !== null && typeof(p[i])=="object") {
