@@ -9,16 +9,24 @@
             <div class="account-wall center-form">
                 <img class="profile-img" src="/img/neurobranch_logo.png"
                      alt="">
-                <form class="form-signin" method="post" action="/users/signup">
+                <form class="form-signin" method="post" action="/api/create-researcher">
                     <!-- fields -->
-                    <input type="text" class="form-control" placeholder="First Name" name="forename" required autofocus>
-                    <input type="text" class="form-control" placeholder="Last Name" name="surname" required>
-                    <input type="text" class="form-control" placeholder="Username" name="username" required>
-                    <input type="text" class="form-control" placeholder="Organisation" name="organisation" required>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Forename" name="forename" required
+                               autofocus>
+                        <input type="text" class="form-control" placeholder="Surname" name="surname" required>
+                        <input type="text" class="form-control" placeholder="Username" name="username" required>
+                        <select class="form-control" name="institute" id="institute">
+                            <option value="def_institute_placeholder" disabled selected>Institute</option>
+                            <option value="TCD">Trinity College Dublin</option>
+                        </select>
+                    </div>
+
                     <input type="email" class="form-control" placeholder="Email" name="email" required>
                     <input type="email" class="form-control" placeholder="Confirm email" name="conf_email" required>
                     <input type="password" class="form-control" placeholder="Password" name="password" required>
-                    <input type="password" class="form-control" placeholder="Confirm password" name="conf_pass" required>
+                    <input type="password" class="form-control" placeholder="Confirm password" name="conf_pass"
+                           required>
 
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
                     <label class="pull-left checkbox checkbox-left-align">
@@ -27,7 +35,7 @@
                         policies</a>.
                     </label>
                     <div class="center-text">
-                        Already have an account? <a href="./login.html" class="need-help">Log in.</a><span
+                        Already have an account? <a href="/users/login" class="need-help">Log in.</a><span
                             class="clearfix"></span>
                     </div>
                 </form>

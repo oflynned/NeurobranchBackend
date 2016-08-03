@@ -3,8 +3,6 @@ var router = express.Router();
 var assert = require('assert');
 
 var Globals = require("./Globals.js");
-var multer = require('multer');
-var upload = multer({dest: 'public/uploads/'});
 
 var candidateAccountSchema = require('../models/Accounts/candidateAccountSchema');
 var conditionsSchema = require('../models/Accounts/conditionsSchema');
@@ -37,58 +35,61 @@ var responseData = mongoose.model('Responses' , responseSchema);
 var trialData = mongoose.model('Trials' , trialSchema);
 var verifiedCandidatesData = mongoose.model('VerifiedCandidates' , verifiedCandidatesSchema);
 
-// debug functions!
-
 // candidates
-router.post('/debug/create-candidate', function (req, res) {
-    console.log(req.body);
-    var mockData = {
-        email: req.body.email,
-        password: req.body.password
-    };
-    candidateAccount.createCandidate(new candidateAccount(mockData));
-    res.redirect("/");
+router.post('/api/create-candidate', function (req) {
+    candidateAccount.createCandidate(new candidateAccount(req.body));
 });
 
-router.get('/debug/get-candidates', function (req, res) {
+router.get('/api/get-candidates', function (req, res) {
     candidateAccount.getCandidates(function(err, result) {
         if(err) throw err;
         res.json(result);
     });
 });
 
-router.get('/debug/get-candidates/:id', function (req, res) {
-    console.log(req.params);
+router.get('/api/get-candidates/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function(err, result) {
         if(err) throw err;
         res.json(result);
     });
 });
 
-// researchers
-router.get('/debug/create-researcher', function (req, res) {
-    var mockData = {
-        forename: Date.now(),
-        surname: Date.now(),
-        username: Date.now(),
-        email: Date.now(),
-        password: Date.now(),
-        institute: Date.now(),
-        datecreated: Date.now()
-    };
-    researcherAccount.createResearcher(new researcherAccount(mockData));
+router.get('/api/get-candidates/:email', function (req, res) {
+    candidateAccount.getCandidateByEmail(req.params.email, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
 });
 
-router.get('/debug/get-researchers', function (req, res) {
+// researchers
+router.post('/api/create-researcher', function (req, res) {
+    researcherAccount.createResearcher(new researcherAccount(req.body));
+    res.redirect("/users/login");
+});
+
+router.get('/api/get-researchers', function (req, res) {
     researcherAccount.getResearcher(function(err, result) {
         if(err) throw err;
         res.json(result);
     });
 });
 
-router.get('/debug/get-researchers/:id', function (req, res) {
-    console.log(req.params);
+router.get('/api/get-researchers/id/:id', function (req, res) {
     researcherAccount.getResearcherById(req.params.id, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+router.get('/api/get-researchers/email/:email', function (req, res) {
+    researcherAccount.getResearcherByEmail(req.params.email, function(err, result) {
+        if(err) throw err;
+        res.json(result);
+    });
+});
+
+router.get('/api/get-researchers/username/:username', function (req, res) {
+    researcherAccount.getResearcherByUsername(req.params.username, function(err, result) {
         if(err) throw err;
         res.json(result);
     });
@@ -129,6 +130,12 @@ router.get('/debug/get-conditions', function (req, res) {
     });
 });
 
+router.get('/debug/get-conditions/:userid', function(req, res) {
+    conditionsData.getConditionById(req.params.userid, function (err, result) {
+        if(err) throw err;
+        res.json(result.conditions);
+    })
+});
 
 router.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
     var inclusions = {};

@@ -64,6 +64,10 @@ module.exports.getResearcherByEmail = function (email, callback) {
     researcher.findOne({email: email}, callback);
 };
 
+module.exports.getResearcherByUsername = function (username, callback) {
+    researcher.findOne({username: username}, callback);
+};
+
 module.exports.comparePasswords = function (researcherPassword, hash, callback) {
     bcrypt.compare(researcherPassword, hash, function (err, isMatch) {
         if (err) throw err;

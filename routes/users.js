@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var User = require('../models/Old/user');
+
+var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Old/trialdata');
 
 var MAX_LENGTH = 200;
@@ -76,56 +78,6 @@ router.get('/signup', function (req, res) {
     });
 });
 
-//sign up post
-router.post('/signup', function (req, res) {
-    var forename = req.body.forename;
-    var surname = req.body.surname;
-    var username = req.body.username;
-    var organisation = req.body.organisation;
-    var email = req.body.email;
-    var conf_email = req.body.conf_email;
-    var password = req.body.password;
-    var conf_pass = req.body.conf_pass;
-
-    // Validation
-    req.checkBody("username", "Username is required").notEmpty();
-
-    req.checkBody("forename", 'Forename is required').notEmpty();
-    req.checkBody("surname", 'Surname is required').notEmpty();
-
-    req.checkBody("email", 'Email is required').notEmpty();
-    req.checkBody("conf_email", 'Email is not valid').equals(req.body.email);
-
-    req.checkBody("organisation", "Organisation is required").notEmpty();
-
-    req.checkBody("password", 'Password is required').notEmpty();
-    req.checkBody("conf_pass", 'Passwords do not match').equals(req.body.conf_pass);
-
-    var errors = req.validationErrors();
-
-    if (errors) {
-        console.log(errors);
-        res.render('signup', {
-            errors: errors
-        });
-    } else {
-        var newUser = new User({
-            forename: forename,
-            surname: surname,
-            username: username,
-            organisation: organisation,
-            password: password,
-            email: email
-        });
-
-        User.createUser(newUser, function (err, user) {
-            if (err) throw err;
-            console.log(user);
-        });
-        res.redirect('/users/login');
-    }
-});
-
 //login
 router.get('/login', function (req, res) {
     res.render('login', {
@@ -136,8 +88,7 @@ router.get('/login', function (req, res) {
 router.post('/login',
     passport.authenticate('local', {
         successRedirect: '/',
-        failureRedirect: '/users/login',
-        failureFlash: true
+        failureRedirect: '/users/news'
     })
 );
 
@@ -245,46 +196,32 @@ router.get('/privacypolicy', function (req, res) {
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        User.getUserByUsername(username, function (err, user) {
-            if (err) {
-                console.log(err);
-                throw err;
-            }
-            if (!user) {
-                return done(null, false, {
-                    message: 'Unknown User'
-                });
-            }
+        researcherAccount.getResearcherByUsername(username, function (err, researcher) {
+            console.log(researcher);
 
-            User.comparePassword(password, user.password, function (err, isMatch) {
+            if (err) throw err;
+            if (!researcher) return done(null, false, { message: 'Unknown User'} );
+
+            researcherAccount.comparePasswords(password, researcher.password, function (err, isMatch) {
                 if (err) throw err;
-                if (isMatch) {
-                    return done(null, user);
-                } else {
-                    return done(null, false, {
-                        message: 'Invalid password'
-                    });
-                }
+                return isMatch ? done(null, researcher) : done(null, false, {message: 'Invalid password'});
             });
         });
-    }));
+    })
+);
 
-passport.serializeUser(function (user, done) {
-    done(null, user.id);
+passport.serializeUser(function (researcher, done) {
+    done(null, researcher.id);
 });
 
 passport.deserializeUser(function (id, done) {
-    User.getUserById(id, function (err, user) {
-        done(err, user);
+    researcherAccount.getResearcherById(id, function (err, researcher) {
+        done(err, researcher);
     });
 });
 
 function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        res.redirect('/');
-    }
+    return req.isAuthenticated() ? next() : res.redirect('/');
 }
 
 module.exports = router;

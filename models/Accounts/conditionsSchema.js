@@ -4,10 +4,10 @@
 var mongoose = require('mongoose');
 
 var conditionSchema = mongoose.Schema({
-    userid: [{
+    userid: {
         type: String,
         ref: 'CandidateAccounts'
-    }],
+    },
     conditions: {}
 });
 
