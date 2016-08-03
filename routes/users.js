@@ -5,7 +5,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
-var trialData = require('../models/Old/trialdata');
+var trialData = require('../models/Trials/trialSchema');
 
 var MAX_LENGTH = 200;
 
@@ -38,7 +38,7 @@ function generateTile(trialName, description, image, trialid) {
 }
 
 function generateFrontNews(limit, res) {
-    trialData.getTrialData(function (err, data) {
+    trialData.getTrials(function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
@@ -49,7 +49,7 @@ function generateFrontNews(limit, res) {
                 rowId++;
                 element = "";
             }
-            element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
+            element += generateTile(data[i]['title'], data[i]['description'], null, data[i]['_id']);
 
             if (i == data.length - 1)
                 container += generateRow(rowId, element);

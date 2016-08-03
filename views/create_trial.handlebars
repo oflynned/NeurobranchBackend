@@ -39,7 +39,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-6 col-md-6">
+                                <div class="col-sm-4 col-md-4">
                                     <select class="form-control" name="trialtype" id="trialtype">
                                         <option value="def_trialtype_placeholder" disabled selected>Trial Type</option>
                                         <option value="pharmaceutical">Pharma</option>
@@ -49,7 +49,12 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-6 col-md-6">
+                                <div class="col-sm-4 col-md-4">
+                                    <input class="form-control" type="text" id="candidatequota" name="candidatequota"
+                                           placeholder="Candidate Quota">
+                                </div>
+
+                                <div class="col-sm-4 col-md-4">
                                     <select class="form-control" name="condition" id="condition">
                                         <option value="def_condition_placeholder" disabled selected>Condition Type
                                         </option>
@@ -58,22 +63,6 @@
                                 </div>
                             </div>
 
-                            <div class="row center-text form-create-trial-margin-section">
-                                <div class="col-sm-6 col-md-6">
-                                        <label for="starttime">Start Time</label>
-                                        <input class="form-control center-text" type="datetime-local"
-                                               id="starttime"
-                                               name="starttime">
-                                    </div>
-
-                                    <div class="col-sm-6 col-md-6">
-                                        <label for="endtime">End Time</label>
-                                        <input class="form-control center-text" type="datetime-local"
-                                               id="endtime"
-                                               name="endtime">
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-4 center-text center-form">
                                     <button class="btn btn-lg btn-primary btn-block" type="submit">

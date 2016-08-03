@@ -67,38 +67,35 @@ var candidateAccount = mongoose.model('CandidateAccounts', candidateAccountSchem
 var researcherAccount = mongoose.model('ResearcherAccounts', researcherAccountsSchema);
 var conditionsData = mongoose.model('Conditions', conditionsSchema);
 
-var epochData = mongoose.model('Epochs' , epochSchema);
-var exclusionsData = mongoose.model('Exclusions' , exclusionSchema);
-var inclusionsData = mongoose.model('Inclusions' , inclusionSchema);
-var requestedCandidatesData = mongoose.model('RequestedCandidates' , requestedCandidatesSchema);
-var researcherAccountsData = mongoose.model('ResearcherAccounts' , researcherAccountsSchema);
-var researcherData = mongoose.model('Researchers' , researcherSchema);
-var responseData = mongoose.model('Responses' , responseSchema);
-var trialData = mongoose.model('Trials' , trialSchema);
-var verifiedCandidatesData = mongoose.model('VerifiedCandidates' , verifiedCandidatesSchema);
+var epochData = mongoose.model('Epochs', epochSchema);
+var exclusionsData = mongoose.model('Exclusions', exclusionSchema);
+var inclusionsData = mongoose.model('Inclusions', inclusionSchema);
+var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCandidatesSchema);
+var researcherAccountsData = mongoose.model('ResearcherAccounts', researcherAccountsSchema);
+var researcherData = mongoose.model('Researchers', researcherSchema);
+var responseData = mongoose.model('Responses', responseSchema);
+var trialData = mongoose.model('Trials', trialSchema);
+var verifiedCandidatesData = mongoose.model('VerifiedCandidates', verifiedCandidatesSchema);
 
 // candidates
 app.post('/api/create-candidate', function (req) {
     candidateAccount.createCandidate(new candidateAccount(req.body));
 });
-
 app.get('/api/get-candidates', function (req, res) {
-    candidateAccount.getCandidates(function(err, result) {
-        if(err) throw err;
+    candidateAccount.getCandidates(function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
-
 app.get('/api/get-candidates/:id', function (req, res) {
-    candidateAccount.getCandidateById(req.params.id, function(err, result) {
-        if(err) throw err;
+    candidateAccount.getCandidateById(req.params.id, function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
-
 app.get('/api/get-candidates/:email', function (req, res) {
-    candidateAccount.getCandidateByEmail(req.params.email, function(err, result) {
-        if(err) throw err;
+    candidateAccount.getCandidateByEmail(req.params.email, function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
@@ -108,39 +105,35 @@ app.post('/api/create-researcher', function (req, res) {
     researcherAccount.createResearcher(new researcherAccount(req.body));
     res.redirect("/users/login");
 });
-
 app.get('/api/get-researchers', function (req, res) {
-    researcherAccount.getResearcher(function(err, result) {
-        if(err) throw err;
+    researcherAccount.getResearcher(function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
-
 app.get('/api/get-researchers/id/:id', function (req, res) {
-    researcherAccount.getResearcherById(req.params.id, function(err, result) {
-        if(err) throw err;
+    researcherAccount.getResearcherById(req.params.id, function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
-
 app.get('/api/get-researchers/email/:email', function (req, res) {
-    researcherAccount.getResearcherByEmail(req.params.email, function(err, result) {
-        if(err) throw err;
+    researcherAccount.getResearcherByEmail(req.params.email, function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
-
 app.get('/api/get-researchers/username/:username', function (req, res) {
-    researcherAccount.getResearcherByUsername(req.params.username, function(err, result) {
-        if(err) throw err;
+    researcherAccount.getResearcherByUsername(req.params.username, function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
 
 // conditions
-app.get('/debug/create-condition/:candidateid/:count', function (req) {
-    var conditions={};
-    for(var i=0; i<req.params.count; i++) {
+app.post('/debug/create-condition/:candidateid/:count', function (req) {
+    var conditions = {};
+    for (var i = 0; i < req.params.count; i++) {
         var item = i;
         conditions["condition" + item] = item;
     }
@@ -151,10 +144,9 @@ app.get('/debug/create-condition/:candidateid/:count', function (req) {
     };
     conditionsData.createCondition(new conditionsData(mockData));
 });
-
 app.get('/debug/edit-condition/:id/:count', function (req, res) {
-    var conditions={};
-    for(var i=0; i<req.params.count; i++) {
+    var conditions = {};
+    for (var i = 0; i < req.params.count; i++) {
         conditions["condition" + i] = Math.floor(Math.random() * 100).toString();
     }
 
@@ -164,17 +156,15 @@ app.get('/debug/edit-condition/:id/:count', function (req, res) {
     });
     res.redirect('/debug/get-conditions');
 });
-
 app.get('/api/get-conditions', function (req, res) {
     conditionsData.getConditions(function (err, result) {
-        if(err) throw err;
+        if (err) throw err;
         res.json(result);
     });
 });
-
-app.get('/api/get-conditions/:userid', function(req, res) {
+app.get('/api/get-conditions/:userid', function (req, res) {
     conditionsData.getConditionById(req.params.userid, function (err, result) {
-        if(err) throw err;
+        if (err) throw err;
         res.json(result.conditions);
     })
 });
@@ -182,7 +172,7 @@ app.get('/api/get-conditions/:userid', function(req, res) {
 // inclusions
 app.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
     var inclusions = {};
-    for(var i=0; i<req.params.count; i++) {
+    for (var i = 0; i < req.params.count; i++) {
         inclusions["inclusion" + i] = Math.floor(Math.random() * 100).toString();
     }
 
@@ -194,45 +184,98 @@ app.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
     inclusionsData.createInclusions(new inclusionsData(inclusionData));
     res.redirect('/debug/get-inclusions');
 });
-
 app.post('/api/create-inclusion', function (req, res) {
     inclusionsData.createInclusions(new inclusionsData(req.body));
     res.redirect('/debug/get-inclusions');
 });
-
 app.get('/debug/edit-inclusions/:userid/:count', function (req, res) {
     var inclusions = {};
-    for(var i=0; i<req.params.count; i++) {
+    for (var i = 0; i < req.params.count; i++) {
         inclusions[i] = Math.floor(Math.random() * 100).toString();
     }
 
-    inclusionsData.getInclusionsById(req.param.userid, function(err, doc) {
-        if(err) throw err;
+    inclusionsData.getInclusionsById(req.param.userid, function (err, doc) {
+        if (err) throw err;
         doc.inclusions = inclusions;
         doc.save();
     });
     res.redirect('/debug/get-inclusions');
 });
-
 app.get('/api/get-inclusions', function (req, res) {
-    inclusionsData.getInclusions(function(err, result) {
-        if(err) throw err;
+    inclusionsData.getInclusions(function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
-
 app.get('/api/get-inclusion/:userid', function (req, res) {
-    conditionsData.getConditionById(req.params.userid, function(err, result) {
-        if(err) throw err;
+    conditionsData.getConditionById(req.params.userid, function (err, result) {
+        if (err) throw err;
         res.json(result.conditions);
     });
 });
 
+//trials
+app.post('/api/create-trial/:researcherid', function (req, res) {
+    var trialParams = req.body;
+    var trialDataParams = {
+        researcherid: req.params.researcherid,
+        trialParams
+    };
+
+    trialData.createTrial(new trialData(trialDataParams));
+    res.redirect('/debug/get-trials');
+});
+app.get('/api/get-trials', function (req, res) {
+    trialData.getTrials(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-trials/:researcherid', function (req, res) {
+    trialData.getTrialsByResearcherId(req.params.researcherid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
+//debug trials
+app.get('/debug/create-trial/:researcherid', function (req, res) {
+    var trialParams = {
+        title: "title" + Date.now(),
+        briefdescription: "briefdescription" + Date.now(),
+        detaileddescription: "detaileddescription" + Date.now(),
+        trialtype: "trialtype" + Date.now(),
+        organisation: "organisation" + Date.now(),
+        condition: "condition" + Date.now(),
+        datecreated: "datecreated" + Date.now(),
+        datepublished: "datepublished" + Date.now(),
+        dateactive: "dateactive" + Date.now(),
+        candidatequota: "candidatequota" + Date.now(),
+        state: "state" + Date.now(),
+        researcherid: req.params.researcherid
+    };
+    trialData.createTrial(new trialData(trialParams));
+    res.redirect('/debug/get-trials');
+});
+app.get('/debug/edit-trial/:userid', function (req, res) {
+    var inclusions = {};
+    for (var i = 0; i < req.params.count; i++) {
+        inclusions[i] = Math.floor(Math.random() * 100).toString();
+    }
+
+    inclusionsData.getInclusionsById(req.param.userid, function (err, doc) {
+        if (err) throw err;
+        doc.inclusions = inclusions;
+        doc.save();
+    });
+    res.redirect('/debug/get-trials');
+});
+
 // -------------------------------------------------------
 
-app.get('/api/randomrecords', function(req, res, next) {
-    trialData.getRandomTrial(3, function(err, result) {
-        if(err) throw err;
+app.get('/api/randomrecords', function (req, res, next) {
+    trialData.getRandomTrial(3, function (err, result) {
+        if (err) throw err;
         res.json(result);
     });
 });
@@ -301,7 +344,7 @@ function clone(obj) {
 
     throw new Error("Unable to copy obj! Its type isn't supported.");
 }
-function traverseNodes(o,func) {
+function traverseNodes(o, func) {
     for (var i in o) {
         if (o[i] !== null && typeof(o[i]) == "object") {
             traverseNodes(o[i], func);
@@ -312,15 +355,15 @@ function traverseNodes(o,func) {
         }
     }
 }
-function traverseDataNodes(p,func) {
+function traverseDataNodes(p, func) {
     for (var i in p) {
-        if (p[i] !== null && typeof(p[i])=="object") {
-            traverseDataNodes(p[i],func);
+        if (p[i] !== null && typeof(p[i]) == "object") {
+            traverseDataNodes(p[i], func);
         }
     }
 }
 
-addResponseData = function(model, value, callback){
+addResponseData = function (model, value, callback) {
     model.create(value, callback);
 };
 

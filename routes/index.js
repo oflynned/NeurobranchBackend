@@ -8,6 +8,9 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.createConnection('localhost:27017/neurobranch_db');
 
+var trialSchema = require('../models/Trials/trialSchema');
+var trialData = mongoose.model('Trials', trialSchema);
+
 //dashboard
 router.get('/users/dashboard', function (req, res) {
     generateDashboard(res);
@@ -23,7 +26,7 @@ router.get('/users/notifications', ensureAuthenticated, function (req, res) {
 });
 
 //display username in create_trial
-router.get('/users/create-trial'/*, ensureAuthenticated*/, function (req, res) {
+router.get('/users/create-trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial',
         {
             user: req.user,
@@ -32,7 +35,7 @@ router.get('/users/create-trial'/*, ensureAuthenticated*/, function (req, res) {
 });
 
 //insert for trials//
-router.post('/insert', function (req, res, err) {
+router.post('/insert', function (req, res) {
 
     var item = {
         questionrelation: req.body._id,
@@ -244,14 +247,14 @@ function generateTile(trialName, description, image, trialid) {
         '<img src="' + image + '">' +
         '<div class="caption">' +
         '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
-        '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
+        '<p>' + description + '</p>' + //trimString(description, MAX_LENGTH) + '</p>' +
         '</div>' +
         '</div>' +
         '</div>'
 }
 
 function generateDashboard(res) {
-    trialData.getTrialsByUsername(function (err, data) {
+    trialData.getTrialsByResearcherId("57a23417d43e4b161b314038", function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
@@ -263,7 +266,7 @@ function generateDashboard(res) {
                 rowId++;
                 element = "";
             }
-            element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
+            element += generateTile(data[i]['title'], data[i]['shortdescription'], null, data[i]['_id']);
 
             if (i == data.length - 1)
                 container += generateRow(rowId, element);
