@@ -13,7 +13,7 @@ var trialData = mongoose.model('Trials', trialSchema);
 
 //dashboard
 router.get('/users/dashboard', function (req, res) {
-    generateDashboard("57a23417d43e4b161b314038", res);
+    generateDashboard("57a233b04aac072416fd1d88", res);
 });
 
 //display username in create_trial

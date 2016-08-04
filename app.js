@@ -175,14 +175,20 @@ app.get('/api/get-conditions/:userid', function (req, res) {
 
 //trials
 app.post('/api/create-trial/:researcherid', function (req, res) {
+    console.log(req.body);
     var trialParams = req.body;
     var trialDataParams = {
-        researcherid: req.params.researcherid,
-        trialParams
+        researcherid: req.params.researcherid
     };
 
+    for(var attribute in trialParams) {
+        trialDataParams[attribute] = trialParams[attribute];
+    }
+
+    console.log(trialDataParams);
+
     trialData.createTrial(new trialData(trialDataParams));
-    res.redirect('/debug/get-trials');
+    res.redirect('/api/get-trials');
 });
 app.get('/api/get-trials', function (req, res) {
     trialData.getTrials(function (err, result) {

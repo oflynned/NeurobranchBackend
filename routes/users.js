@@ -8,6 +8,7 @@ var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
 
 var MAX_LENGTH = 200;
+var researcherId = "";
 
 function trimString(input, length) {
     var trimmedString = input.substr(0, length);
@@ -105,7 +106,8 @@ router.get('/trials/:trialid', function (req, res) {
 //create trial
 router.get('/create_trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial', {
-        active_dash: "true"
+        active_dash: "true",
+        researcher: researcherId
     });
 });
 router.get('/create_question', ensureAuthenticated, function (req, res) {
@@ -174,6 +176,7 @@ passport.serializeUser(function (researcher, done) {
 
 passport.deserializeUser(function (id, done) {
     researcherAccount.getResearcherById(id, function (err, researcher) {
+        researcherId = researcher._id;
         done(err, researcher);
     });
 });
