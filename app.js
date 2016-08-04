@@ -102,7 +102,6 @@ app.use(function printSession(req, res, next) {
     console.assert(typeof req.session.views === 'number',
         'missing views count in the session', req.session);
     req.session.views++;
-
     return next();
 });
 
