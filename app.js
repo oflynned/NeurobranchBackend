@@ -4,7 +4,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var exphbs = require('express-handlebars');
-var expressValidator = require('express-validator');
 var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
@@ -22,7 +21,6 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
 app.set('view engine', 'handlebars');
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.text());
@@ -408,7 +406,40 @@ app.get('/api/get-responses/:questionid/:candidateid', function (req, res) {
         res.json(result);
     });
 });
-app.delete('/api/delete-response/:responseid', function(req, res) {
+app.delete('/api/delete-response/:_id', function(req, res) {
+
+});
+
+//researchers ownership of trial meta data, ie who is hosting the trial
+app.post('/api/create-researcher-data/:trialid', function (req, res) {
+    var trialid = req.params.trialid;
+    var researchers = req.body;
+    var researcherDataParams = {
+        trialid: trialid,
+        researchers
+    };
+    researcherData.createResearchers(new researcherData(researcherDataParams));
+    res.redirect('/api/get-researcher-data');
+});
+app.get('/api/get-researcher-data', function (req, res) {
+    researcherData.getResearchers(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-researcher-data/:trialid', function (req, res) {
+    researcherData.getResearchersById(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        res.json(result.exclusions);
+    });
+});
+app.get('/api/get-researcher-data/:_id', function (req, res) {
+    researcherData.getResearchersById(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        res.json(result.exclusions);
+    });
+});
+app.delete('/api/delete-researcher-data/:_id', function (req, res) {
 
 });
 
@@ -553,8 +584,6 @@ app.get('/trial_number', function (req, res, next) {
         res.json(trialdata.length + " records in collection");
     });
 });
-
-//POST question data
 app.post('/api/questiondata', function (req, res) {
     var quest = req.body;
     questionData.addQuestionData(function (err, quest) {
@@ -564,7 +593,6 @@ app.post('/api/questiondata', function (req, res) {
         res.json(response);
     })
 });
-// GET question data
 app.get('/api/questiondata', function (req, res) {
     questionData.getQuestionData(function (err, questiondata) {
         if (err) {
@@ -573,7 +601,6 @@ app.get('/api/questiondata', function (req, res) {
         res.json(questiondata);
     });
 });
-//GET user data
 app.get('/api/user', function (req, res) {
     userdata.getUser(function (err, userdata) {
         if (err) {

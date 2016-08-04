@@ -10,18 +10,22 @@ var researcherSchema = mongoose.Schema({
 
 var researcherData = module.exports = mongoose.model('Researchers', researcherSchema);
 
-module.exports.getExclusions = function (callback) {
+module.exports.getResearchers = function (callback) {
     researcherData.find(callback).sort({$natural:-1});
 };
 
-module.exports.getExclusionsWithLimit = function (limit, callback) {
+module.exports.getResearchersWithLimit = function (limit, callback) {
     researcherData.find(callback).skip(researcherData - limit).sort({$natural:-1}).limit(limit);
 };
 
-module.exports.createExclusions = function (researcherData, callback) {
+module.exports.createResearchers = function (researcherData, callback) {
     researcherData.save(callback);
 };
 
-module.exports.getExclusionsById = function (id, callback) {
-    researcherData.findOne({trialid: id}, callback);
+module.exports.getResearchersById = function (id, callback) {
+    researcherData.find({_id: id}, callback);
+};
+
+module.exports.getResearchersById = function (trialid, callback) {
+    researcherData.find({trialid: trialid}, callback);
 };
