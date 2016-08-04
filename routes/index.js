@@ -4,63 +4,14 @@ var assert = require('assert');
 var multer = require('multer');
 var cookie = require('cookie');
 var upload = multer({dest: 'public/uploads/'});
+var Globals = require("./Globals.js");
 
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+mongoose.Promise = global.Promise;
 mongoose.createConnection('localhost:27017/neurobranch_db');
 
-var trialData = require('../models/trialdata');
-var Globals = require("./Globals.js");
-//_id used to reference back trial, question relation to specify question schema relation
-var userDataSchema = new Schema(
-    {
-        questionrelation: [{type: Schema.Types.ObjectId, ref: 'QuestionData'}],
-        trialname: String,
-        trialid: String,
-        description: String,
-        trialtype: String,
-        researcher: [{
-            researchgroup: String,
-            researchername: String
-        }],
-        organisation: String,
-        specialisation: String,
-        starttime: String,
-        endtime: String,
-        timeperiodfrequency: String,
-        notificationfrequency: String,
-        imageresource: String,
-        prerequisites: [{
-            minage: String,
-            condition: String,
-            prereqtype: String
-        }]
-    },
-    {
-        collection: 'trialdata',
-        safe: true
-    }
-);
-
-var questionDataSchema = new Schema(
-    {
-        trialrelation: String,
-        questions: [{
-            question: String,
-            questiontype: String,
-            options: {
-                answer: [String]
-            }
-        }]
-    },
-    {
-        collection: 'questiondata',
-        safe: true
-    }
-);
-
-var QuestionData = mongoose.model('QuestionData', questionDataSchema);
-var UserData = mongoose.model('UserData', userDataSchema);
+var trialSchema = require('../models/Trials/trialSchema');
+var trialData = mongoose.model('Trials', trialSchema);
 
 
 router.get('/', ensureAuthenticated, function (req, res) {
@@ -76,9 +27,11 @@ router.get('/', ensureAuthenticated, function (req, res) {
         });
 });
 
+
+
 //dashboard
 router.get('/users/dashboard', function (req, res) {
-    generateDashboard(50, res);
+    generateDashboard(res);
 });
 
 //display username in create_trial
@@ -91,12 +44,66 @@ router.get('/users/notifications', ensureAuthenticated, function (req, res) {
 });
 
 //display username in create_trial
-router.get('/users/create_trial', ensureAuthenticated, function (req, res) {
+router.get('/users/create-trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial',
         {
             user: req.user,
             active_dash: "true"
         });
+});
+
+//insert for trials//
+router.post('/insert', function (req, res) {
+
+    var item = {
+        /*remove quertion relaltion*/
+        questionrelation: req.body._id,
+        trialname: req.body.trialname,
+        trialid: req.body.trialid,
+        description: req.body.description,
+        trialtype: req.body.trialtype,
+        researcher: {
+            researchgroup: req.body.researchgroup,
+            researchername: req.body.researchername
+        },
+        organisation: req.body.organisation,
+        specialisation: req.body.specialisation,
+        starttime: req.body.starttime,
+        endtime: req.body.endtime,
+        timeperiodfrequency: req.body.timeperiodfrequency,
+        notificationfrequency: req.body.notificationfrequency,
+        imageresource: req.body.imageresource,
+        prerequisites: {
+            minage: req.body.minage,
+            condition: req.body.condition,
+            prereqtype: req.body.prereqtype
+        }
+    };
+
+    var itemq = {
+        questions: {
+            trialrelation: item.trialname,
+            question: req.body.question,
+            questiontype: req.body.questiontype,
+            options: {
+                answer: req.body.answer
+            }
+        }
+    };
+
+    var qdata = new QuestionData(itemq);
+    qdata.save();
+
+    var data = new UserData(item);
+    data.save(function (err) {
+        if (err) return __handleError(err);
+
+        var question1 = new QuestionData({
+            trialrelation: data._id
+        });
+        question1.save();
+    });
+    res.redirect('/users/dashboard');
 });
 
 //display username in create_question
@@ -150,61 +157,6 @@ router.get('/get-data-q', function (req, res, next) {
                 username: req.user.username
             });
         });
-});
-
-//insert for trials//
-router.post('/insert', upload.any(), function ( req, res, err) {
-
-    var item = {
-        /*remove quertion relaltion*/
-        questionrelation: req.body._id,
-        trialname: req.body.trialname,
-        trialid: req.body.trialid,
-        description: req.body.description,
-        trialtype: req.body.trialtype,
-        researcher: {
-            researchgroup: req.body.researchgroup,
-            researchername: req.body.researchername
-        },
-        organisation: req.body.organisation,
-        specialisation: req.body.specialisation,
-        starttime: req.body.starttime,
-        endtime: req.body.endtime,
-        timeperiodfrequency: req.body.timeperiodfrequency,
-        notificationfrequency: req.body.notificationfrequency,
-        imageresource: req.body.imageresource,
-        prerequisites: {
-            minage: req.body.minage,
-            condition: req.body.condition,
-            prereqtype: req.body.prereqtype
-        }
-    };
-
-    var itemq = {
-        questions: {
-            trialrelation: item.trialname,
-            /*trialrelation: userDataSchema._id,*/
-            question: req.body.question,
-            questiontype: req.body.questiontype,
-            options: {
-                answer: req.body.answer
-            }
-        }
-    };
-
-    var qdata = new QuestionData(itemq);
-    qdata.save();
-
-    var data = new UserData(item);
-    data.save(function (err) {
-       if (err) return __handleError(err);
-
-        var question1 = new QuestionData({
-            trialrelation:data._id
-        });
-        question1.save();
-    });
-    res.redirect('/users/dashboard');
 });
 
 ///question update
@@ -299,32 +251,37 @@ function trimString(input, length) {
 }
 
 function generateTile(trialName, description, image, trialid) {
-    return '<div class="col-md-3">' +
+    return '<div class="col-sm-4 col-md-3 col-xl-2">' +
         '<div class="thumbnail">' +
         '<img src="' + image + '">' +
         '<div class="caption">' +
         '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
-        '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
+        '<p>' + description + '</p>' + //trimString(description, MAX_LENGTH) + '</p>' +
         '</div>' +
         '</div>' +
         '</div>'
 }
 
-function generateDashboard(limit, res) {
-    trialData.getRandomTrial(limit, function (err, data) {
+function generateDashboard(res) {
+    trialData.getTrialsByResearcherId("57a23417d43e4b161b314038", function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
-        for (var i = 0; i < data.length; i++) {
+        var i = 0;
+
+        for (i; i < data.length; i++) {
             if (i % 4 == 0 && i > 0) {
                 container += generateRow(rowId, element);
                 rowId++;
                 element = "";
             }
-            element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
+            element += generateTile(data[i]['title'], data[i]['shortdescription'], null, data[i]['_id']);
+
+            if (i == data.length - 1)
+                container += generateRow(rowId, element);
         }
         res.render('dashboard', {
-            active_dash: "true",
+            active_main: "true",
             content: container
         });
     });

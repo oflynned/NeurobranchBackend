@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var User = require('../models/user');
-var trialData = require('../models/trialdata');
+
+var researcherAccount = require('../models/Accounts/researcherAccountSchema');
+var trialData = require('../models/Trials/trialSchema');
 
 var MAX_LENGTH = 200;
 
@@ -23,12 +25,12 @@ function generateRow(rowId, content) {
         '</div>'
 }
 
-function generateTile(trialName, description, image) {
+function generateTile(trialName, description, image, trialid) {
     return '<div class="col-md-3">' +
         '<div class="thumbnail">' +
         '<img src="' + image + '">' +
         '<div class="caption">' +
-        '<h4>' + trialName + '</h4>' +
+        '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
         '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
         '</div>' +
         '</div>' +
@@ -36,7 +38,7 @@ function generateTile(trialName, description, image) {
 }
 
 function generateFrontNews(limit, res) {
-    trialData.getRandomTrial(limit, function (err, data) {
+    trialData.getTrials(function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
@@ -47,7 +49,7 @@ function generateFrontNews(limit, res) {
                 rowId++;
                 element = "";
             }
-            element += generateTile(data[i]['trialname'], data[i]['description'], data[i]['imageresource'], data[i]['_id']);
+            element += generateTile(data[i]['title'], data[i]['description'], null, data[i]['_id']);
 
             if (i == data.length - 1)
                 container += generateRow(rowId, element);
@@ -56,7 +58,7 @@ function generateFrontNews(limit, res) {
             active_main: "true",
             news_content: container
         });
-    })
+    }, limit);
 }
 
 //news
@@ -76,56 +78,6 @@ router.get('/signup', function (req, res) {
     });
 });
 
-//sign up post
-router.post('/signup', function (req, res) {
-    var forename = req.body.forename;
-    var surname = req.body.surname;
-    var username = req.body.username;
-    var organisation = req.body.organisation;
-    var email = req.body.email;
-    var conf_email = req.body.conf_email;
-    var password = req.body.password;
-    var conf_pass = req.body.conf_pass;
-
-    // Validation
-    req.checkBody("username", "Username is required").notEmpty();
-
-    req.checkBody("forename", 'Forename is required').notEmpty();
-    req.checkBody("surname", 'Surname is required').notEmpty();
-
-    req.checkBody("email", 'Email is required').notEmpty();
-    req.checkBody("conf_email", 'Email is not valid').equals(req.body.email);
-
-    req.checkBody("organisation", "Organisation is required").notEmpty();
-
-    req.checkBody("password", 'Password is required').notEmpty();
-    req.checkBody("conf_pass", 'Passwords do not match').equals(req.body.conf_pass);
-
-    var errors = req.validationErrors();
-
-    if (errors) {
-        console.log(errors);
-        res.render('signup', {
-            errors: errors
-        });
-    } else {
-        var newUser = new User({
-            forename: forename,
-            surname: surname,
-            username: username,
-            organisation: organisation,
-            password: password,
-            email: email
-        });
-
-        User.createUser(newUser, function (err, user) {
-            if (err) throw err;
-            console.log(user);
-        });
-        res.redirect('/users/login');
-    }
-});
-
 //login
 router.get('/login', function (req, res) {
     res.render('login', {
@@ -136,8 +88,7 @@ router.get('/login', function (req, res) {
 router.post('/login',
     passport.authenticate('local', {
         successRedirect: '/',
-        failureRedirect: '/users/login',
-        failureFlash: true
+        failureRedirect: '/users/login'
     })
 );
 
@@ -160,11 +111,11 @@ router.get('/trials/:trialid', function (req, res) {
             throw err;
         }
 
-        //convert epoch
-        var start = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        //convert inclusion
+        var start = new Date(0); // The 0 there is the key, which sets the date to the inclusion
         start.setUTCSeconds(trialAttributes.starttime);
 
-        var end = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        var end = new Date(0); // The 0 there is the key, which sets the date to the inclusion
         end.setUTCSeconds(trialAttributes.endtime);
 
         res.render('trial', {
@@ -181,26 +132,6 @@ router.get('/trials/:trialid', function (req, res) {
         });
     })
 });
-
-Date.prototype.customFormat = function(formatString){
-    var YYYY,YY,MMMM,MMM,MM,M,DDDD,DDD,DD,D,hhhh,hhh,hh,h,mm,m,ss,s,ampm,AMPM,dMod,th;
-    YY = ((YYYY=this.getFullYear())+"").slice(-2);
-    MM = (M=this.getMonth()+1)<10?('0'+M):M;
-    MMM = (MMMM=["January","February","March","April","May","June","July","August","September","October","November","December"][M-1]).substring(0,3);
-    DD = (D=this.getDate())<10?('0'+D):D;
-    DDD = (DDDD=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][this.getDay()]).substring(0,3);
-    th=(D>=10&&D<=20)?'th':((dMod=D%10)==1)?'st':(dMod==2)?'nd':(dMod==3)?'rd':'th';
-    formatString = formatString.replace("#YYYY#",YYYY).replace("#YY#",YY).replace("#MMMM#",MMMM).replace("#MMM#",MMM).replace("#MM#",MM).replace("#M#",M).replace("#DDDD#",DDDD).replace("#DDD#",DDD).replace("#DD#",DD).replace("#D#",D).replace("#th#",th);
-    h=(hhh=this.getHours());
-    if (h==0) h=24;
-    if (h>12) h-=12;
-    hh = h<10?('0'+h):h;
-    hhhh = hhh<10?('0'+hhh):hhh;
-    AMPM=(ampm=hhh<12?'am':'pm').toUpperCase();
-    mm=(m=this.getMinutes())<10?('0'+m):m;
-    ss=(s=this.getSeconds())<10?('0'+s):s;
-    return formatString.replace("#hhhh#",hhhh).replace("#hhh#",hhh).replace("#hh#",hh).replace("#h#",h).replace("#mm#",mm).replace("#m#",m).replace("#ss#",ss).replace("#s#",s).replace("#ampm#",ampm).replace("#AMPM#",AMPM);
-};
 
 //create trial
 router.get('/create_trial', ensureAuthenticated, function (req, res) {
@@ -265,46 +196,32 @@ router.get('/privacypolicy', function (req, res) {
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        User.getUserByUsername(username, function (err, user) {
-            if (err) {
-                console.log(err);
-                throw err;
-            }
-            if (!user) {
-                return done(null, false, {
-                    message: 'Unknown User'
-                });
-            }
+        researcherAccount.getResearcherByUsername(username, function (err, researcher) {
+            console.log(researcher);
 
-            User.comparePassword(password, user.password, function (err, isMatch) {
+            if (err) throw err;
+            if (!researcher) return done(null, false, { message: 'Unknown User'} );
+
+            researcherAccount.comparePasswords(password, researcher.password, function (err, isMatch) {
                 if (err) throw err;
-                if (isMatch) {
-                    return done(null, user);
-                } else {
-                    return done(null, false, {
-                        message: 'Invalid password'
-                    });
-                }
+                return isMatch ? done(null, researcher) : done(null, false, {message: 'Invalid password'});
             });
         });
-    }));
+    })
+);
 
-passport.serializeUser(function (user, done) {
-    done(null, user.id);
+passport.serializeUser(function (researcher, done) {
+    done(null, researcher.id);
 });
 
 passport.deserializeUser(function (id, done) {
-    User.getUserById(id, function (err, user) {
-        done(err, user);
+    researcherAccount.getResearcherById(id, function (err, researcher) {
+        done(err, researcher);
     });
 });
 
 function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        res.redirect('/');
-    }
+    return req.isAuthenticated() ? next() : res.redirect('/');
 }
 
 module.exports = router;
