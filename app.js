@@ -56,6 +56,7 @@ var epochSchema = require('./models/Trials/epochSchema');
 var exclusionSchema = require('./models/Trials/exclusionSchema');
 var inclusionSchema = require('./models/Trials/inclusionSchema');
 var requestedCandidatesSchema = require('./models/Validation/requestedCandidateSchema');
+var questionSchema = require('./models/Trials/questionSchema');
 var researcherAccountsSchema = require('./models/Accounts/researcherAccountSchema');
 var researcherSchema = require('./models/Trials/researcherSchema');
 var responseSchema = require('./models/Trials/responseSchema');
@@ -67,17 +68,22 @@ var candidateAccount = mongoose.model('CandidateAccounts', candidateAccountSchem
 var researcherAccount = mongoose.model('ResearcherAccounts', researcherAccountsSchema);
 var conditionsData = mongoose.model('Conditions', conditionsSchema);
 
+//base interactions
+var trialData = mongoose.model('Trials', trialSchema);
+var questionData = mongoose.model('Questions', questionSchema);
 var epochData = mongoose.model('Epochs', epochSchema);
+
+//meta data about trials
 var exclusionsData = mongoose.model('Exclusions', exclusionSchema);
 var inclusionsData = mongoose.model('Inclusions', inclusionSchema);
-var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCandidatesSchema);
-var researcherAccountsData = mongoose.model('ResearcherAccounts', researcherAccountsSchema);
 var researcherData = mongoose.model('Researchers', researcherSchema);
 var responseData = mongoose.model('Responses', responseSchema);
-var trialData = mongoose.model('Trials', trialSchema);
-var verifiedCandidatesData = mongoose.model('VerifiedCandidates', verifiedCandidatesSchema);
 
-// candidates
+//verification to trial
+var verifiedCandidatesData = mongoose.model('VerifiedCandidates', verifiedCandidatesSchema);
+var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCandidatesSchema);
+
+//candidates
 app.post('/api/create-candidate', function (req) {
     candidateAccount.createCandidate(new candidateAccount(req.body));
 });
@@ -100,7 +106,7 @@ app.get('/api/get-candidates/:email', function (req, res) {
     });
 });
 
-// researchers
+//researchers
 app.post('/api/create-researcher', function (req, res) {
     researcherAccount.createResearcher(new researcherAccount(req.body));
     res.redirect("/users/login");
@@ -130,7 +136,7 @@ app.get('/api/get-researchers/username/:username', function (req, res) {
     });
 });
 
-// conditions
+//conditions
 app.post('/debug/create-condition/:candidateid/:count', function (req) {
     var conditions = {};
     for (var i = 0; i < req.params.count; i++) {
@@ -169,51 +175,6 @@ app.get('/api/get-conditions/:userid', function (req, res) {
     })
 });
 
-// inclusions
-app.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
-    var inclusions = {};
-    for (var i = 0; i < req.params.count; i++) {
-        inclusions["inclusion" + i] = Math.floor(Math.random() * 100).toString();
-    }
-
-    var inclusionData = {
-        trialid: req.params.trialid,
-        inclusions
-    };
-
-    inclusionsData.createInclusions(new inclusionsData(inclusionData));
-    res.redirect('/debug/get-inclusions');
-});
-app.post('/api/create-inclusion', function (req, res) {
-    inclusionsData.createInclusions(new inclusionsData(req.body));
-    res.redirect('/debug/get-inclusions');
-});
-app.get('/debug/edit-inclusions/:userid/:count', function (req, res) {
-    var inclusions = {};
-    for (var i = 0; i < req.params.count; i++) {
-        inclusions[i] = Math.floor(Math.random() * 100).toString();
-    }
-
-    inclusionsData.getInclusionsById(req.param.userid, function (err, doc) {
-        if (err) throw err;
-        doc.inclusions = inclusions;
-        doc.save();
-    });
-    res.redirect('/debug/get-inclusions');
-});
-app.get('/api/get-inclusions', function (req, res) {
-    inclusionsData.getInclusions(function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
-});
-app.get('/api/get-inclusion/:userid', function (req, res) {
-    conditionsData.getConditionById(req.params.userid, function (err, result) {
-        if (err) throw err;
-        res.json(result.conditions);
-    });
-});
-
 //trials
 app.post('/api/create-trial/:researcherid', function (req, res) {
     var trialParams = req.body;
@@ -236,6 +197,9 @@ app.get('/api/get-trials/:researcherid', function (req, res) {
         if (err) throw err;
         res.json(result);
     });
+});
+app.delete('/api/delete-trial/:trialid', function (req, res) {
+    //TODO
 });
 
 //debug trials
@@ -271,6 +235,212 @@ app.get('/debug/edit-trial/:userid', function (req, res) {
     res.redirect('/debug/get-trials');
 });
 
+//epochs
+app.post('/api/create-epoch/:trialid', function (req, res) {
+    var trialid = req.params.trialid;
+    var epochParams = req.body;
+    var epochDataParams = {
+        trialid: trialid,
+        epochParams
+    };
+
+    epochData.createEpoch(new epochData(epochDataParams));
+    res.redirect('/api/get-epochs');
+});
+app.get('/api/get-epochs', function (req, res) {
+    epochData.getEpochs(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-epochs/:epochid', function (req, res) {
+    epochData.getEpochById(req.params.epochid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-epochs/:trialid', function (req, res) {
+    epochData.getEpochByTrialId(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-epochs/:trialid/:epochid', function (req, res) {
+    epochData.getEpochByAllParams(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.delete('/api/delete-epoch/:epochid', function(req, res) {
+    
+});
+
+//questions
+app.post('/api/create-question/:epochid', function (req, res) {
+    var epochid = req.params.epochid;
+    var questionParams = req.body;
+    var questionDataParams = {
+        epochid: epochid,
+        questionParams
+    };
+
+    questionData.createQuestion(new questionData(questionDataParams));
+    res.redirect('/api/get-questions');
+});
+app.get('/api/get-questions', function (req, res) {
+    questionData.getQuestions(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-questions/:questionid', function (req, res) {
+    questionData.getQuestionById(req.params.questionid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-questions/:epochid', function (req, res) {
+    questionData.getQuestionByEpochId(req.params.epochid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-questions/:epochid/:questionid', function (req, res) {
+    questionData.getQuestionByAllParams(req.params.questionid, req.params.epochid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.delete('/api/delete-question/:questionid', function (req, res) {
+
+});
+app.delete('/api/delete-epoch-questions/:epochid', function (req, res) {
+
+});
+
+//inclusions
+app.post('/api/create-inclusion/:trialid', function (req, res) {
+    var trialid = req.params.trialid;
+    var inclusions = req.body;
+    var inclusionDataParams = {
+        trialid: trialid,
+        inclusions
+    };
+    inclusionsData.createInclusions(new inclusionsData(inclusionDataParams));
+    res.redirect('/api/get-inclusions');
+});
+app.get('/api/get-inclusions', function (req, res) {
+    inclusionsData.getInclusions(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-inclusions/:trialid', function (req, res) {
+    inclusionsData.getInclusionsById(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        res.json(result.inclusions);
+    });
+});
+app.delete('/api/delete-inclusion/:inclusionid', function (req, res) {
+    
+});
+
+//exclusions
+app.post('/api/create-exclusion/:trialid', function (req, res) {
+    var trialid = req.params.trialid;
+    var exclusions = req.body;
+    var exclusionDataParams = {
+        trialid: trialid,
+        exclusions
+    };
+    exclusionsData.createInclusions(new exclusionsData(exclusionDataParams));
+    res.redirect('/api/get-exclusions');
+});
+app.get('/api/get-exclusions', function (req, res) {
+    exclusionsData.getInclusions(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-exclusions/:trialid', function (req, res) {
+    exclusionsData.getInclusionsById(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        res.json(result.exclusions);
+    });
+});
+app.delete('/api/delete-exclusion/:exclusionid', function (req, res) {
+
+});
+
+//responses
+app.post('/api/create-response/:questionid', function (req, res) {
+    var questionid = req.params.questionid;
+    var responseParams = req.body;
+    var responseDataParams = {
+        questionid: questionid,
+        responseParams
+    };
+
+    responseData.createResponse(new responseData(responseDataParams));
+    res.redirect('/api/get-responses');
+});
+app.get('/api/get-responses', function (req, res) {
+    responseData.getResponses(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-responses/:_id', function (req, res) {
+    responseData.getResponseById(req.params._id, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-responses/:questionid', function (req, res) {
+    responseData.getResponseByQuestionId(req.params.questionid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-responses/:questionid/:candidateid', function (req, res) {
+    responseData.getResponseByQuestionIdCandidateId(req.params.questionid, req.params.candidateid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.delete('/api/delete-response/:responseid', function(req, res) {
+
+});
+
+//debug inclusions
+app.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
+    var inclusions = {};
+    for (var i = 0; i < req.params.count; i++) {
+        inclusions["inclusion" + i] = Math.floor(Math.random() * 100).toString();
+    }
+
+    var inclusionData = {
+        trialid: req.params.trialid,
+        inclusions
+    };
+
+    inclusionsData.createInclusions(new inclusionsData(inclusionData));
+    res.redirect('/debug/get-inclusions');
+});
+app.get('/debug/edit-inclusions/:userid/:count', function (req, res) {
+    var inclusions = {};
+    for (var i = 0; i < req.params.count; i++) {
+        inclusions[i] = Math.floor(Math.random() * 100).toString();
+    }
+
+    inclusionsData.getInclusionsById(req.param.userid, function (err, doc) {
+        if (err) throw err;
+        doc.inclusions = inclusions;
+        doc.save();
+    });
+    res.redirect('/debug/get-inclusions');
+});
+
 // -------------------------------------------------------
 
 app.get('/api/randomrecords', function (req, res, next) {
@@ -279,8 +449,6 @@ app.get('/api/randomrecords', function (req, res, next) {
         res.json(result);
     });
 });
-
-
 app.post('/api/responsedata', function (req, res, next) {
     var data = "";
 

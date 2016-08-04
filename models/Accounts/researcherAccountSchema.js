@@ -34,6 +34,10 @@ var researcherAccountSchema = mongoose.Schema({
     datecreated: {
         type: String,
         safe: true
+    },
+    isverified: {
+        type: String,
+        safe: true
     }
 });
 

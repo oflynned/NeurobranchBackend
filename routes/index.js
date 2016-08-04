@@ -13,7 +13,7 @@ var trialData = mongoose.model('Trials', trialSchema);
 
 //dashboard
 router.get('/users/dashboard', function (req, res) {
-    generateDashboard("57a234b93dce3e8b1b93a410", res);
+    generateDashboard("57a23417d43e4b161b314038", res);
 });
 
 //display username in create_trial
@@ -254,7 +254,7 @@ function generateTile(trialName, description, image, trialid) {
 }
 
 function generateDashboard(researcherId, res) {
-    trialData.getTrialsByResearcherId("57a23417d43e4b161b314038", function (err, data) {
+    trialData.getTrialsByResearcherId(researcherId, function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
@@ -266,7 +266,7 @@ function generateDashboard(researcherId, res) {
                 rowId++;
                 element = "";
             }
-            element += generateTile(data[i]['title'], data[i]['shortdescription'], null, data[i][researcherId]);
+            element += generateTile(data[i]['title'], data[i]['briefdescription'], null, data[i]['_id']);
 
             if (i == data.length - 1)
                 container += generateRow(rowId, element);

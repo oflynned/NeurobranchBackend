@@ -26,3 +26,15 @@ module.exports.createEpoch = function (epoch, callback) {
 module.exports.getEpochById = function (id, callback) {
     epoch.findOne({userid: id}, callback);
 };
+
+module.exports.getEpochByTrialId = function (trialid, callback) {
+    epoch.findOne({trialid: trialid}, callback);
+};
+
+module.exports.getEpochByTrialId = function (trialid, callback) {
+    epoch.findOne({trialid: trialid}, callback);
+};
+
+module.exports.getEpochByAllParams = function (epochid, trialid, callback) {
+    epoch.findOne({trialid: trialid, epochid: epochid}, callback);
+};
