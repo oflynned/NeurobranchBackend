@@ -80,7 +80,7 @@ router.post('/insert', function (req, res) {
         }
     };
 
-    var itemq = {
+    /*var itemq = {
         questions: {
             trialrelation: item.trialname,
             question: req.body.question,
@@ -92,7 +92,7 @@ router.post('/insert', function (req, res) {
     };
 
     var qdata = new QuestionData(itemq);
-    qdata.save();
+    qdata.save();*/
 
     var data = new UserData(item);
     data.save(function (err) {

@@ -60,7 +60,7 @@ app.use(function printSession(req, res, next) {
     console.log('req.session', req.session , req.session.views);
     console.log('++++++++++++++++++');
     console.assert(typeof req.session.views === 'number',
-        'missing views count in the session', req.session);
+        'missing views count in the session', req.session._id);
     req.session.views++;
     return next();
 });
