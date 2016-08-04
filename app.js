@@ -472,6 +472,72 @@ app.get('/debug/edit-inclusions/:userid/:count', function (req, res) {
     res.redirect('/debug/get-inclusions');
 });
 
+//verified candidate lists
+app.post('/api/create-verified-candidates/:trialid', function (req, res) {
+    var trialid = req.params.trialid;
+    var users = req.body;
+    var verifiedCandidatesDataParams = {
+        trialid: trialid,
+        users
+    };
+    verifiedCandidatesData.create(new verifiedCandidatesData(verifiedCandidatesDataParams));
+    res.redirect('/api/get-exclusions');
+});
+app.get('/api/get-verified-candidates', function (req, res) {
+    verifiedCandidatesData.getVerifiedCandidates(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-verified-candidates/:trialid', function (req, res) {
+    verifiedCandidatesData.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        res.json(result.users);
+    });
+});
+app.get('/api/get-verified-candidates/:_id', function (req, res) {
+    verifiedCandidatesData.getVerifiedCandidatesById(req.params._id, function (err, result) {
+        if (err) throw err;
+        res.json(result.users);
+    });
+});
+app.delete('/api/delete-verified-candidates/:_id', function (req, res) {
+
+});
+
+//requested candidate lists
+app.post('/api/create-requested-candidates/:trialid', function (req, res) {
+    var trialid = req.params.trialid;
+    var users = req.body;
+    var requestedCandidatesDataParams = {
+        trialid: trialid,
+        users
+    };
+    requestedCandidatesData.create(new requestedCandidatesData(requestedCandidatesDataParams));
+    res.redirect('/api/get-exclusions');
+});
+app.get('/api/get-requested-candidates', function (req, res) {
+    requestedCandidatesData.getRequestedCandidates(function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-requested-candidates/:trialid', function (req, res) {
+    requestedCandidatesData.getRequestedCandidatesByTrialId(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        res.json(result.users);
+    });
+});
+app.get('/api/get-requested-candidates/:_id', function (req, res) {
+    requestedCandidatesData.getRequestedCandidatesById(req.params._id, function (err, result) {
+        if (err) throw err;
+        res.json(result.users);
+    });
+});
+app.delete('/api/delete-requested-candidates/:_id', function (req, res) {
+
+});
+
 // -------------------------------------------------------
 
 app.get('/api/randomrecords', function (req, res, next) {
