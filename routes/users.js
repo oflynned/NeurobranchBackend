@@ -8,11 +8,13 @@ var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
 
 var MAX_LENGTH = 200;
+var researcherId = "";
 
 function trimString(input, length) {
     var trimmedString = input.substr(0, length);
     return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "...";
 }
+
 
 //main
 router.get('/index', function (req, res) {
@@ -24,7 +26,6 @@ function generateRow(rowId, content) {
         content +
         '</div>'
 }
-
 function generateTile(trialName, description, image, trialid) {
     return '<div class="col-md-3">' +
         '<div class="thumbnail">' +
@@ -36,7 +37,6 @@ function generateTile(trialName, description, image, trialid) {
         '</div>' +
         '</div>'
 }
-
 function generateFrontNews(limit, res) {
     trialData.getTrials(function (err, data) {
         var element = "";
@@ -61,7 +61,9 @@ function generateFrontNews(limit, res) {
     }, limit);
 }
 
-//news
+router.get('/mainpage', function (req, res) {
+    generateFrontNews(4, res);
+});
 router.get('/news', function (req, res) {
     res.render('news', {
         news_section_1: "section 1",
@@ -70,64 +72,39 @@ router.get('/news', function (req, res) {
         active_news: "true"
     });
 });
-
-//sign up get
+router.get('/login', function (req, res) {
+    res.render('login', {
+        active_login: "true"
+    });
+});
 router.get('/signup', function (req, res) {
     res.render('signup', {
         active_signup: "true"
     });
 });
 
-//login
-router.get('/login', function (req, res) {
-    res.render('login', {
-        active_login: "true"
-    });
-});
-
-router.post('/login',
-    passport.authenticate('local', {
+router.post('/login', passport.authenticate('local', {
         successRedirect: '/',
         failureRedirect: '/users/login'
-    })
-);
-
+    }));
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/users/login');
 });
 
-//dashboard
-//overview
 router.get('/dashboard', ensureAuthenticated, function (req, res) {
     res.render('dashboard', {
         active_dash: "true"
     });
 });
-
 router.get('/trials/:trialid', function (req, res) {
-    trialData.getTrialById(req.params.trialid, function (err, trialAttributes) {
-        if (err) {
-            throw err;
-        }
-
-        //convert inclusion
-        var start = new Date(0); // The 0 there is the key, which sets the date to the inclusion
-        start.setUTCSeconds(trialAttributes.starttime);
-
-        var end = new Date(0); // The 0 there is the key, which sets the date to the inclusion
-        end.setUTCSeconds(trialAttributes.endtime);
-
+    trialData.getTrialById(req.params.trialid, function (err, trial) {
+        if (err) throw err;
+        var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
         res.render('trial', {
-            trialName: trialAttributes.trialname,
-            trialDescription: trialAttributes.description,
-            trialType: trialAttributes.trialtype,
-            organisation: trialAttributes.organisation,
-            specialisation: trialAttributes.specialisation,
-            startTime: start,
-            endTime: end,
-            notificationFrequency: trialAttributes.notificationfrequency,
-            imageResource: trialAttributes.imageresource,
+            trial: trial,
+            is_researcher: isResearcher,
+            multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
             active_dash: "true"
         });
     })
@@ -136,25 +113,22 @@ router.get('/trials/:trialid', function (req, res) {
 //create trial
 router.get('/create_trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial', {
-        active_dash: "true"
+        active_dash: "true",
+        researcher: researcherId
     });
 });
-
-//create questions
 router.get('/create_question', ensureAuthenticated, function (req, res) {
     res.render('create_question', {
         active_dash: "true"
     });
 });
 
-//settings
+//options
 router.get('/settings', ensureAuthenticated, function (req, res) {
     res.render('settings', {
         active_settings: "true"
     });
 });
-
-//help
 router.get('/help', ensureAuthenticated, function (req, res) {
     res.render('help', {
         active_dash: "true"
@@ -165,31 +139,24 @@ router.get('/help', ensureAuthenticated, function (req, res) {
 router.get('/goals', function (req, res) {
     res.render('goals');
 });
-
 router.get('/aboutneurobranch', function (req, res) {
     res.render('aboutneurobranch');
 });
-
 router.get('/aboutglassbyte', function (req, res) {
     res.render('aboutglassbyte');
 });
-
 router.get('/faq', function (req, res) {
     res.render('faq');
 });
-
 router.get('/support', function (req, res) {
     res.render('support');
 });
-
 router.get('/termsofuse', function (req, res) {
     res.render('termsofuse');
 });
-
 router.get('/cookiepolicy', function (req, res) {
     res.render('cookiepolicy');
 });
-
 router.get('/privacypolicy', function (req, res) {
     res.render('privacypolicy');
 });
@@ -216,6 +183,7 @@ passport.serializeUser(function (researcher, done) {
 
 passport.deserializeUser(function (id, done) {
     researcherAccount.getResearcherById(id, function (err, researcher) {
+        researcherId = researcher._id;
         done(err, researcher);
     });
 });

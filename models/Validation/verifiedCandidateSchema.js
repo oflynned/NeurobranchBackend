@@ -10,18 +10,22 @@ var verifiedCandidateSchema = mongoose.Schema({
 
 var verifiedCandidates = module.exports = mongoose.model('VerifiedCandidates', verifiedCandidateSchema);
 
-module.exports.getConditions = function (callback) {
+module.exports.getVerifiedCandidates = function (callback) {
     verifiedCandidates.find(callback).sort({$natural:-1});
 };
 
-module.exports.getConditionsWithLimit = function (limit, callback) {
+module.exports.getVerifiedCandidatesWithLimit = function (limit, callback) {
     verifiedCandidates.find(callback).skip(verifiedCandidates - limit).sort({$natural:-1}).limit(limit);
 };
 
-module.exports.createCondition = function (verifiedCandidates, callback) {
+module.exports.createVerifiedCandidates = function (verifiedCandidates, callback) {
     verifiedCandidates.save(callback);
 };
 
-module.exports.getConditionById = function (id, callback) {
-    verifiedCandidates.findOne({userid: id}, callback);
+module.exports.getVerifiedCandidatesByTrialId = function (id, callback) {
+    verifiedCandidates.find({trialid: id}, callback);
+};
+
+module.exports.getVerifiedCandidatesById = function (id, callback) {
+    verifiedCandidates.find({_id: id}, callback);
 };

@@ -20,7 +20,7 @@
                     <img class="form-image" src="/img/neurobranch_logo.png"
                          alt="">
 
-                    <form action="/insert" method="post" role="form">
+                    <form action="/api/create-trial/{{researcher}}" method="post" role="form">
                         <div class="form-create-trial form-create-trial-margin">
                             <div class="form-group">
                                 <input class="form-control" type="text" id="title" name="title"
@@ -58,7 +58,7 @@
                                     <select class="form-control" name="condition" id="condition">
                                         <option value="def_condition_placeholder" disabled selected>Condition Type
                                         </option>
-                                        <option value="pharmaceutical">Cancer</option>
+                                        <option value="cancer">Cancer</option>
                                     </select>
                                 </div>
                             </div>

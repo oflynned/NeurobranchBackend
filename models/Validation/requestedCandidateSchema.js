@@ -10,18 +10,22 @@ var requestedCandidateSchema = mongoose.Schema({
 
 var requestedCandidates = module.exports = mongoose.model('RequestedCandidates', requestedCandidateSchema);
 
-module.exports.getConditions = function (callback) {
+module.exports.getRequestedCandidates = function (callback) {
     requestedCandidates.find(callback).sort({$natural:-1});
 };
 
-module.exports.getConditionsWithLimit = function (limit, callback) {
+module.exports.getRequestedCandidatesWithLimit = function (limit, callback) {
     requestedCandidates.find(callback).skip(requestedCandidates - limit).sort({$natural:-1}).limit(limit);
 };
 
-module.exports.createCondition = function (requestedCandidates, callback) {
+module.exports.createRequestedCandidates = function (requestedCandidates, callback) {
     requestedCandidates.save(callback);
 };
 
-module.exports.getConditionById = function (id, callback) {
-    requestedCandidates.findOne({userid: id}, callback);
+module.exports.getRequestedCandidatesByTrialId = function (id, callback) {
+    requestedCandidates.find({trialid: id}, callback);
+};
+
+module.exports.getRequestedCandidatesById = function (id, callback) {
+    requestedCandidates.find({_id: id}, callback);
 };

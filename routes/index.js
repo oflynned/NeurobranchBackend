@@ -31,7 +31,7 @@ router.get('/', ensureAuthenticated, function (req, res) {
 
 //dashboard
 router.get('/users/dashboard', function (req, res) {
-    generateDashboard(res);
+    generateDashboard("57a233b04aac072416fd1d88", res);
 });
 
 //display username in create_trial
@@ -262,8 +262,8 @@ function generateTile(trialName, description, image, trialid) {
         '</div>'
 }
 
-function generateDashboard(res) {
-    trialData.getTrialsByResearcherId("57a23417d43e4b161b314038", function (err, data) {
+function generateDashboard(researcherId, res) {
+    trialData.getTrialsByResearcherId(researcherId, function (err, data) {
         var element = "";
         var rowId = 0;
         var container = "";
@@ -275,13 +275,14 @@ function generateDashboard(res) {
                 rowId++;
                 element = "";
             }
-            element += generateTile(data[i]['title'], data[i]['shortdescription'], null, data[i]['_id']);
+            element += generateTile(data[i]['title'], data[i]['briefdescription'],
+                "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image " + (i+1) + "&w=500&h=250", data[i]['_id']);
 
             if (i == data.length - 1)
                 container += generateRow(rowId, element);
         }
         res.render('dashboard', {
-            active_main: "true",
+            active_dash: "true",
             content: container
         });
     });
