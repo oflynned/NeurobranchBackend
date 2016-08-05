@@ -4,7 +4,7 @@
 var mongoose = require('mongoose');
 
 var questionSchema = mongoose.Schema({
-    epochid: String,
+    trialid: String,
     questiontype: String,
     title: String,
     answers: {}
@@ -28,10 +28,10 @@ module.exports.getQuestionById = function (id, callback) {
     question.find({_id: id}, callback);
 };
 
-module.exports.getQuestionByEpochId = function (epochid, callback) {
-    question.find({epochid: epochid}, callback);
+module.exports.getQuestionByTrialId = function (trialid, callback) {
+    question.find({trialid: trialid}, callback);
 };
 
-module.exports.getQuestionByAllParams = function (questionid, epochid, callback) {
-    question.find({epochid: epochid, _id: questionid}, callback);
+module.exports.getQuestionByAllParams = function (questionid, trialid, callback) {
+    question.find({trialid: trialid, _id: questionid}, callback);
 };

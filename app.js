@@ -50,7 +50,6 @@ app.get('/', function (req, res, next) {
 
 var candidateAccountSchema = require('./models/Accounts/candidateAccountSchema');
 var conditionsSchema = require('./models/Accounts/conditionsSchema');
-var epochSchema = require('./models/Trials/epochSchema');
 var exclusionSchema = require('./models/Trials/exclusionSchema');
 var inclusionSchema = require('./models/Trials/inclusionSchema');
 var requestedCandidatesSchema = require('./models/Validation/requestedCandidateSchema');
@@ -69,7 +68,6 @@ var conditionsData = mongoose.model('Conditions', conditionsSchema);
 //base interactions
 var trialData = mongoose.model('Trials', trialSchema);
 var questionData = mongoose.model('Questions', questionSchema);
-var epochData = mongoose.model('Epochs', epochSchema);
 
 //meta data about trials
 var exclusionsData = mongoose.model('Exclusions', exclusionSchema);
@@ -188,7 +186,7 @@ app.post('/api/create-trial', function (req, res) {
     console.log(trialDataParams);
 
     trialData.createTrial(new trialData(trialDataParams));
-    res.redirect('/api/get-trials');
+    res.redirect('/users/dashboard');
 });
 app.get('/api/get-trials', function (req, res) {
     trialData.getTrials(function (err, result) {
@@ -239,52 +237,12 @@ app.get('/debug/edit-trial/:userid', function (req, res) {
     res.redirect('/debug/get-trials');
 });
 
-//epochs
-app.post('/api/create-epoch/:trialid', function (req, res) {
-    var trialid = req.params.trialid;
-    var epochParams = req.body;
-    var epochDataParams = {
-        trialid: trialid,
-        epochParams
-    };
-
-    epochData.createEpoch(new epochData(epochDataParams));
-    res.redirect('/api/get-epochs');
-});
-app.get('/api/get-epochs', function (req, res) {
-    epochData.getEpochs(function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
-});
-app.get('/api/get-epochs/:epochid', function (req, res) {
-    epochData.getEpochById(req.params.epochid, function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
-});
-app.get('/api/get-epochs/:trialid', function (req, res) {
-    epochData.getEpochByTrialId(req.params.trialid, function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
-});
-app.get('/api/get-epochs/:trialid/:epochid', function (req, res) {
-    epochData.getEpochByAllParams(req.params.trialid, function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
-});
-app.delete('/api/delete-epoch/:epochid', function(req, res) {
-    
-});
-
 //questions
-app.post('/api/create-question/:epochid', function (req, res) {
-    var epochid = req.params.epochid;
+app.post('/api/create-question/:trialid', function (req, res) {
+    var trialid = req.params.trialid;
     var questionParams = req.body;
     var questionDataParams = {
-        epochid: epochid,
+        trialid: trialid,
         questionParams
     };
 
@@ -303,14 +261,14 @@ app.get('/api/get-questions/:questionid', function (req, res) {
         res.json(result);
     });
 });
-app.get('/api/get-questions/:epochid', function (req, res) {
-    questionData.getQuestionByEpochId(req.params.epochid, function (err, result) {
+app.get('/api/get-questions/:trialid', function (req, res) {
+    questionData.getQuestionByTrialId(req.params.trialid, function (err, result) {
         if (err) throw err;
         res.json(result);
     });
 });
-app.get('/api/get-questions/:epochid/:questionid', function (req, res) {
-    questionData.getQuestionByAllParams(req.params.questionid, req.params.epochid, function (err, result) {
+app.get('/api/get-questions/:trialid/:questionid', function (req, res) {
+    questionData.getQuestionByAllParams(req.params.questionid, req.params.trialid, function (err, result) {
         if (err) throw err;
         res.json(result);
     });
@@ -318,7 +276,7 @@ app.get('/api/get-questions/:epochid/:questionid', function (req, res) {
 app.delete('/api/delete-question/:questionid', function (req, res) {
 
 });
-app.delete('/api/delete-epoch-questions/:epochid', function (req, res) {
+app.delete('/api/delete-epoch-questions/:trialid', function (req, res) {
 
 });
 
@@ -544,148 +502,19 @@ app.delete('/api/delete-requested-candidates/:_id', function (req, res) {
 
 });
 
-// -------------------------------------------------------
-
-app.get('/api/randomrecords', function (req, res, next) {
-    trialData.getRandomTrial(3, function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
-});
-app.post('/api/responsedata', function (req, res, next) {
-    var data = "";
-
-    req.on('data', function (chunk) {
-        data += chunk;
-    });
-
-    req.on('end', function () {
-        res.writeHead(200, "OK", {'Content-Type': 'text/html'});
-        res.end();
-
-        var valueField = JSON.parse(data);
-
-        var typeField = clone(valueField);
-        traverseNodes(typeField);
-        var responseSchema = new mongoose.Schema(generator.convert(typeField));
-        var responseModel = mongoose.model(res + Date.now(), responseSchema, 'res');
-
-        var reversedValueField = clone(valueField);
-        traverseDataNodes(reversedValueField);
-
-        addResponseData(responseModel, reversedValueField, function (err) {
-            if (err) {
-                console.log(err);
-                throw err;
-            }
-        });
-    });
-});
-
-function clone(obj) {
-    var copy;
-
-    // Handle the 3 simple types, and null or undefined
-    if (null == obj || "object" != typeof obj) return obj;
-
-    // Handle Date
-    if (obj instanceof Date) {
-        copy = new Date();
-        copy.setTime(obj.getTime());
-        return copy;
-    }
-
-    // Handle Array
-    if (obj instanceof Array) {
-        copy = [];
-        for (var i = 0, len = obj.length; i < len; i++) {
-            copy[i] = clone(obj[i]);
-        }
-        return copy;
-    }
-
-    // Handle Object
-    if (obj instanceof Object) {
-        copy = {};
-        for (var attr in obj) {
-            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
-        }
-        return copy;
-    }
-
-    throw new Error("Unable to copy obj! Its type isn't supported.");
-}
-function traverseNodes(o, func) {
-    for (var i in o) {
-        if (o[i] !== null && typeof(o[i]) == "object") {
-            traverseNodes(o[i], func);
-        } else {
-            o[i] = {
-                type: "String"
-            }
-        }
-    }
-}
-function traverseDataNodes(p, func) {
-    for (var i in p) {
-        if (p[i] !== null && typeof(p[i]) == "object") {
-            traverseDataNodes(p[i], func);
-        }
-    }
-}
-
-addResponseData = function (model, value, callback) {
-    model.create(value, callback);
-};
-
-function isEmptyObject(obj) {
-    for (var key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            return false;
-        }
-    }
-    return true;
-}
-
+//debug
 //get number of trials in collection
-app.get('/trial_number', function (req, res, next) {
+app.get('/debug/trial-number', function (req, res) {
     trialData.getTrialData(function (err, trialdata) {
-        if (err) {
-            throw err;
-        }
+        if (err) throw err;
         res.json(trialdata.length + " records in collection");
     });
 });
-app.post('/api/questiondata', function (req, res) {
-    var quest = req.body;
-    questionData.addQuestionData(function (err, quest) {
-        if (err) {
-            throw err;
-        }
-        res.json(response);
-    })
-});
-app.get('/api/questiondata', function (req, res) {
-    questionData.getQuestionData(function (err, questiondata) {
-        if (err) {
-            throw err;
-        }
-        res.json(questiondata);
-    });
-});
-app.get('/api/user', function (req, res) {
-    userdata.getUser(function (err, userdata) {
-        if (err) {
-            throw err;
-        }
-        res.json(userdata);
-    });
-});
 
-app.use('/', routes); //mapped to routes which goes to index file
-app.use('/users', users);//goes to users.js
+//mapping
+app.use('/', routes);
+app.use('/users', users);
 
-// Set Port
 app.set('port', (process.env.PORT || Globals.PORT));
 app.listen(app.get('port'), function () {
     console.log('Server started on port ' + app.get('port'));

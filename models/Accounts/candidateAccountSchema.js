@@ -13,6 +13,10 @@ var candidateAccountSchema = mongoose.Schema({
         type: String,
         unique: true,
         safe: true
+    },
+    isverified: {
+        type: String,
+        safe: true
     }
 });
 

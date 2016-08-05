@@ -1,44 +1,54 @@
 <!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="container-fluid content-main">
-        <div class="row">
-            <div class="col-lg-12">
-                <!-- title -->
-                <div class="page-header">
-                    <h3>Dashboard</h3>
+        <form action="/api/create-trial" method="post" role="form">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- title -->
+                    <div class="page-header">
+                        <h3>Create Trial</h3>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <!-- create trial card -->
-            <div class="col-sm-6 col-md-6">
-                <div class="account-wall center-form">
-                    <img class="form-image" src="/img/neurobranch_logo.png"
-                         alt="">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="page-header">
+                        <h4>Trial Details</h4>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="page-header">
+                        <h4>Multimedia</h4>
+                    </div>
+                </div>
+            </div>
 
-                    <form action="/api/create-trial/{{researcher}}" method="post" role="form">
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="center-form">
                         <div class="form-create-trial form-create-trial-margin">
                             <div class="form-group">
                                 <input class="form-control" type="text" id="title" name="title"
-                                       placeholder="Trial Title">
+                                       placeholder="Trial Title" required autofocus>
                             </div>
                             <div class="form-group">
                                             <textarea class="form-control description-box" rows="2"
                                                       id="briefdescription"
                                                       name="briefdescription"
-                                                      placeholder="Brief Description"></textarea>
+                                                      placeholder="Brief Description" required></textarea>
                             </div>
                             <div class="form-group">
                                             <textarea class="form-control description-box" rows="10"
                                                       id="detaileddescription"
-                                                      name="detaileddescription" placeholder="Detailed Description"></textarea>
+                                                      name="detaileddescription"
+                                                      placeholder="Detailed Description" required></textarea>
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-4 col-md-4">
-                                    <select class="form-control" name="trialtype" id="trialtype">
-                                        <option value="def_trialtype_placeholder" disabled selected>Trial Type</option>
+                                    <select class="form-control" name="trialtype" id="trialtype" required>
+                                        <option value="def_trialtype_placeholder" disabled>Trial Type</option>
                                         <option value="pharmaceutical">Pharma</option>
                                         <option value="biomedicaldevice">Bio-Device</option>
                                         <option value="consumable">Food</option>
@@ -48,29 +58,101 @@
 
                                 <div class="col-sm-4 col-md-4">
                                     <input class="form-control" type="text" id="candidatequota" name="candidatequota"
-                                           placeholder="Candidate Quota">
+                                           placeholder="Candidate Quota" required>
                                 </div>
 
                                 <div class="col-sm-4 col-md-4">
-                                    <select class="form-control" name="condition" id="condition">
-                                        <option value="def_condition_placeholder" disabled selected>Condition Type
+                                    <select class="form-control" name="condition" id="condition" required>
+                                        <option value="def_condition_placeholder" disabled>Condition Type
                                         </option>
                                         <option value="cancer">Cancer</option>
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-4 col-md-offset-4 center-text center-form">
-                                    <button class="btn btn-lg btn-primary btn-block" type="submit">
-                                        Create Trial
-                                    </button>
-                                </div>
-                            </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <!-- title -->
+                    <div class="page-header">
+                        <h4>Question Details</h4>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <!-- title -->
+                    <div class="page-header">
+                        <h4>Trial Tips</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="center-form form-create-trial form-create-trial-margin">
+                        <div class="form-group">
+                            <h5>Question 1</h5>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="questiontitle" name="questiontitle"
+                                   placeholder="Question">
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-6 col-md-6">
+                                <select class="form-control" name="trialtype" id="trialtype">
+                                    <option value="def_trialtype_placeholder" disabled>Trial Type
+                                    </option>
+                                    <option value="pharmaceutical">Checkbox</option>
+                                    <option value="biomedicaldevice">Choice</option>
+                                    <option value="consumable">Scale</option>
+                                    <option value="behavioural">Section</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-11 col-md-11">
+                                <input class="form-control" type="text" id="answer1" name="answer1"
+                                       placeholder="Option 1">
+                            </div>
+                            <div class="col-sm-1 col-md-1">
+                                <button class="btn-lg btn-primary">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6">
+                    <ul>
+                    <li><strong>Trial Title</strong> is the first thing that candidates will see when choosing to join a trial.</li>
+                    <li><strong>Brief Description</strong> is the short description that candidates will first see when searching for trials under the title.</li>
+                    <li><strong>Detailed Description</strong> is seen when a candidate clicks into a trial providing in depth details about the trial.</li>
+                    <li><strong>Trial Type</strong> is the category of clinical trial being performed.</li>
+                    <li><strong>Candidate Quota</strong> is the minimum amount of candidates needed in order to be able to set a trial ongoing.</li>
+                    <li><strong>Condition Type</strong> is the condition pertaining to the trial. It's used for categorisation.</li>
+                    <br>
+                    <li><strong>Question Title</strong> is the text that candidates will read with options (if any) of answers underneath it.</li>
+                    <li><strong>Question Type</strong> is the type of question that can be asked:</li>
+                        <ul>
+                            <li><strong>Checkbox</strong> is where a candidate can select any amount of answers, including none or all.</li>
+                            <ul><li><strong>Requires options for candidate to select</strong></li></ul>
+                            <li><strong>Choice</strong> is where a candidate can select only <strong>one</strong> answer.</li>
+                            <ul><li><strong>Requires options for candidate to select</strong></li></ul>
+                            <li><strong>Scale</strong> is where a candidate can drag a bar to a level between 0 and 100 incorporating colours.</li>
+                            <li><strong>Section</strong> is where a candidate can write unlimited text into a paragraph</li>
+                        </ul>
+                    <li><strong>Question Option</strong> is the potential option a candidate can choose if the type utilises selection.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5 center-text center-form">
+                    <button class="btn-create-trial btn-lg btn-primary btn-block" type="submit">
+                        Create Trial
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

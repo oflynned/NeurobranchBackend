@@ -24,7 +24,7 @@ function generateTile(trialName, description, image, trialid) {
         '<img src="' + image + '">' +
         '<div class="caption">' +
         '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
-        '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
+        '<p>' + description + '</p>' + //trimString(description, MAX_LENGTH) + '</p>' +
         '</div>' +
         '</div>' +
         '</div>'
