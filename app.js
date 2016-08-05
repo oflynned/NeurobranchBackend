@@ -174,11 +174,12 @@ app.get('/api/get-conditions/:userid', function (req, res) {
 });
 
 //trials
-app.post('/api/create-trial/:researcherid', function (req, res) {
+app.post('/api/create-trial', function (req, res) {
     console.log(req.body);
+    console.log(req.user.id);
     var trialParams = req.body;
     var trialDataParams = {
-        researcherid: req.params.researcherid
+        researcherid: req.user.id
     };
 
     for(var attribute in trialParams) {

@@ -8,7 +8,7 @@ var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
 
 var MAX_LENGTH = 200;
-var researcherId = "";
+var researcherObject;
 
 function trimString(input, length) {
     var trimmedString = input.substr(0, length);
@@ -90,6 +90,7 @@ router.get('/dashboard', ensureAuthenticated, function (req, res) {
         active_dash: "true"
     });
 });
+
 router.get('/trials/:trialid', function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
@@ -104,13 +105,14 @@ router.get('/trials/:trialid', function (req, res) {
 });
 
 //create trial
-router.get('/create_trial', ensureAuthenticated, function (req, res) {
+router.get('/create-trial', ensureAuthenticated, function (req, res){
+    console.log(req.user.id);
     res.render('create_trial', {
         active_dash: "true",
-        researcher: researcherId
+        researcher: req.user.id
     });
 });
-router.get('/create_question', ensureAuthenticated, function (req, res) {
+router.get('/create-question', ensureAuthenticated, function (req, res) {
     res.render('create_question', {
         active_dash: "true"
     });
@@ -176,7 +178,6 @@ passport.serializeUser(function (researcher, done) {
 
 passport.deserializeUser(function (id, done) {
     researcherAccount.getResearcherById(id, function (err, researcher) {
-        researcherId = researcher._id;
         done(err, researcher);
     });
 });
