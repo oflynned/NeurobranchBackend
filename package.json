@@ -39,5 +39,8 @@
     "passport-local": "*",
     "redis": "^2.6.2",
     "request-promise": "^4.1.0"
+  },
+  "devDependencies": {
+    "less": "^2.7.1"
   }
 }

@@ -58,7 +58,7 @@ app.use(function printSession(req, res, next) {
     console.log('req.session', req.session , req.session.views);
     console.log('++++++++++++++++++');
     console.assert(typeof req.session.views === 'number',
-        'missing views count in the session', req.session._id);
+        'missing views count in the session', req.session.id);
     req.session.views++;
     return next();
 });
@@ -128,6 +128,53 @@ app.get('/api/get-candidates/:email', function (req, res) {
     });
 });
 
+//Email Verification
+app.get('/send',function(req,res) {
+    rand = Math.floor((Math.random() * 100) + 54);
+    host = req.get('host');
+    link = "http://" + req.get('host') + "/verify?id=" + rand;
+    mailOptions = {
+        to: req.query.to,
+        subject: "Please confirm your Email account",
+        html: "Sup Brah,<br> Click on the link to verify stuff<br><a href=" + link + ">Click here to verify</a>"
+    }
+    console.log(mailOptions);
+    smtpTransport.sendMail(mailOptions, function (error, response) {
+        if (error) {
+            console.log(error);
+            res.end("error");
+        } else {
+            console.log("Message sent too: " + response.message);
+            res.end("sent");
+        }
+    });
+});
+
+app.get('/verify',function(req,res){
+    console.log(req.protocol+":/"+req.get('host'));
+    if((req.protocol+"://"+req.get('host'))==("http://"+host))
+    {
+        console.log("Email checks out . Information is from a authentic email");
+        if(req.query.id==rand)
+        {
+            console.log("email verified!!!");
+            res.end("<h1>Email "+mailOptions.to+" is been Successfully verified");
+        }
+        else
+        {
+            console.log("email not verified");
+            res.end("<h1>Bad Request</h1>");
+        }
+    }
+    else
+    {
+        res.end("<h1>Request is from unknown source");
+    }
+});
+/*----END EMAIL VERIFIED*/
+
+
+
 //researchers
 app.post('/api/create-researcher', function (req, res) {
     researcherAccount.createResearcher(new researcherAccount(req.body));
@@ -195,7 +242,6 @@ app.get('/api/get-conditions/:userid', function (req, res) {
         res.json(result.conditions);
     })
 });
-
 
 // inclusions
 app.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
