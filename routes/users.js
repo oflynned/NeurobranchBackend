@@ -8,7 +8,6 @@ var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
 
 var MAX_LENGTH = 200;
-var researcherObject;
 
 function trimString(input, length) {
     var trimmedString = input.substr(0, length);
@@ -91,6 +90,10 @@ router.get('/dashboard', ensureAuthenticated, function (req, res) {
     });
 });
 
+router.get('/cookie-details', function (req, res) {
+    res.json(req.user);
+});
+
 router.get('/trials/:trialid', function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
@@ -106,10 +109,8 @@ router.get('/trials/:trialid', function (req, res) {
 
 //create trial
 router.get('/create-trial', ensureAuthenticated, function (req, res){
-    console.log(req.user.id);
     res.render('create_trial', {
-        active_dash: "true",
-        researcher: req.user.id
+        active_dash: "true"
     });
 });
 router.get('/create-question', ensureAuthenticated, function (req, res) {

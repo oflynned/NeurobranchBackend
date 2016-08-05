@@ -8,7 +8,7 @@ var trialSchema = mongoose.Schema({
     briefdescription: String,
     detaileddescription: String,
     trialtype: String,
-    organisation: String,
+    institute: String,
     condition: String,
     datecreated: String,
     datepublished: String,
