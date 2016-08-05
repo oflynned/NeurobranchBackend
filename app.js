@@ -10,7 +10,7 @@ var session = require('express-session');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-
+var nodemailer = require("nodemailer");
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
 var users = require(Globals.USERS_ROUTE);
@@ -127,6 +127,16 @@ app.get('/api/get-candidates/:email', function (req, res) {
         res.json(result);
     });
 });
+
+/*SMTP SERVICE*/
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",
+    auth: {
+        user: "teztneuro@gmail.com",
+        pass: "lCk3TN:68w4Yn8C"
+    }
+});
+/*END SMTP SERVICE*/
 
 //Email Verification
 app.get('/send',function(req,res) {
