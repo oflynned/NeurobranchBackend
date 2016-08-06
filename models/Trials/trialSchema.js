@@ -11,8 +11,8 @@ var trialSchema = mongoose.Schema({
     institute: String,
     condition: String,
     datecreated: String,
-    datepublished: String,
-    dateactive: String,
+    datestarted: String,
+    dateended: String,
     candidatequota: String,
     state: String,
     researcherid: String
@@ -38,6 +38,10 @@ module.exports.getTrialById = function (id, callback) {
 
 module.exports.getTrialsByResearcherId = function (researcherid, callback) {
     trialData.find({researcherid: researcherid}, callback).sort({$natural:-1});
+};
+
+module.exports.getLatestTrialByResearcher = function (researcherid, callback) {
+    trialData.find({researcherid: researcherid}, callback).sort({$natural:-1}).limit(1);
 };
 
 

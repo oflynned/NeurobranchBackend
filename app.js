@@ -101,6 +101,9 @@ app.get('/api/get-candidates/:email', function (req, res) {
         res.json(result);
     });
 });
+app.post('/api/candidate-login/:email/:password', function (req, res) {
+
+});
 
 //researchers
 app.post('/api/create-researcher', function (req, res) {
@@ -173,21 +176,43 @@ app.get('/api/get-conditions/:userid', function (req, res) {
 
 //trials
 app.post('/api/create-trial', function (req, res) {
-    var trialParams = req.body;
-    var trialDataParams = {};
+    //sort into trial and qs
+    //log trial
+    //retrieve trial by search with latest id
+    //log q documents with this id as trialid
+    //to be implemented lol
 
-    for(var attribute in trialParams) {
-        trialDataParams[attribute] = trialParams[attribute];
-    }
+    console.log(req.body);
 
-    trialDataParams['researcherid'] = req.user.id;
-    trialDataParams['institute'] = req.user.institute;
+    var trialParams = {
+        title: req.body.title,
+        briefdescription: req.body.briefdescription,
+        detaileddescription: req.body.detaileddescription,
+        trialtype: req.body.trialtype,
+        institute: req.user.institute,
+        condition: req.body.condition,
+        datecreated: Date.now(),
+        datestarted: null,
+        dateended: null,
+        candidatequota: req.body.candidatequota,
+        state: "created",
+        researcherid: req.user.id
+    };
 
-    console.log(trialDataParams);
+    trialData.createTrial(new trialData(trialParams), function() {
+        trialData.getTrialsByResearcherId(req.user.id, function(retrievedData){
+            console.log(req.user.id, retrievedData);
+            for (var removeAttribute in trialParams) {
+                delete req.body[removeAttribute];
+            }
+            //req.body['trialid'] = retrievedData['trialid'];
+            questionData.createQuestion(new questionData(req.body));
+        });
+    });
 
-    trialData.createTrial(new trialData(trialDataParams));
     res.redirect('/users/dashboard');
 });
+
 app.get('/api/get-trials', function (req, res) {
     trialData.getTrials(function (err, result) {
         if (err) throw err;
@@ -304,7 +329,7 @@ app.get('/api/get-inclusions/:trialid', function (req, res) {
     });
 });
 app.delete('/api/delete-inclusion/:inclusionid', function (req, res) {
-    
+
 });
 
 //exclusions
@@ -335,12 +360,13 @@ app.delete('/api/delete-exclusion/:exclusionid', function (req, res) {
 });
 
 //responses
-app.post('/api/create-response/:questionid', function (req, res) {
-    var questionid = req.params.questionid;
-    var responseParams = req.body;
+app.post('/api/create-response/', function (req, res) {
+    console.log(req.body);
+
     var responseDataParams = {
-        questionid: questionid,
-        responseParams
+        questionid: req.body.questionid,
+        candidateid: req.body.candidateid,
+        response: req.body.response
     };
 
     responseData.createResponse(new responseData(responseDataParams));
@@ -352,13 +378,13 @@ app.get('/api/get-responses', function (req, res) {
         res.json(result);
     });
 });
-app.get('/api/get-responses/:_id', function (req, res) {
+app.get('/api/get-responses/id/:_id', function (req, res) {
     responseData.getResponseById(req.params._id, function (err, result) {
         if (err) throw err;
         res.json(result);
     });
 });
-app.get('/api/get-responses/:questionid', function (req, res) {
+app.get('/api/get-responses/questionid/:questionid', function (req, res) {
     responseData.getResponseByQuestionId(req.params.questionid, function (err, result) {
         if (err) throw err;
         res.json(result);
@@ -370,7 +396,7 @@ app.get('/api/get-responses/:questionid/:candidateid', function (req, res) {
         res.json(result);
     });
 });
-app.delete('/api/delete-response/:_id', function(req, res) {
+app.delete('/api/delete-response/:_id', function (req, res) {
 
 });
 
@@ -505,10 +531,13 @@ app.delete('/api/delete-requested-candidates/:_id', function (req, res) {
 //debug
 //get number of trials in collection
 app.get('/debug/trial-number', function (req, res) {
-    trialData.getTrialData(function (err, trialdata) {
+    trialData.getTrials(function (err, trialdata) {
         if (err) throw err;
         res.json(trialdata.length + " records in collection");
     });
+});
+app.post('/debug/see-response', function (req) {
+    console.log(req.body);
 });
 
 //mapping

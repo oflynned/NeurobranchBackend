@@ -98,6 +98,8 @@ router.get('/trials/:trialid', function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
+        trial.datecreated = new Date(parseInt(trial.datecreated));
+
         res.render('trial', {
             trial: trial,
             is_researcher: isResearcher,
@@ -160,8 +162,6 @@ router.get('/privacypolicy', function (req, res) {
 passport.use(new LocalStrategy(
     function (username, password, done) {
         researcherAccount.getResearcherByUsername(username, function (err, researcher) {
-            console.log(researcher);
-
             if (err) throw err;
             if (!researcher) return done(null, false, { message: 'Unknown User'} );
 

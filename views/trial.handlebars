@@ -4,9 +4,7 @@
             <div class="col-lg-12">
                 <!-- title -->
                 <div class="page-header">
-                    <h3>{{trial.title}}<br>
-                        <small>{{trial.trialtype}} {{trial.state}}</small>
-                    </h3>
+                    <h3>{{trial.title}}</h3>
                 </div>
             </div>
         </div>
@@ -22,6 +20,14 @@
                     <div><strong>Type:</strong> {{trial.trialtype}}</div>
                     <div><strong>Institute:</strong> {{trial.institute}}</div>
                     <div><strong>Condition:</strong> {{trial.condition}}</div>
+                    <div><strong>State:</strong> {{trial.state}}</div>
+                    <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
+                    {{#if trial.datestarted}}
+                        <div><strong>Date Started:</strong> {{trial.datestarted}}</div>
+                    {{/if}}
+                    {{#if trial.dateended}}
+                        <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
+                    {{/if}}
                     <br>
                     <div>{{trial.briefdescription}}</div>
                 </div>
@@ -42,8 +48,26 @@
                 {{/if}}
             {{/if}}
 
+            {{#if is_researcher}}
+                <div class="page-header">
+                    <h3>Questions</h3>
+                </div>
+                {{#each question}}
+                    <div>
+                        {{question.title}}
+                    </div>
+                {{/each}}
+            {{/if}}
+
+            <div class="page-header"><h3>Updates</h3></div>
             {{#if update.hasupdate}}
-                <div class="page-header"><h3>Updates</h3></div>
+                <div>
+                    <h5>Ayyy updates here</h5>
+                </div>
+            {{else}}
+                <div>
+                    <h5>No updates yet for this trial!</h5>
+                </div>
             {{/if}}
             <div class="page-header"><h3>About the trial</h3></div>
             <div>{{trial.detaileddescription}}</div>

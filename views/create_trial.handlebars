@@ -1,6 +1,7 @@
 <!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="container-fluid content-main">
+        <!--"/api/create-trial"-->
         <form action="/api/create-trial" method="post" role="form">
             <div class="row">
                 <div class="col-lg-12">
@@ -90,58 +91,57 @@
             </div>
             <div class="row">
                 <div class="col-sm-6 col-md-6">
-                    <div class="center-form form-create-trial form-create-trial-margin">
-                        <div class="form-group">
-                            <h5>Question 1</h5>
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control" type="text" id="questiontitle" name="questiontitle"
-                                   placeholder="Question">
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-sm-6 col-md-6">
-                                <select class="form-control" name="trialtype" id="trialtype">
-                                    <option value="def_trialtype_placeholder" disabled>Trial Type
-                                    </option>
-                                    <option value="pharmaceutical">Checkbox</option>
-                                    <option value="biomedicaldevice">Choice</option>
-                                    <option value="consumable">Scale</option>
-                                    <option value="behavioural">Section</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-11 col-md-11">
-                                <input class="form-control" type="text" id="answer1" name="answer1"
-                                       placeholder="Option 1">
-                            </div>
-                            <div class="col-sm-1 col-md-1">
-                                <button class="btn-lg btn-primary">+</button>
-                            </div>
-                        </div>
+                    <a id="add-question-btn">Add Question</a>
+                    <div class="center-form form-create-trial form-create-trial-margin" id="question-holder">
+
                     </div>
                 </div>
 
                 <div class="col-sm-6 col-md-6">
                     <ul>
-                    <li><strong>Trial Title</strong> is the first thing that candidates will see when choosing to join a trial.</li>
-                    <li><strong>Brief Description</strong> is the short description that candidates will first see when searching for trials under the title.</li>
-                    <li><strong>Detailed Description</strong> is seen when a candidate clicks into a trial providing in depth details about the trial.</li>
-                    <li><strong>Trial Type</strong> is the category of clinical trial being performed.</li>
-                    <li><strong>Candidate Quota</strong> is the minimum amount of candidates needed in order to be able to set a trial ongoing.</li>
-                    <li><strong>Condition Type</strong> is the condition pertaining to the trial. It's used for categorisation.</li>
-                    <br>
-                    <li><strong>Question Title</strong> is the text that candidates will read with options (if any) of answers underneath it.</li>
-                    <li><strong>Question Type</strong> is the type of question that can be asked:</li>
+                        <li><strong>Trial Title</strong> is the first thing that candidates will see when choosing to
+                            join a trial.
+                        </li>
+                        <li><strong>Brief Description</strong> is the short description that candidates will first see
+                            when searching for trials under the title.
+                        </li>
+                        <li><strong>Detailed Description</strong> is seen when a candidate clicks into a trial providing
+                            in depth details about the trial.
+                        </li>
+                        <li><strong>Trial Type</strong> is the category of clinical trial being performed.</li>
+                        <li><strong>Candidate Quota</strong> is the minimum amount of candidates needed in order to be
+                            able to set a trial ongoing.
+                        </li>
+                        <li><strong>Condition Type</strong> is the condition pertaining to the trial. It's used for
+                            categorisation.
+                        </li>
+                        <br>
+                        <li><strong>Question Title</strong> is the text that candidates will read with options (if any)
+                            of answers underneath it.
+                        </li>
+                        <li><strong>Question Type</strong> is the type of question that can be asked:</li>
                         <ul>
-                            <li><strong>Checkbox</strong> is where a candidate can select any amount of answers, including none or all.</li>
-                            <ul><li><strong>Requires options for candidate to select</strong></li></ul>
-                            <li><strong>Choice</strong> is where a candidate can select only <strong>one</strong> answer.</li>
-                            <ul><li><strong>Requires options for candidate to select</strong></li></ul>
-                            <li><strong>Scale</strong> is where a candidate can drag a bar to a level between 0 and 100 incorporating colours.</li>
-                            <li><strong>Section</strong> is where a candidate can write unlimited text into a paragraph</li>
+                            <li><strong>Checkbox</strong> is where a candidate can select any amount of answers,
+                                including none or all.
+                            </li>
+                            <ul>
+                                <li><strong>Requires options for candidate to select</strong></li>
+                            </ul>
+                            <li><strong>Choice</strong> is where a candidate can select only <strong>one</strong>
+                                answer.
+                            </li>
+                            <ul>
+                                <li><strong>Requires options for candidate to select</strong></li>
+                            </ul>
+                            <li><strong>Scale</strong> is where a candidate can drag a bar to a level between 0 and 100
+                                incorporating colours.
+                            </li>
+                            <li><strong>Section</strong> is where a candidate can write unlimited text into a paragraph
+                            </li>
                         </ul>
-                    <li><strong>Question Option</strong> is the potential option a candidate can choose if the type utilises selection.</li>
+                        <li><strong>Question Option</strong> is the potential option a candidate can choose if the type
+                            utilises selection.
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -156,3 +156,71 @@
         </form>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"
+        integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script>
+        var questionCount = 1;
+        addQuestion();
+
+        $('.questiontype').on('change', function () {
+            if (value == "checkbox" || value == "choice") {
+                $('.question-holder').append('<div class="row">' +
+                        '<div class="col-sm-12 col-md-12">' +
+                        '<input class="form-control" type="text" id="answer1" name="answer1" placeholder="Option 1">' +
+                        '</div>' +
+                        '</div>');
+            }
+        });
+        $('.add-option-btn').click(function () {
+            var currentOption = $('#questiontype').find(':selected').val();
+            if (currentOption == "checkbox" || currentOption == "choice") {
+                $('#question-holder').append('<div class="row">' +
+                        '<div class="col-sm-12 col-md-12">' +
+                        '<input class="form-control" type="text" id="answer' + Date.now() + '" name="answer' + Date.now() + '" placeholder="Option">' +
+                        '<a class="remove-field">Remove</a>' +
+                        '</div>' +
+                        '</div>');
+
+            }
+        });
+        $('.remove-field').click(function (e) {
+            console.log("clicked");
+            e.preventDefault();
+            var fieldId = this.id.charAt(this.id.length - 1);
+            console.log(fieldId);
+
+            questionCount--;
+            $(this).parent('div').remove();
+        });
+        $('#add-question-btn').click(function (e) {
+            e.preventDefault();
+            ++questionCount;
+            addQuestion();
+        });
+
+    function addQuestion(){
+        $('#question-holder').append('<div id="question-group-' + questionCount + '">' +
+                '<a class="remove-field">Remove</a>' +
+                '<div class="form-group">' +
+                '<h4>Question ' + questionCount + '</h4>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<input class="form-control" type="text" id="questiontitle" name="questiontitle" placeholder="Question Title">' +
+                '</div>' +
+                '<div class="row form-group">' +
+                '<div class="col-sm-6 col-md-6">' +
+                '<select class="form-control" name="questiontype" id="questiontype">' +
+                '<option value="def_trialtype_placeholder" disabled>Trial Type' +
+                '</option>' +
+                '<option value="checkbox">Checkbox</option>' +
+                '<option value="choice">Choice</option>' +
+                '<option value="scale">Scale</option>' +
+                '<option value="section">Section</option>' +
+                '</select>' +
+                '</div>' +
+                '<div class="col-sm-6 col-md-6">' +
+                '<a class="add-option-btn">Add Option</a>' +
+                '</div></div></div>');
+    }
+</script>

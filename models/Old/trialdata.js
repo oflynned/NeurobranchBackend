@@ -1,6 +1,4 @@
 var mongoose = require('mongoose');
-var random = require('mongoose-query-random');
-
 var trialdataSchema = mongoose.Schema({
         trialname: {
             type: String,
@@ -78,7 +76,7 @@ module.exports.getTrialsBelongingToUser = function(username, callback) {
     trialData.find({'researchername':username}, callback).sort({$natural:-1})
 };
 
-module.exports.getTrialsByUsername = function (callback) {
+module.exports.getTrials = function (callback) {
     trialData.find(callback).sort({$natural:-1});
 };
 

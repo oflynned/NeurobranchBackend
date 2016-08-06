@@ -15,7 +15,6 @@ var MAX_LENGTH = 300;
 
 //dashboard
 router.get('/users/dashboard', ensureAuthenticated, function (req, res) {
-    console.log("index?! " + req.user.id);
     generateDashboard(req.user.id, res);
 });
 router.get('/users/notifications', ensureAuthenticated, function (req, res) {
@@ -81,9 +80,7 @@ function trimString(input, length) {
     return "";
 }
 function generateRow(id, content) {
-    return '<div class="row flex-row" id="' + id + '">' +
-        content +
-        '</div>';
+    return '<div class="row flex-row" id="' + id + '">' + content + '</div>';
 }
 function generateTile(trialName, description, image, trialid) {
     return '<div class="col-sm-4 col-md-3 col-xl-2">' +

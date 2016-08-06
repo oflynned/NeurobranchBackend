@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var responseSchema = mongoose.Schema({
     questionid: String,
     candidateid: String,
-    responses: {}
+    response: {}
 });
 
 var response = module.exports = mongoose.model('Responses', responseSchema);
@@ -19,8 +19,8 @@ module.exports.getResponsesWithLimit = function (limit, callback) {
     response.find(callback).skip(response - limit).sort({$natural:-1}).limit(limit);
 };
 
-module.exports.createResponse = function (researcherData, callback) {
-    response.save(callback);
+module.exports.createResponse = function (responseData, callback) {
+    responseData.save(callback);
 };
 
 module.exports.getResponseById = function (id, callback) {
