@@ -91,10 +91,11 @@
             </div>
             <div class="row">
                 <div class="col-sm-6 col-md-6">
-                    <a id="add-question-btn">Add Question</a>
+
                     <div class="center-form form-create-trial form-create-trial-margin" id="question-holder">
 
                     </div>
+                    <div><a id="add-question-btn">Add Question</a></div>
                 </div>
 
                 <div class="col-sm-6 col-md-6">
@@ -172,27 +173,6 @@
                         '</div>');
             }
         });
-        $('.add-option-btn').click(function () {
-            var currentOption = $('#questiontype').find(':selected').val();
-            if (currentOption == "checkbox" || currentOption == "choice") {
-                $('#question-holder').append('<div class="row">' +
-                        '<div class="col-sm-12 col-md-12">' +
-                        '<input class="form-control" type="text" id="answer' + Date.now() + '" name="answer' + Date.now() + '" placeholder="Option">' +
-                        '<a class="remove-field">Remove</a>' +
-                        '</div>' +
-                        '</div>');
-
-            }
-        });
-        $('.remove-field').click(function (e) {
-            console.log("clicked");
-            e.preventDefault();
-            var fieldId = this.id.charAt(this.id.length - 1);
-            console.log(fieldId);
-
-            questionCount--;
-            $(this).parent('div').remove();
-        });
         $('#add-question-btn').click(function (e) {
             e.preventDefault();
             ++questionCount;
@@ -203,10 +183,11 @@
         $('#question-holder').append('<div id="question-group-' + questionCount + '">' +
                 '<a class="remove-field">Remove</a>' +
                 '<div class="form-group">' +
-                '<h4>Question ' + questionCount + '</h4>' +
+                '<h4>Question</h4>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<input class="form-control" type="text" id="questiontitle" name="questiontitle" placeholder="Question Title">' +
+                '<input class="form-control" type="text" id="questiontitle' + questionCount + '" name="questiontitle' +
+                questionCount + '" placeholder="Question Title">' +
                 '</div>' +
                 '<div class="row form-group">' +
                 '<div class="col-sm-6 col-md-6">' +
@@ -222,5 +203,19 @@
                 '<div class="col-sm-6 col-md-6">' +
                 '<a class="add-option-btn">Add Option</a>' +
                 '</div></div></div>');
+        $('.remove-field').click(function (e) {
+            e.preventDefault();
+            questionCount--;
+            $(this).closest('div').remove();
+        });
+        $('.add-option-btn').click(function () {
+            var currentOption = $('#questiontype').find(':selected').val();
+            if (currentOption == "checkbox" || currentOption == "choice") {
+                $(this).parent('div').append('<div class="row">' +
+                        '<input class="form-control" type="text" id="answer" name="answer" placeholder="Option">' +
+                        '<a class="remove-field">Remove</a>' +
+                        '</div>');
+            }
+        });
     }
 </script>
