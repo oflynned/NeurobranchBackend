@@ -56,7 +56,6 @@ app.get('/', function (req, res, next) {
 
 app.use(function printSession(req, res, next) {
     console.log('req.session', req.session , req.session.views);
-    console.log('++++++++++++++++++');
     console.assert(typeof req.session.views === 'number',
         'missing views count in the session', req.session.id);
     req.session.views++;
@@ -136,6 +135,7 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
         pass: "lCk3TN:68w4Yn8C"
     }
 });
+var rand,mailOptions,host,link;
 /*END SMTP SERVICE*/
 
 //Email Verification
@@ -143,17 +143,20 @@ app.get('/send',function(req,res) {
     rand = Math.floor((Math.random() * 100) + 54);
     host = req.get('host');
     link = "http://" + req.get('host') + "/verify?id=" + rand;
+    console.log("STEP 1");
     mailOptions = {
-        to: req.query.to,
+        email: req.query.email,
         subject: "Please confirm your Email account",
-        html: "Sup Brah,<br> Click on the link to verify stuff<br><a href=" + link + ">Click here to verify</a>"
+        html: "Hello,<br> Click on the link to verify account<br><a href=" + link + ">Click here to verify</a>"
     }
+    console.log("STEP 2");
     console.log(mailOptions);
     smtpTransport.sendMail(mailOptions, function (error, response) {
         if (error) {
             console.log(error);
             res.end("error");
         } else {
+            console.log("STEP 3");
             console.log("Message sent too: " + response.message);
             res.end("sent");
         }
@@ -164,11 +167,14 @@ app.get('/verify',function(req,res){
     console.log(req.protocol+":/"+req.get('host'));
     if((req.protocol+"://"+req.get('host'))==("http://"+host))
     {
-        console.log("Email checks out . Information is from a authentic email");
+        console.log("STEP 4");
+        console.log("Information is from a authentic email");
         if(req.query.id==rand)
         {
+            console.log("STEP 5");
             console.log("email verified!!!");
-            res.end("<h1>Email "+mailOptions.to+" is been Successfully verified");
+            res.end("<h1>Email "+mailOptions.email+" is been Successfully verified");
+            res.redirect("/users/login");
         }
         else
         {

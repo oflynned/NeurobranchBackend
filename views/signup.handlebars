@@ -1,5 +1,22 @@
 <div class="container">
     <!-- title -->
+    <script>
+        $(document).ready(function(){
+            var from,email,subject,text;
+            $("#submit").click(function(){
+                to=$("#email").val();
+                $("#message").text("Sending E-mail...Please wait");
+                $.get("http://localhost:3000/send",{to:to},function(data){
+                    if(data=="sent")
+                    {
+                        $("#message").empty().html("<p>Email is been sent at "+email+" . Please check inbox !</p>");
+                    }
+
+                });
+            });
+        });
+    </script>
+
     <div class="page-header text-center">
         <h3>Sign Up</h3>
     </div>
@@ -38,6 +55,7 @@
                         Already have an account? <a href="/users/login" class="need-help">Log in.</a><span
                             class="clearfix"></span>
                     </div>
+                    <span id="message"></span>
                 </form>
             </div>
         </div>
