@@ -11,6 +11,7 @@ var passport = require('passport');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");
+var smtpTransport = require("nodemailer-smtp-transport");
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
 var users = require(Globals.USERS_ROUTE);
@@ -130,6 +131,8 @@ app.get('/api/get-candidates/:email', function (req, res) {
 /*SMTP SERVICE*/
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Gmail",
+    secureConnection : false,
+    port:3000,
     auth: {
         user: "teztneuro@gmail.com",
         pass: "lCk3TN:68w4Yn8C"
@@ -144,7 +147,7 @@ app.get('/send',function(req,res) {
     host = req.get('host');
     link = "http://" + req.get('host') + "/verify?id=" + rand;
     console.log("STEP 1");
-    mailOptions = {
+    var mailOptions = {
         email: req.query.email,
         subject: "Please confirm your Email account",
         html: "Hello,<br> Click on the link to verify account<br><a href=" + link + ">Click here to verify</a>"
@@ -194,6 +197,7 @@ app.get('/verify',function(req,res){
 //researchers
 app.post('/api/create-researcher', function (req, res) {
     researcherAccount.createResearcher(new researcherAccount(req.body));
+    console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
     res.redirect("/users/login");
 });
 app.get('/api/get-researchers', function (req, res) {

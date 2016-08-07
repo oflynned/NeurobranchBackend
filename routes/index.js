@@ -23,7 +23,6 @@ router.get('/', ensureAuthenticated, function (req, res) {
                     user: req.user,
                     active_main: "true"
                 });
-            console.log('DEBUG HERE---------');
         });
 });
 
