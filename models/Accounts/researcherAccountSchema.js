@@ -51,6 +51,10 @@ module.exports.getResearcher = function (callback) {
     researcher.find(callback).sort({$natural:-1});
 };
 
+module.exports.verifyResearcher = function (researcherid, status, callback) {
+    researcher.find({researcherid: researcherid}, callback);
+};
+
 module.exports.createResearcher = function (newCandidate, callback) {
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(newCandidate.password, salt, function (err, hash) {

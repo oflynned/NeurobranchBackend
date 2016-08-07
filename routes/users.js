@@ -74,6 +74,11 @@ router.get('/signup', function (req, res) {
         active_signup: "true"
     });
 });
+router.get('/verified', function (req, res) {
+    res.render('verified', {
+        researcher: req.user
+    })
+});
 
 router.post('/login', passport.authenticate('local', {
         successRedirect: '/',

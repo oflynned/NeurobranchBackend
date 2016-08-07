@@ -81,6 +81,7 @@ var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCan
 
 //candidates
 app.post('/api/create-candidate', function (req) {
+    req.body["isverified"] = "false";
     candidateAccount.createCandidate(new candidateAccount(req.body));
 });
 app.get('/api/get-candidates', function (req, res) {
@@ -101,14 +102,34 @@ app.get('/api/get-candidates/:email', function (req, res) {
         res.json(result);
     });
 });
-app.post('/api/candidate-login/:email/:password', function (req, res) {
-
+app.post('/api/candidate-login', function (req, res) {
+    candidateAccount.getCandidateByEmail(req.body.email, function (error, result) {
+        console.log(req.body);
+        if(error) throw error;
+        if(result != null) {
+            candidateAccount.comparePasswords(req.body.password, result.password, function (err, isMatch) {
+                if (err) throw err;
+                res.json({
+                    isMatch: isMatch,
+                    id: result.id
+                });
+            });
+        }
+    });
 });
 
 //researchers
 app.post('/api/create-researcher', function (req, res) {
+    req.body["isverified"] = "false";
     researcherAccount.createResearcher(new researcherAccount(req.body));
     res.redirect("/users/login");
+});
+app.get('/api/verify-researcher/:id', function (req, res) {
+    researcherAccount.getResearcherById(req.params.id, function (err, doc) {
+        doc.isverified = "true";
+        doc.save();
+    });
+    res.redirect('/users/verified');
 });
 app.get('/api/get-researchers', function (req, res) {
     researcherAccount.getResearcher(function (err, result) {
@@ -192,27 +213,41 @@ app.post('/api/create-trial', function (req, res) {
         institute: req.user.institute,
         condition: req.body.condition,
         datecreated: Date.now(),
-        datestarted: null,
-        dateended: null,
+        datestarted: "0",
+        dateended: "0",
         candidatequota: req.body.candidatequota,
         state: "created",
         researcherid: req.user.id
     };
 
     trialData.createTrial(new trialData(trialParams), function() {
-        trialData.getTrialsByResearcherId(req.user.id, function(retrievedData){
-            console.log(req.user.id, retrievedData);
+        trialData.getLatestTrialByResearcher(req.user.id, function(err, result){
             for (var removeAttribute in trialParams) {
                 delete req.body[removeAttribute];
             }
-            //req.body['trialid'] = retrievedData['trialid'];
-            questionData.createQuestion(new questionData(req.body));
+            req.body['trialid'] = result.trialid;
+            console.log(req.body);
+
+            /*
+            var i=0;
+            for(var key in req.body) {
+                ++i;
+                var name = key + i;
+                if(name == "questiontitle" + i ||
+                    name == "questiontype" + i){
+                    var questionParams = {};
+                    questionParams[name] = req.body[name];
+                    questionParams["trialid"] = "test" + i;
+
+                    questionData.createQuestion(new questionData(questionParams));
+                }
+            }*/
+
         });
     });
 
     res.redirect('/users/dashboard');
 });
-
 app.get('/api/get-trials', function (req, res) {
     trialData.getTrials(function (err, result) {
         if (err) throw err;

@@ -161,37 +161,31 @@
 <script src="https://code.jquery.com/jquery-3.1.0.min.js"
         integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script>
-        var questionCount = 1;
-        addQuestion();
+    var questionCount = 1;
+    addQuestion();
 
-        $('.questiontype').on('change', function () {
-            if (value == "checkbox" || value == "choice") {
-                $('.question-holder').append('<div class="row">' +
-                        '<div class="col-sm-12 col-md-12">' +
-                        '<input class="form-control" type="text" id="answer1" name="answer1" placeholder="Option 1">' +
-                        '</div>' +
-                        '</div>');
-            }
-        });
-        $('#add-question-btn').click(function (e) {
-            e.preventDefault();
+    function addQuestion() {
+        $('#add-question-btn').click(function () {
             ++questionCount;
             addQuestion();
         });
-
-    function addQuestion(){
-        $('#question-holder').append('<div id="question-group-' + questionCount + '">' +
+        $('.questiontype').on('change', function () {
+            $('.question-holder').append('<div class="row">' +
+                    '<div class="col-sm-12 col-md-12">' +
+                    '<input class="form-control" type="text" id="answer1" name="answer1" placeholder="Option 1">' +
+                    '</div>' +
+                    '</div>');
+        });
+        $('#question-holder').append('<div id="account-wall question-group-' + questionCount + '">' +
                 '<a class="remove-field">Remove</a>' +
+                '<div class="form-group"<h4>Question</h4></div>' +
                 '<div class="form-group">' +
-                '<h4>Question</h4>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<input class="form-control" type="text" id="questiontitle' + questionCount + '" name="questiontitle' +
+                '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' +
                 questionCount + '" placeholder="Question Title">' +
                 '</div>' +
                 '<div class="row form-group">' +
                 '<div class="col-sm-6 col-md-6">' +
-                '<select class="form-control" name="questiontype" id="questiontype">' +
+                '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
                 '<option value="def_trialtype_placeholder" disabled>Trial Type' +
                 '</option>' +
                 '<option value="checkbox">Checkbox</option>' +
@@ -203,19 +197,15 @@
                 '<div class="col-sm-6 col-md-6">' +
                 '<a class="add-option-btn">Add Option</a>' +
                 '</div></div></div>');
-        $('.remove-field').click(function (e) {
-            e.preventDefault();
+        $('.remove-field').click(function () {
             questionCount--;
             $(this).closest('div').remove();
         });
         $('.add-option-btn').click(function () {
-            var currentOption = $('#questiontype').find(':selected').val();
-            if (currentOption == "checkbox" || currentOption == "choice") {
-                $(this).parent('div').append('<div class="row">' +
-                        '<input class="form-control" type="text" id="answer" name="answer" placeholder="Option">' +
-                        '<a class="remove-field">Remove</a>' +
-                        '</div>');
-            }
+            $(this).closest('div').append('<div class="row">' +
+                    '<input class="form-control" type="text" id="answer' + questionCount + '" name="answer' + questionCount + '" placeholder="Option">' +
+                    '<a class="remove-field">Remove</a>' +
+                    '</div>');
         });
     }
 </script>
