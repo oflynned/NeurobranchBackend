@@ -1,5 +1,6 @@
 <!-- Page Content -->
 <div id="page-content-wrapper">
+    <link rel="stylesheet" type="text/css" href="/css/info.css">
     <div class="container-fluid content-main">
         <!--"/api/create-trial"-->
         <form action="/api/create-trial" method="post" role="form">
@@ -30,20 +31,23 @@
                     <div class="center-form">
                         <div class="form-create-trial form-create-trial-margin">
                             <div class="form-group">
-                                <input class="form-control" type="text" id="title" name="title"
-                                       placeholder="Trial Title" required autofocus>
+                                <input class="form-control" type="text" id="title" name="title" placeholder="Trial Title" required autofocus>
+                                <span title="Trial Title is the first thing that candidates will see when choosing to join a trial." class="fa fa-info-circle errspan" ></span>
                             </div>
                             <div class="form-group">
                                             <textarea class="form-control description-box" rows="2"
                                                       id="briefdescription"
                                                       name="briefdescription"
                                                       placeholder="Brief Description" required></textarea>
+                                <span title="Brief Description is the short description that candidates will first see when searching for trials under the title." class="fa fa-info-circle errspan" ></span>
                             </div>
+
                             <div class="form-group">
                                             <textarea class="form-control description-box" rows="10"
                                                       id="detaileddescription"
                                                       name="detaileddescription"
                                                       placeholder="Detailed Description" required></textarea>
+                                <span title="Detailed Description is seen when a candidate clicks into a trial providing in depth details about the trial." class="fa fa-info-circle errspan" ></span>
                             </div>
 
                             <div class="row">
@@ -55,11 +59,13 @@
                                         <option value="consumable">Food</option>
                                         <option value="behavioural">Behavioural</option>
                                     </select>
+                                    <span title="Trial Type is the category of clinical trial being performed." class="fa fa-info-circle errspan" ></span>
                                 </div>
 
                                 <div class="col-sm-4 col-md-4">
                                     <input class="form-control" type="text" id="candidatequota" name="candidatequota"
                                            placeholder="Candidate Quota" required>
+                                    <span title="Candidate Quota is the minimum amount of candidates needed in order to be able to set a trial ongoing." class="fa fa-info-circle errspan" ></span>
                                 </div>
 
                                 <div class="col-sm-4 col-md-4">
@@ -68,6 +74,7 @@
                                         </option>
                                         <option value="cancer">Cancer</option>
                                     </select>
+                                    <span title="Condition Type is the condition pertaining to the trial. It's used for categorisation." class="fa fa-info-circle errspan" ></span>
                                 </div>
                             </div>
                         </div>
@@ -100,22 +107,7 @@
 
                 <div class="col-sm-6 col-md-6">
                     <ul>
-                        <li><strong>Trial Title</strong> is the first thing that candidates will see when choosing to
-                            join a trial.
-                        </li>
-                        <li><strong>Brief Description</strong> is the short description that candidates will first see
-                            when searching for trials under the title.
-                        </li>
-                        <li><strong>Detailed Description</strong> is seen when a candidate clicks into a trial providing
-                            in depth details about the trial.
-                        </li>
-                        <li><strong>Trial Type</strong> is the category of clinical trial being performed.</li>
-                        <li><strong>Candidate Quota</strong> is the minimum amount of candidates needed in order to be
-                            able to set a trial ongoing.
-                        </li>
-                        <li><strong>Condition Type</strong> is the condition pertaining to the trial. It's used for
-                            categorisation.
-                        </li>
+
                         <br>
                         <li><strong>Question Title</strong> is the text that candidates will read with options (if any)
                             of answers underneath it.
