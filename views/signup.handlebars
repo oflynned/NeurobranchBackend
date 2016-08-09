@@ -24,7 +24,7 @@
                         </select>
                     </div>
 
-                    <input type="email" class="form-control" placeholder="Email" name="email" required>
+                    <input type="email" class="form-control" placeholder="Email" name="email" id="to" required>
                     <input type="email" class="form-control" placeholder="Confirm email" name="conf_email" required>
                     <input type="password" class="form-control" placeholder="Password" name="password" required>
                     <input type="password" class="form-control" placeholder="Confirm password" name="conf_pass"
@@ -45,3 +45,22 @@
         </div>
     </div>
 </div>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var from,to,subject,text;
+        $("#send_email").click(function(){
+            to=$("#to").val();
+            $("#message").text("Sending email...please wait");
+            $.get("http://localhost:3000/send",{to:to},function(data){
+                if(data=="sent")
+                {
+                    $("#message").empty().html("<p>Email is been sent at "+to+" . Please check inbox !</p>");
+                }
+
+            });
+        });
+    });
+</script>

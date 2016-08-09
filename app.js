@@ -1,6 +1,7 @@
 var Globals = require('./routes/Globals');
 
 var express = require('express');
+var nodemailer = require("nodemailer");
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var exphbs = require('express-handlebars');
@@ -17,6 +18,16 @@ var users = require(Globals.USERS_ROUTE);
 var util = require('util');
 var generator = require('mongoose-gen');
 var app = express();
+/*SMTP*/
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",
+    auth: {
+        user: "teztneuro@gmail.com",
+        pass: "lCk3TN:68w4Yn8C"
+    }
+});
+var rand,mailOptions,host,link;
+/*ENd of SMTP*/
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
@@ -105,8 +116,8 @@ app.get('/api/get-candidates/:email', function (req, res) {
 app.post('/api/candidate-login', function (req, res) {
     candidateAccount.getCandidateByEmail(req.body.email, function (error, result) {
         console.log(req.body);
-        if(error) throw error;
-        if(result != null) {
+        if (error) throw error;
+        if (result != null) {
             candidateAccount.comparePasswords(req.body.password, result.password, function (err, isMatch) {
                 if (err) throw err;
                 res.json({
@@ -117,6 +128,56 @@ app.post('/api/candidate-login', function (req, res) {
         }
     });
 });
+
+/*Email Verification*/
+
+
+app.get('/send', function (req, res) {
+    rand = Math.floor((Math.random() * 100) + 54);
+    host = req.get('host');
+    link = "http://" + req.get('host') + "/verify?id=" + rand;
+    console.log("STEP 1");
+    mailOptions = {
+        to: req.query.to,
+        subject: "Please confirm your Email account",
+        html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
+    }
+    console.log("STEP 2");
+    console.log(mailOptions);
+    smtpTransport.sendMail(mailOptions, function (error, response) {
+        if (error) {
+            console.log(error);
+            res.end("error");
+        } else {
+            console.log("STEP 3");
+            console.log("Message sent: " + response.message);
+            res.end("sent");
+        }
+    });
+});
+
+app.get('/verify', function (req, res) {
+    console.log(req.protocol + ":/" + req.get('host'));
+    if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
+        console.log("STEP 4");
+        console.log("Domain is matched. Information is from Authentic email");
+        if (req.query.id == rand) {
+            console.log("STEP 5");
+            console.log("email is verified");
+            res.end("<h1>Email " + mailOptions.to + " wooop wooop");
+        }
+        else {
+            console.log("email is not verified");
+            res.end("<h1>Bad Request</h1>");
+        }
+    }
+    else {
+        res.end("<h1>Request is from unknown source");
+    }
+});
+/*End of Email verification */
+
+
 
 //researchers
 app.post('/api/create-researcher', function (req, res) {
@@ -220,8 +281,8 @@ app.post('/api/create-trial', function (req, res) {
         researcherid: req.user.id
     };
 
-    trialData.createTrial(new trialData(trialParams), function() {
-        trialData.getLatestTrialByResearcher(req.user.id, function(err, result){
+    trialData.createTrial(new trialData(trialParams), function () {
+        trialData.getLatestTrialByResearcher(req.user.id, function (err, result) {
             for (var removeAttribute in trialParams) {
                 delete req.body[removeAttribute];
             }
@@ -229,19 +290,19 @@ app.post('/api/create-trial', function (req, res) {
             console.log(req.body);
 
             /*
-            var i=0;
-            for(var key in req.body) {
-                ++i;
-                var name = key + i;
-                if(name == "questiontitle" + i ||
-                    name == "questiontype" + i){
-                    var questionParams = {};
-                    questionParams[name] = req.body[name];
-                    questionParams["trialid"] = "test" + i;
+             var i=0;
+             for(var key in req.body) {
+             ++i;
+             var name = key + i;
+             if(name == "questiontitle" + i ||
+             name == "questiontype" + i){
+             var questionParams = {};
+             questionParams[name] = req.body[name];
+             questionParams["trialid"] = "test" + i;
 
-                    questionData.createQuestion(new questionData(questionParams));
-                }
-            }*/
+             questionData.createQuestion(new questionData(questionParams));
+             }
+             }*/
 
         });
     });
