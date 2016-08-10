@@ -2,6 +2,8 @@ var Globals = require('./routes/Globals');
 
 var express = require('express');
 var nodemailer = require("nodemailer");
+var redis = require('redis');
+var redisClient = redis.createClient(); // default setting.
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var exphbs = require('express-handlebars');
@@ -17,16 +19,16 @@ var users = require(Globals.USERS_ROUTE);
 
 var util = require('util');
 var generator = require('mongoose-gen');
+var async = require('async');
 var app = express();
 /*SMTP*/
-var smtpTransport = nodemailer.createTransport("SMTP",{
+var smtpTransport = nodemailer.createTransport({
     service: "Gmail",
     auth: {
         user: "teztneuro@gmail.com",
         pass: "lCk3TN:68w4Yn8C"
     }
 });
-var rand,mailOptions,host,link;
 /*ENd of SMTP*/
 
 app.set('views', path.join(__dirname, 'views'));
@@ -131,47 +133,89 @@ app.post('/api/candidate-login', function (req, res) {
 
 /*Email Verification*/
 
-
-app.get('/send', function (req, res) {
-    rand = Math.floor((Math.random() * 100) + 54);
-    host = req.get('host');
-    link = "http://" + req.get('host') + "/verify?id=" + rand;
-    console.log("STEP 1");
-    mailOptions = {
-        to: req.query.to,
-        subject: "Please confirm your Email account",
-        html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
-    }
-    console.log("STEP 2");
-    console.log(mailOptions);
-    smtpTransport.sendMail(mailOptions, function (error, response) {
-        if (error) {
-            console.log(error);
-            res.end("error");
-        } else {
-            console.log("STEP 3");
-            console.log("Message sent: " + response.message);
-            res.end("sent");
+app.post('/send',function(req,res) {
+    console.log(req.body.to);
+    async.waterfall([
+        function(callback) {
+            redisClient.exists(req.body.to,function(err,reply) {
+                if(err) {
+                    return callback(true,"Error in redis");
+                }
+                if(reply === 1) {
+                    return callback(true,"Email already requested");
+                }
+                callback(null);
+            });
+        },
+        function(callback) {
+            "use strict";
+            let rand=Math.floor((Math.random() * 100) + 54);
+            let encodedMail = new Buffer(req.body.to).toString('base64');
+            let link="http://"+req.get('host')+"/verify?mail="+encodedMail+"&id="+rand;
+            let mailOptions={
+                from : 'teztneuro@gmail.com',
+                to : req.body.to,
+                subject : "Please confirm your Email account",
+                html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
+            };
+            callback(null,mailOptions,rand);
+        },
+        function(mailData,secretKey,callback) {
+            console.log(mailData);
+            smtpTransport.sendMail(mailData, function(error, response){
+                if(error){
+                    console.log(error);
+                    return callback(true,"Error in sending email");
+                }
+                console.log("Message sent: " + JSON.stringify(response));
+                redisClient.set(req.body.to,secretKey);
+                redisClient.expire(req.body.to,600); // expiry for 10 minutes.
+                callback(null,"Email sent Successfully");
+            });
         }
+    ],function(err,data) {
+        console.log(err,data);
+        res.json({error : err === null ? false : true, data : data});
     });
 });
 
-app.get('/verify', function (req, res) {
-    console.log(req.protocol + ":/" + req.get('host'));
-    if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
-        console.log("STEP 4");
+app.get('/verify',function(req,res) {
+    console.log(req.protocol+":/"+req.get('host'));
+    if((req.protocol+"://"+req.get('host')) === ("http://"+host)) {
         console.log("Domain is matched. Information is from Authentic email");
-        if (req.query.id == rand) {
-            console.log("STEP 5");
-            console.log("email is verified");
-            res.end("<h1>Email " + mailOptions.to + " wooop wooop");
-        }
-        else {
-            console.log("email is not verified");
-            res.end("<h1>Bad Request</h1>");
-        }
-    }
-    else {
+        async.waterfall([
+            function(callback) {
+                "use strict";
+                let decodedMail = new Buffer(req.query.mail, 'base64').toString('ascii');
+                redisClient.get(decodedMail,function(err,reply) {
+                    if(err) {
+                        return callback(true,"Error in redis");
+                    }
+                    if(reply === null) {
+                        return callback(true,"Invalid email address");
+                    }
+                    callback(null,decodedMail,reply);
+                });
+            },
+            function(key,redisData,callback) {
+                if(redisData === req.query.id) {
+                    redisClient.del(key,function(err,reply) {
+                        if(err) {
+                            return callback(true,"Error in redis");
+                        }
+                        if(reply !== 1) {
+                            return callback(true,"Issue in redis");
+                        }
+                        callback(null,"Email is verified");
+                    });
+                } else {
+                    return callback(true,"Invalid token");
+                }
+            }
+        ],function(err,data) {
+            res.send(data);
+        });
+    } else {
         res.end("<h1>Request is from unknown source");
     }
 });

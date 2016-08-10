@@ -9,6 +9,7 @@
   "author": "Alexandru Sulea",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.0.0-rc.5",
     "bcryptjs": "*",
     "body-parser": "^1.15.2",
     "connect": "*",
@@ -33,11 +34,12 @@
     "mongoose-query-random": "^1.0.1",
     "mongoose-simple-random": "^0.3.3",
     "multer": "^1.1.0",
-    "nodemailer": "~1.10.0",
+    "nodemailer": "~2.5.0",
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
     "redis": "^2.6.2",
-    "step": "latest"
+    "step": "latest",
+    "xoauth2": "^1.2.0"
   }
 }
