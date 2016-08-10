@@ -103,15 +103,13 @@
 
                     </div>
                     <div><a id="add-question-btn">Add Question</a></div>
+                    <span title=" Click here to add another question " class="fa fa-info-circle errspan" ></span>
                 </div>
 
                 <div class="col-sm-6 col-md-6">
                     <ul>
 
                         <br>
-                        <li><strong>Question Title</strong> is the text that candidates will read with options (if any)
-                            of answers underneath it.
-                        </li>
                         <li><strong>Question Type</strong> is the type of question that can be asked:</li>
                         <ul>
                             <li><strong>Checkbox</strong> is where a candidate can select any amount of answers,
@@ -165,6 +163,7 @@
             $('.question-holder').append('<div class="row">' +
                     '<div class="col-sm-12 col-md-12">' +
                     '<input class="form-control" type="text" id="answer1" name="answer1" placeholder="Option 1">' +
+                            '<span title=" Question type" class="fa fa-info-circle errspan" ></span>'+
                     '</div>' +
                     '</div>');
         });
@@ -174,6 +173,7 @@
                 '<div class="form-group">' +
                 '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' +
                 questionCount + '" placeholder="Question Title">' +
+                '<span title="Question Title is the text that candidates will read with options (if any) of answers underneath it." class="fa fa-info-circle errspan" ></span>'+
                 '</div>' +
                 '<div class="row form-group">' +
                 '<div class="col-sm-6 col-md-6">' +
