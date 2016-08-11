@@ -108,8 +108,6 @@
 
                 <div class="col-sm-6 col-md-6">
                     <ul>
-
-                        <br>
                         <li><strong>Question Type</strong> is the type of question that can be asked:</li>
                         <ul>
                             <li><strong>Checkbox</strong> is where a candidate can select any amount of answers,
@@ -153,12 +151,12 @@
 <script>
     var questionCount = 1;
     addQuestion();
-
+    $('#add-question-btn').click(function () {
+        ++questionCount;
+        addQuestion();
+    });
     function addQuestion() {
-        $('#add-question-btn').click(function () {
-            ++questionCount;
-            addQuestion();
-        });
+
         $('.questiontype').on('change', function () {
             $('.question-holder').append('<div class="row">' +
                     '<div class="col-sm-12 col-md-12">' +
