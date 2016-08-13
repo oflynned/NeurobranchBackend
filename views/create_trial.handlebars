@@ -156,46 +156,59 @@
         addQuestion();
     });
     function addQuestion() {
-
         $('.questiontype').on('change', function () {
-            $('.question-holder').append('<div class="row">' +
-                    '<div class="col-sm-12 col-md-12">' +
-                    '<input class="form-control" type="text" id="answer1" name="answer1" placeholder="Option 1">' +
+            $('.question-holder').append(
+                    '<div class="row">' +
+                        '<div class="col-sm-12 col-md-12">' +
+                            '<input class="form-control" type="text" id="answer1" name="answer1" placeholder="Option 1">' +
                             '<span title=" Question type" class="fa fa-info-circle errspan" ></span>'+
-                    '</div>' +
+                        '</div>' +
                     '</div>');
         });
-        $('#question-holder').append('<div id="account-wall question-group-' + questionCount + '">' +
-                '<a class="remove-field">Remove</a>' +
-                '<div class="form-group"<h4>Question</h4></div>' +
-                '<div class="form-group">' +
-                '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' +
-                questionCount + '" placeholder="Question Title">' +
-                '<span title="Question Title is the text that candidates will read with options (if any) of answers underneath it." class="fa fa-info-circle errspan" ></span>'+
-                '</div>' +
-                '<div class="row form-group">' +
-                '<div class="col-sm-6 col-md-6">' +
-                '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
-                '<option value="def_trialtype_placeholder" disabled>Trial Type' +
-                '</option>' +
-                '<option value="checkbox">Checkbox</option>' +
-                '<option value="choice">Choice</option>' +
-                '<option value="scale">Scale</option>' +
-                '<option value="section">Section</option>' +
-                '</select>' +
-                '</div>' +
-                '<div class="col-sm-6 col-md-6">' +
-                '<a class="add-option-btn">Add Option</a>' +
-                '</div></div></div>');
+
         $('.remove-field').click(function () {
             questionCount--;
             $(this).closest('div').remove();
         });
+
+
+        $('#question-holder').append(
+                '<div id="account-wall question-group-' + questionCount + '">' +
+                    '<a class="remove-field">Remove Question</a>' +
+                    '<div class="form-group"<h4>Question </h4></div>' +
+                        '<div class="form-group">' +
+                            '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' +
+                            questionCount + '" placeholder="Question Title">' +
+                            '<span title="Question Title is the text that candidates will read with options (if any) of answers underneath it." class="fa fa-info-circle errspan" ></span>'+
+                        '</div>' +
+                        '<div class="row form-group">' +
+                            '<div class="col-sm-6 col-md-6">' +
+                                '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
+                                    '<option value="def_trialtype_placeholder" disabled>Trial Type' + '</option>' +
+                                    '<option value="checkbox">Checkbox</option>' +
+                                    '<option value="choice">Choice</option>' +
+                                    '<option value="scale">Scale</option>' +
+                                    '<option value="section">Section</option>' +
+                                '</select>' +
+                            '</div>' +
+                        '<div class="col-sm-6 col-md-6">' +
+                            '<a class="add-option-btn">Add Option</a>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>');
+
         $('.add-option-btn').click(function () {
-            $(this).closest('div').append('<div class="row">' +
-                    '<input class="form-control" type="text" id="answer' + questionCount + '" name="answer' + questionCount + '" placeholder="Option">' +
-                    '<a class="remove-field">Remove</a>' +
+            $(this).closest('div').append(
+                    '<div class="row">' +
+                        '<input class="form-control" type="text" id="answer' + questionCount + '" name="answer' + questionCount + '" placeholder="Option">' +
+                        '<a class="remove-option">Remove Option</a>' +
                     '</div>');
+
+            $('.remove-option').click(function () {
+                /*questionCount--;*/
+                $(this).closest('div').remove();
+            });
         });
+
     }
 </script>
