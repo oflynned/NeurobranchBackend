@@ -101,7 +101,7 @@
                     <span title=" Click here to add another question " class="fa fa-info-circle errspan" ></span>
                     <a>   ----------------Ending---------------</a>
                 </div>
-
+            </div>
                 <!--div class="col-sm-6 col-md-6">
                     <ul>
                         <li><strong>Question Option</strong> is the potential option a candidate can choose if the type
@@ -109,7 +109,6 @@
                         </li>
                     </ul>
                 </--div-->
-            </div>
 
             <div class="row">
                 <div class="col-md-2 col-md-offset-5 center-text center-form">
@@ -141,29 +140,19 @@
 
     function addOption() {
         $('#option-holder').append(
-                '<div id="account-wall question-group-' + questionCount + '">' +
-                    '<a class="remove-field">Remove Question</a>' +
-                    '<div class="form-group"<h4>Option </h4></div>' +
-                        '<div class="form-group">' +
-                            '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' + questionCount + '" placeholder="Question Title">' +
-                        '</div>' +
-                        '<div class="row form-group">' +
-                            '<div class="col-sm-6 col-md-6">' +
-                                '<a class="add-option-btn">Add Option</a>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="row">' +
+                '<input class="form-control" type="text" id="answer' + optionCount + '" name="answer' + optionCount + '" placeholder="Option">' +
+                '<a class="remove-option">Remove Option</a>' +
                 '</div>'
         );
     };
-
 
     function addQuestion() {
         $('.questiontype').on('change', function () {
             $('.question-holder').append(
                     '<div class="row">' +
                         '<div class="col-sm-12 col-md-12">' +
-                            '<input class="form-control" type="text" id="answer1" name="answer1" placeholder="Option 1">' +
+                            '<input class="form-control" type="text" id="answer0" name="answer0" placeholder="Option 0">' +
                         '</div>' +
                     '</div>'
             );
@@ -190,6 +179,7 @@
                             '</div>' +
 
                             '<div class="col-sm-6 col-md-6">' +
+                                '<fieldset id="buildyourform"></fieldset>'+
                                 '<a class="add-option-btn">Add Option</a>' +
                             '</div>' +
                         '</div>' +
@@ -198,10 +188,11 @@
         );
 
         $('.add-option-btn').click(function () {
+            optionCount++;
             $(this).closest('div').append(
                     '<div class="row">' +
-                        '<input class="form-control" type="text" id="answer' + optionCount + '" name="answer' + optionCount + '" placeholder="Option">' +
-                        '<a class="remove-option">Remove Option</a>' +
+                    '<input class="form-control" type="text" id="answer' + optionCount + '" name="answer' + optionCount + '" placeholder="Option">' +
+                    '<a class="remove-option">Remove Option</a>' +
                     '</div>'
             );
             $('.remove-option').click(function () {
@@ -209,5 +200,6 @@
                 $(this).closest('div').remove();
             });
         });
+
     };
 </script>
