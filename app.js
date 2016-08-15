@@ -130,9 +130,15 @@ app.post('/api/candidate-login', function (req, res) {
         }
     });
 });
+app.get('/api/verify-candidate/:id', function (req, res) {
+    candidateAccount.getCandidateById(req.params.id, function (err, doc) {
+        doc.isverified = "true";
+        doc.save();
+    });
+    res.redirect('/users/verified');
+});
 
-/*Email Verification*/
-
+//email Verification
 app.post('/send',function(req,res) {
     console.log(req.body.to);
     async.waterfall([
@@ -178,7 +184,6 @@ app.post('/send',function(req,res) {
         res.json({error : err === null ? false : true, data : data});
     });
 });
-
 app.get('/verify',function(req,res) {
     console.log(req.protocol+":/"+req.get('host'));
     if((req.protocol+"://"+req.get('host')) === ("http://"+host)) {
@@ -219,7 +224,6 @@ app.get('/verify',function(req,res) {
         res.end("<h1>Request is from unknown source");
     }
 });
-/*End of Email verification */
 
 
 
