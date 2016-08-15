@@ -92,41 +92,23 @@
             </div>
             <div class="row">
                 <div class="col-sm-6 col-md-6">
-
+                    <a>----------------Beginning---------------</a>
                     <div class="center-form form-create-trial form-create-trial-margin" id="question-holder">
-
                     </div>
-                    <div><a id="add-question-btn">Add Question</a></div>
+                    <div>
+                        <a id="add-question-btn">Add Question</a>
+                    </div>
                     <span title=" Click here to add another question " class="fa fa-info-circle errspan" ></span>
+                    <a>   ----------------Ending---------------</a>
                 </div>
 
-                <div class="col-sm-6 col-md-6">
+                <!--div class="col-sm-6 col-md-6">
                     <ul>
-                        <li><strong>Question Type</strong> is the type of question that can be asked:</li>
-                        <ul>
-                            <li><strong>Checkbox</strong> is where a candidate can select any amount of answers,
-                                including none or all.
-                            </li>
-                            <ul>
-                                <li><strong>Requires options for candidate to select</strong></li>
-                            </ul>
-                            <li><strong>Choice</strong> is where a candidate can select only <strong>one</strong>
-                                answer.
-                            </li>
-                            <ul>
-                                <li><strong>Requires options for candidate to select</strong></li>
-                            </ul>
-                            <li><strong>Scale</strong> is where a candidate can drag a bar to a level between 0 and 100
-                                incorporating colours.
-                            </li>
-                            <li><strong>Section</strong> is where a candidate can write unlimited text into a paragraph
-                            </li>
-                        </ul>
                         <li><strong>Question Option</strong> is the potential option a candidate can choose if the type
                             utilises selection.
                         </li>
                     </ul>
-                </div>
+                </--div-->
             </div>
 
             <div class="row">
@@ -146,16 +128,34 @@
     var questionCount = 1;
     var optionCount = 1;
     addQuestion();
+    addOption();
     $('#add-question-btn').click(function () {
         ++questionCount;
         addQuestion();
-        
+
         $('.remove-field').click(function () {
             questionCount--;
             $(this).closest('div').remove();
         });
-
     });
+
+    function addOption() {
+        $('#option-holder').append(
+                '<div id="account-wall question-group-' + questionCount + '">' +
+                    '<a class="remove-field">Remove Question</a>' +
+                    '<div class="form-group"<h4>Option </h4></div>' +
+                        '<div class="form-group">' +
+                            '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' + questionCount + '" placeholder="Question Title">' +
+                        '</div>' +
+                        '<div class="row form-group">' +
+                            '<div class="col-sm-6 col-md-6">' +
+                                '<a class="add-option-btn">Add Option</a>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+        );
+    };
 
 
     function addQuestion() {
@@ -164,11 +164,10 @@
                     '<div class="row">' +
                         '<div class="col-sm-12 col-md-12">' +
                             '<input class="form-control" type="text" id="answer1" name="answer1" placeholder="Option 1">' +
-                            '<span title=" Question type" class="fa fa-info-circle errspan" ></span>'+
                         '</div>' +
-                    '</div>');
+                    '</div>'
+            );
         });
-
 
         $('#question-holder').append(
                 '<div id="account-wall question-group-' + questionCount + '">' +
@@ -181,13 +180,15 @@
                         '<div class="row form-group">' +
                             '<div class="col-sm-6 col-md-6">' +
                                 '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
-                                    '<option value="def_trialtype_placeholder" disabled>Trial Type' + '</option>' +
+                                    '<option value=" " disabled selected>Question Type' + '</option>' +
                                     '<option value="checkbox">Checkbox</option>' +
                                     '<option value="choice">Choice</option>' +
                                     '<option value="scale">Scale</option>' +
                                     '<option value="section">Section</option>' +
                                 '</select>' +
+                '<span title="Question Type is the type of question that can be asked:Checkbox is where a candidate can select any amount of answers, including none or all.Requires options for candidate to selectChoice is where a candidate can select only one answer.Requires options for candidate to selectScale is where a candidate can drag a bar to a level between 0 and 100 incorporating colours.Section is where a candidate can write unlimited text into a paragraph" class="fa fa-info-circle errspan" ></span>'+
                             '</div>' +
+
                             '<div class="col-sm-6 col-md-6">' +
                                 '<a class="add-option-btn">Add Option</a>' +
                             '</div>' +
@@ -201,13 +202,12 @@
                     '<div class="row">' +
                         '<input class="form-control" type="text" id="answer' + optionCount + '" name="answer' + optionCount + '" placeholder="Option">' +
                         '<a class="remove-option">Remove Option</a>' +
-                    '</div>');
-
+                    '</div>'
+            );
             $('.remove-option').click(function () {
                 optionCount--;
                 $(this).closest('div').remove();
             });
         });
-
-    }
+    };
 </script>
