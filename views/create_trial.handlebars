@@ -93,7 +93,7 @@
             <div class="row">
                 <div class="col-sm-6 col-md-6">
                     <a>----------------Beginning---------------</a>
-                    <div class="center-form form-create-trial form-create-trial-margin" id="question-holder">
+                    <div class="center-form form-create-trial form-create-trial-margin" id="question-holder">Parent
                     </div>
                     <div>
                         <a id="add-question-btn">Add Question</a>
@@ -102,14 +102,6 @@
                     <a>   ----------------Ending---------------</a>
                 </div>
             </div>
-                <!--div class="col-sm-6 col-md-6">
-                    <ul>
-                        <li><strong>Question Option</strong> is the potential option a candidate can choose if the type
-                            utilises selection.
-                        </li>
-                    </ul>
-                </--div-->
-
             <div class="row">
                 <div class="col-md-2 col-md-offset-5 center-text center-form">
                     <button class="btn-create-trial btn-lg btn-primary btn-block" type="submit">
@@ -128,6 +120,7 @@
     var optionCount = 1;
     addQuestion();
     addOption();
+
     $('#add-question-btn').click(function () {
         ++questionCount;
         addQuestion();
@@ -138,14 +131,6 @@
         });
     });
 
-    function addOption() {
-        $('#option-holder').append(
-                '<div class="row">' +
-                '<input class="form-control" type="text" id="answer' + optionCount + '" name="answer' + optionCount + '" placeholder="Option">' +
-                '<a class="remove-option">Remove Option</a>' +
-                '</div>'
-        );
-    };
 
     function addQuestion() {
         $('.questiontype').on('change', function () {
@@ -179,27 +164,49 @@
                             '</div>' +
 
                             '<div class="col-sm-6 col-md-6">' +
-                                '<fieldset id="buildyourform"></fieldset>'+
-                                '<a class="add-option-btn">Add Option</a>' +
+                                ' <a>---START---</a>'+
+                                '<div class="center-form form-create-trial form-create-trial-margin" id="option-holder">Child </div>'+
+                                '<div>'+
+                                    '<a id="add-option-btn">Add Option</a>'+
+                                '</div>'+
+                                '<span title=" Question Option is the potential option a candidate can choose if the type utilises selection" class="fa fa-info-circle errspan" ></span>'+
+                                '<a>   ---END---</a>'+
                             '</div>' +
                         '</div>' +
                     '</div>' +
                 '</div>'
         );
+    };
 
-        $('.add-option-btn').click(function () {
-            optionCount++;
-            $(this).closest('div').append(
-                    '<div class="row">' +
-                    '<input class="form-control" type="text" id="answer' + optionCount + '" name="answer' + optionCount + '" placeholder="Option">' +
-                    '<a class="remove-option">Remove Option</a>' +
-                    '</div>'
-            );
-            $('.remove-option').click(function () {
-                optionCount--;
-                $(this).closest('div').remove();
-            });
+    $('#add-option-btn').click(function () {
+        optionCount++;
+        addOption();
+        $('.remove-option').click(function () {
+            optionCount--;
+            $(this).closest('div').remove();
         });
 
+    });
+
+
+    function addOption() {
+        $('.optiontype').on('change', function () {
+            $('.option-holder').append(
+                    '<div class="row">' +
+                    '<div class="col-sm-12 col-md-12">' +
+                    '<input class="form-control" type="text" id="option0" name="option0" placeholder="Option 0">' +
+                    '</div>' +
+                    '</div>'
+            );
+
+        });
+
+        $('#option-holder').append(
+                '<div class="row">' +
+                '<input class="form-control" type="text" id="option' + optionCount + '" name="option' + optionCount + '" placeholder="Option">' +
+                '<a class="remove-option">Remove Option</a>' +
+                '</div>'
+        );
     };
+
 </script>

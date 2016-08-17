@@ -1,9 +1,8 @@
 var Globals = require('./routes/Globals');
 
 var express = require('express');
-var nodemailer = require("nodemailer");
-var redis = require('redis');
-var redisClient = redis.createClient(); // default setting.
+
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var exphbs = require('express-handlebars');
@@ -12,6 +11,10 @@ var session = require('express-session');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var nodemailer = require("nodemailer");
+var redis = require('redis');
+var redisClient = redis.createClient(); // default setting.
+var mandrillTransport = require('nodemailer-mandrill-transport');
 
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
@@ -57,6 +60,10 @@ app.use(function (req, res, next) {
     res.locals.user = req.user || null;
     next();
 });
+
+var host = "localhost:3000";
+app.use(bodyParser.urlencoded({"extended" : false}));
+
 app.get('/', function (req, res, next) {
     res.render('mainpage');
 });
@@ -140,7 +147,11 @@ app.get('/api/verify-candidate/:id', function (req, res) {
 
 //email Verification
 app.post('/send',function(req,res) {
-    console.log(req.body.to);
+    console.log('email--->' + req.body.to);
+    console.log('forename--->' + req.body.forename);
+    req.body["isverified"] = "false";
+    researcherAccount.createResearcher(new researcherAccount(req.body));
+
     async.waterfall([
         function(callback) {
             redisClient.exists(req.body.to,function(err,reply) {
@@ -167,6 +178,10 @@ app.post('/send',function(req,res) {
             callback(null,mailOptions,rand);
         },
         function(mailData,secretKey,callback) {
+            req.body["isverified"] = "false";
+            researcherAccount.createResearcher(new researcherAccount(req.body));
+
+
             console.log(mailData);
             smtpTransport.sendMail(mailData, function(error, response){
                 if(error){
@@ -199,6 +214,7 @@ app.get('/verify',function(req,res) {
                     if(reply === null) {
                         return callback(true,"Invalid email address");
                     }
+
                     callback(null,decodedMail,reply);
                 });
             },
@@ -211,7 +227,13 @@ app.get('/verify',function(req,res) {
                         if(reply !== 1) {
                             return callback(true,"Issue in redis");
                         }
-                        callback(null,"Email is verified");
+                       /* callback(null,"Email is verified");*/
+
+                        /*researcherAccount.getResearcherById(req.params.id, function (err, doc) {
+                            doc.isverified = "true";
+                            doc.save();
+                        });*/
+                        res.redirect('/users/verified');
                     });
                 } else {
                     return callback(true,"Invalid token");
