@@ -35,6 +35,14 @@ var researcherAccountSchema = mongoose.Schema({
         type: String,
         safe: true
     },
+    resetPasswordToken: {
+        type: String,
+        safe: true
+    },
+    resetPasswordExpires: {
+        type:Date,
+        safe:true
+        },
     isverified: {
         type: String,
         safe: true

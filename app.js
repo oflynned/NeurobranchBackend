@@ -151,7 +151,7 @@ app.get('/api/verify-candidate/:id', function (req, res) {
     res.redirect('/users/verified');
 });
 
-//email Verification
+//send email Verification
 app.post('/send',function(req,res) {
     console.log('email--->' + req.body.to);
     console.log('forename--->' + req.body.forename);
