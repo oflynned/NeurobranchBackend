@@ -4,11 +4,14 @@ var express = require('express');
 
 
 var path = require('path');
+var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var exphbs = require('express-handlebars');
 var flash = require('connect-flash');
+var crypto = require('crypto');
 var session = require('express-session');
 var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");
@@ -22,6 +25,7 @@ var users = require(Globals.USERS_ROUTE);
 
 var util = require('util');
 var generator = require('mongoose-gen');
+var bcrypt = require('bcrypt-nodejs');
 var async = require('async');
 var app = express();
 /*SMTP*/
@@ -37,6 +41,8 @@ var smtpTransport = nodemailer.createTransport({
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
 app.set('view engine', 'handlebars');
+
+app.use(logger('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.text());

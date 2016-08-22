@@ -1,3 +1,12 @@
+
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script>
+    $(function() {
+        $( "#accordion" ).accordion();
+    });
+</script>
+
 <div id="page-content-wrapper">
     <div class="container-fluid content-main">
         <div class="row">
@@ -11,6 +20,35 @@
 
         <!-- container for holding trial data -->
         <div id="dashboard-content-holder">
+
+
+
+
+            <div id="accordion">
+                <button class="btn btn-lg btn-primary btn-block">I forgot my password</button>
+                <div>
+                    <p>
+                       If you have forgotten your password please input the password here and click the submit button, after a coupple of seconds you will receive an e-mail with further instructions on how to recoveer your password.
+                        <input type="email">
+                        <button  type="submit">
+                            Send
+                        </button>
+                    </p>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block">I forgot my email</button>
+                <div>
+                    <p>
+                      If you have forgotten your e-mail, please first check your e-mail inboxes for a password verify e-mail from us, if you have signed up there should be an e-mail in your inbox asking you to verify your account. Some e-mail providers deal with automatic mail in different ways, if your e-mail cannot be found in your inbox, please check your spam.
+                    </p>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block">My querry is not listed here</button>
+                <div>
+                    <p>
+                        If your querry is not listed here please do not hesitate to e-mail us. We will try to get back to you with a solution within hr.
+                    </p>
+
+                </div>
+            </div>
 
         </div>
     </div>

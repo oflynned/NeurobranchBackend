@@ -52,7 +52,7 @@ router.get('/users/settings', ensureAuthenticated, function (req, res) {
             active_dash: "true"
         });
 });
-router.get('/users/help', ensureAuthenticated, function (req, res) {
+router.get('/users/help', function (req, res) {
     res.render('help', {
         user: req.user,
         active_dash: "true"
