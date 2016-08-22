@@ -42,7 +42,7 @@ var researcherAccountSchema = mongoose.Schema({
     resetPasswordExpires: {
         type:Date,
         safe:true
-        },
+    },
     isverified: {
         type: String,
         safe: true

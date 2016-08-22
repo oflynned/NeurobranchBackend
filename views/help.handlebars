@@ -27,10 +27,14 @@
                 <div>
                     <p>
                        If you have forgotten your password please input the password here and click the submit button, after a coupple of seconds you will receive an e-mail with further instructions on how to recoveer your password.
-                        <input type="email">
-                        <button  type="submit">
-                            Send
-                        </button>
+                    <form method="POST" action="/forgot">
+                        <legend>Forgot Password</legend>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" name="email" autofocus class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Reset Password</button>
+                    </form>
                     </p>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block">I forgot my email</button>
