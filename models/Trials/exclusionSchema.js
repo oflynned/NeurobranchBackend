@@ -1,6 +1,9 @@
 /**
  * Created by ed on 01/08/16.
  */
+/**
+ * This schema exists to support the n amount of exclusion criteria found in a  trial
+ */
 var mongoose = require('mongoose');
 
 var exclusionSchema = mongoose.Schema({

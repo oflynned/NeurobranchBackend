@@ -1,6 +1,11 @@
 /**
  * Created by ed on 01/08/16.
  */
+
+/**
+* This schema contains the specific meta data about a trial
+*/
+
 var mongoose = require('mongoose');
 
 var trialSchema = mongoose.Schema({
@@ -11,6 +16,7 @@ var trialSchema = mongoose.Schema({
     institute: String,
     condition: String,
     datecreated: String,
+    datepublished: String,
     datestarted: String,
     dateended: String,
     candidatequota: String,

@@ -23,54 +23,84 @@
                     <div><strong>State:</strong> {{trial.state}}</div>
                     <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
                     {{#if trial.datestarted}}
+                        <div><strong>Date Published:</strong> {{trial.datepublished}}</div>
+                    {{else}}
+                        <div><strong>Date Published:</strong> to be set</div>
+                    {{/if}}
+                    {{#if trial.datestarted}}
                         <div><strong>Date Started:</strong> {{trial.datestarted}}</div>
+                    {{else}}
+                        <div><strong>Date Started:</strong> to be set</div>
                     {{/if}}
                     {{#if trial.dateended}}
                         <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
+                    {{else}}
+                        <div><strong>Date Ended:</strong> to be set</div>
                     {{/if}}
                     <br>
                     <div>{{trial.briefdescription}}</div>
                 </div>
             </div>
 
-            {{#if is_researcher.show_statistics}}
-                <div class="page-header">
-                    <h3>Statistics</h3>
-                </div>
-                {{#if has_statistics}}
-                    <div>
-                        <h5>Ayyy stats here</h5>
-                    </div>
-                {{else}}
-                    <div>
-                        <h5>No statistics yet for this trial!</h5>
-                    </div>
-                {{/if}}
-            {{/if}}
 
-            {{#if is_researcher}}
-                <div class="page-header">
-                    <h3>Questions</h3>
-                </div>
-                {{#each question}}
-                    <div>
-                        {{question.title}}
-                    </div>
-                {{/each}}
-            {{/if}}
+            <div class="row text-center">
+                <div class="col-md-6">
+                    {{#if is_researcher.show_statistics}}
+                        <div class="page-header">
+                            <h3>Statistics</h3>
+                        </div>
+                        {{#if has_statistics}}
+                            <div>
+                                <h5>Ayyy stats here</h5>
+                            </div>
+                        {{else}}
+                            <div>
+                                <h5>No statistics yet for this trial!</h5>
+                            </div>
+                        {{/if}}
+                    {{/if}}
 
-            <div class="page-header"><h3>Updates</h3></div>
-            {{#if update.hasupdate}}
-                <div>
-                    <h5>Ayyy updates here</h5>
+                    {{#if is_researcher}}
+                        <div class="page-header">
+                            <h3>Questions</h3>
+                        </div>
+                        {{#each question}}
+                            <div>
+                                {{question.title}}
+                            </div>
+                        {{/each}}
+                    {{/if}}
+
+                    <div class="page-header"><h3>Updates</h3></div>
+                    {{#if update.hasupdate}}
+                        <div>
+                            <h5>Ayyy updates here</h5>
+                        </div>
+                    {{else}}
+                        <div>
+                            <h5>No updates yet for this trial!</h5>
+                        </div>
+                    {{/if}}
+                    <div class="page-header"><h3>About the trial</h3></div>
+                    <div>{{trial.detaileddescription}}</div>
+                    <div><button  class="btn btn-primary">Publish Trial</button></div>
                 </div>
-            {{else}}
-                <div>
-                    <h5>No updates yet for this trial!</h5>
+
+                <div class="col-md-6 text-left">
+                    <div class="page-header">
+                        <h3>Candidates</h3>
+                    </div>
+                    {{#if update.hasupdate}}
+                        <div>
+                            <h5>updates below</h5>
+                        </div>
+                    {{else}}
+                        <div>
+                            <h5>No candidates yet for this trial!</h5>
+                        </div>
+                    {{/if}}
                 </div>
-            {{/if}}
-            <div class="page-header"><h3>About the trial</h3></div>
-            <div>{{trial.detaileddescription}}</div>
+            </div>
         </div>
     </div>
 </div>

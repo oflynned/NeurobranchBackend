@@ -1,6 +1,10 @@
 /**
  * Created by ed on 01/08/16.
  */
+
+/**
+ * This schema is created for the capturing of answers from the different candidates for the different questions
+ */
 var mongoose = require('mongoose');
 
 var responseSchema = mongoose.Schema({

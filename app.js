@@ -451,8 +451,9 @@ app.post('/api/create-trial', function (req, res) {
         institute: req.user.institute,
         condition: req.body.condition,
         datecreated: Date.now(),
-        datestarted: "0",
-        dateended: "0",
+        /*datestarted: "0",
+         datepublished: req.body.datepublished,
+        dateended: "0",*/
         candidatequota: req.body.candidatequota,
         state: "created",
         researcherid: req.user.id

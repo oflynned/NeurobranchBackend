@@ -1,6 +1,10 @@
 /**
  * Created by ed on 01/08/16.
  */
+
+/**
+ * This schema is created for the allocation of a sharing function of trial between different researchers
+ */
 var mongoose = require('mongoose');
 
 var researcherSchema = mongoose.Schema({

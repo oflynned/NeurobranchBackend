@@ -1,6 +1,9 @@
 /**
  * Created by ed on 01/08/16.
  */
+/**
+ * This schema exists to support the n amount of candidates accepted to a trial
+ */
 var mongoose = require('mongoose');
 
 var verifiedCandidateSchema = mongoose.Schema({

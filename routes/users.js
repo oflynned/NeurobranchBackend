@@ -111,6 +111,8 @@ router.get('/trials/:trialid', function (req, res) {
             multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
             active_dash: "true"
         });
+
+
     })
 });
 

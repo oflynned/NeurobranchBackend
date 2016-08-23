@@ -1,6 +1,10 @@
 /**
  * Created by ed on 01/08/16.
  */
+/**
+ * This scheama contains the specific metadata about the questions being asked
+ */
+
 var mongoose = require('mongoose');
 
 var questionSchema = mongoose.Schema({
