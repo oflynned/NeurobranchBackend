@@ -25,7 +25,7 @@ var users = require(Globals.USERS_ROUTE);
 
 var util = require('util');
 var generator = require('mongoose-gen');
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt');
 var async = require('async');
 var app = express();
 /*SMTP*/
@@ -309,7 +309,6 @@ app.get('/reset/:token', function (req, res) {
             req.flash('error', 'Password reset token is invalid or has expired.');
             return res.redirect('/help');
         }
-        console.log("HERE**");
         res.render('reset', {
             user: req.user
         });
@@ -329,15 +328,26 @@ app.post('/reset/:token', function (req, res) {
                     return res.redirect('back');
                 }
                 console.log("before saving");
+
                 user.password = req.body.password;
                 user.resetPasswordToken = undefined;
                 user.resetPasswordExpires = undefined;
+                
+                console.log('xxxxxxxxxxxx');
+                bcrypt.genSalt(10 , function (err ,salt) {
+                    bcrypt.hash(user.password, salt, function (err, hash) {
+                        user.password =hash;
+                        console.log(user.password);
 
-                user.save(function (err) {
-                    req.logIn(user, function (err) {
-                        done(err, user);
+                        user.save(function (err) {
+                            req.logIn(user, function (err) {
+                                done(err, user);
+                            });
+                        });
+
                     });
                 });
+                console.log('xxxxxxxxxxxx');
                 console.log("after saving");
             });
         },
