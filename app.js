@@ -267,6 +267,7 @@ app.post('/forgot', function (req, res, next) {
         function (token, done) {
             researcherAccount.findOne({email: req.body.email}, function (err, user) {
                 if (!user) {
+                    console.log('No account with that email address exists.');
                     req.flash('error', 'No account with that email address exists.');
                     return res.redirect('/forgot');
                 }
@@ -280,9 +281,10 @@ app.post('/forgot', function (req, res, next) {
             });
         },
         function (token, user, done) {
+            console.log("Reset Email was sent");
             var mailOptions = {
                 to: user.email,
-                from: 'passwordreset@demo.com',
+                from: 'teztneuro@gmail.com',
                 subject: 'Node.js Password Reset',
                 text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
@@ -307,6 +309,7 @@ app.get('/reset/:token', function (req, res) {
             req.flash('error', 'Password reset token is invalid or has expired.');
             return res.redirect('/help');
         }
+        console.log("HERE**");
         res.render('reset', {
             user: req.user
         });
@@ -325,7 +328,7 @@ app.post('/reset/:token', function (req, res) {
                     req.flash('error', 'Password reset token is invalid or has expired.');
                     return res.redirect('back');
                 }
-
+                console.log("before saving");
                 user.password = req.body.password;
                 user.resetPasswordToken = undefined;
                 user.resetPasswordExpires = undefined;
@@ -335,12 +338,13 @@ app.post('/reset/:token', function (req, res) {
                         done(err, user);
                     });
                 });
+                console.log("after saving");
             });
         },
         function (user, done) {
             var mailOptions = {
                 to: user.email,
-                from: 'passwordreset@demo.com',
+                from: 'teztneuro@gmail.com',
                 subject: 'Your password has been changed',
                 text: 'Hello '+user.forename+ ','+'\n\n' +
                 'This is a confirmation that the password for your account ' + user.email +' has just been changed to' + user.password + '\n'
