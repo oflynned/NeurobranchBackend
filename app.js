@@ -252,7 +252,10 @@ app.get('/verify',function(req,res) {
         res.end("<h1>Request is from unknown source");
     }
 });
+app.post('/emailverify',function (req, res, next) {
+    
 
+});
 
 /*BEGIN PASSWORD RESET*/
 
@@ -328,11 +331,10 @@ app.post('/reset/:token', function (req, res) {
                     return res.redirect('back');
                 }
                 console.log("before saving");
-
                 user.password = req.body.password;
                 user.resetPasswordToken = undefined;
                 user.resetPasswordExpires = undefined;
-                
+
                 console.log('xxxxxxxxxxxx');
                 bcrypt.genSalt(10 , function (err ,salt) {
                     bcrypt.hash(user.password, salt, function (err, hash) {
@@ -782,7 +784,7 @@ app.get('/api/get-verified-candidates/:_id', function (req, res) {
 app.delete('/api/delete-verified-candidates/:_id', function (req, res) {
 
 });
-
+/*INSERT LIST HERE*/
 //requested candidate lists
 app.post('/api/create-requested-candidates/:trialid', function (req, res) {
     var trialid = req.params.trialid;

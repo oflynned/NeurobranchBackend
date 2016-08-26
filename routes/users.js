@@ -4,6 +4,9 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+
+var questionSchema = require('../models/Trials/questionSchema');
+var requestedCandidate = require('../models/Validation/requestedCandidateSchema');
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
 
@@ -103,13 +106,15 @@ router.get('/trials/:trialid', function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
+
         trial.datecreated = new Date(parseInt(trial.datecreated));
 
         res.render('trial', {
             trial: trial,
             is_researcher: isResearcher,
             multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-            active_dash: "true"
+            active_dash: "true",
+            request_can_list: "true"
         });
 
 
