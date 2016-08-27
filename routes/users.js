@@ -109,54 +109,23 @@ router.get('/trials/:trialid', function (req, res) {
         var isQuestions = req.user.questionSchema;
         trial.datecreated = new Date(parseInt(trial.datecreated));
 
-
-        requestedCandidate.find({}, function (err, reqcan) {
-            if (err) {
-                throw err
-            }
+        requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, reqcan) {
+            if (err) throw err;
+            var is_req_candidate = req.user.requestedCandidate;
             res.render('trial', {
                 trial: trial,
-                reqcan: reqcan,
                 is_researcher: isResearcher,
                 multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
                 active_dash: "true",
                 request_can_list: "true",
+                isreqcan: is_req_candidate,
+                reqcan: reqcan,
                 wp: "woop woop",
                 wp2: "woop woop 2"
 
             });
         });
-
-        /*renders in trial.handlebars*/
-        /* res.render('trial', {
-         trial: trial,
-         is_researcher: isResearcher,
-         multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-         active_dash: "true",
-         request_can_list: "true",
-         wp: "woop woop"
-         });*/
-
-
-        /*requestedCandidate.find({}, function (err,result) {
-         if(err)
-         return res.status(400).send(err);
-         console.log("error in users/requestcandidates");
-         res.render('creq',{wp:"woop woop2"});
-         });*/
     });
-    /*questionSchema.find({}, function (err, question) {
-     if(err)
-     return res.status(400).send(err);
-     console.log("error in users/questions");
-     res.render('question',{wp:"woop woop2"});
-     });*/
-    /* requestedCandidate.find({}, function (err,creq) {
-     if(err)
-     return res.status(400).send(err);
-     console.log("error in users/requestcandidates");
-     res.render('creq',{wp:"woop woop2"});
-     });*/
 });
 
 //create trial
