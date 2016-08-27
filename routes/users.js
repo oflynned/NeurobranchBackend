@@ -84,9 +84,9 @@ router.get('/verified', function (req, res) {
 });
 
 router.post('/login', passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/users/login'
-    }));
+    successRedirect: '/',
+    failureRedirect: '/users/login'
+}));
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/users/login');
@@ -106,23 +106,61 @@ router.get('/trials/:trialid', function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
-
+        var isQuestions = req.user.questionSchema;
         trial.datecreated = new Date(parseInt(trial.datecreated));
 
-        res.render('trial', {
-            trial: trial,
-            is_researcher: isResearcher,
-            multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-            active_dash: "true",
-            request_can_list: "true"
+
+        trialData.find({}).exec(function (err, recetas) {
+            if (err) { throw err}
+            requestedCandidate.find({}, function (err, autores) {
+                if (err) { throw err}
+                res.render('trial', {
+                    trial: trial,
+                    is_researcher: isResearcher,
+                    multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
+                    active_dash: "true",
+                    request_can_list: "true",
+                    wp: "woop woop",
+                    wp2: "woop woop 2"
+
+                });
+            });
         });
 
+            /*renders in trial.handlebars*/
+           /* res.render('trial', {
+                trial: trial,
+                is_researcher: isResearcher,
+                multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
+                active_dash: "true",
+                request_can_list: "true",
+                wp: "woop woop"
+            });*/
 
-    })
+
+        /*requestedCandidate.find({}, function (err,result) {
+         if(err)
+         return res.status(400).send(err);
+         console.log("error in users/requestcandidates");
+         res.render('creq',{wp:"woop woop2"});
+         });*/
+    });
+    /*questionSchema.find({}, function (err, question) {
+     if(err)
+     return res.status(400).send(err);
+     console.log("error in users/questions");
+     res.render('question',{wp:"woop woop2"});
+     });*/
+    /* requestedCandidate.find({}, function (err,creq) {
+     if(err)
+     return res.status(400).send(err);
+     console.log("error in users/requestcandidates");
+     res.render('creq',{wp:"woop woop2"});
+     });*/
 });
 
 //create trial
-router.get('/create-trial', ensureAuthenticated, function (req, res){
+router.get('/create-trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial', {
         active_dash: "true"
     });
@@ -175,7 +213,7 @@ passport.use(new LocalStrategy(
     function (username, password, done) {
         researcherAccount.getResearcherByUsername(username, function (err, researcher) {
             if (err) throw err;
-            if (!researcher) return done(null, false, { message: 'Unknown User'} );
+            if (!researcher) return done(null, false, {message: 'Unknown User'});
 
             researcherAccount.comparePasswords(password, researcher.password, function (err, isMatch) {
                 if (err) throw err;
