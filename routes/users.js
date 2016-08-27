@@ -110,32 +110,32 @@ router.get('/trials/:trialid', function (req, res) {
         trial.datecreated = new Date(parseInt(trial.datecreated));
 
 
-        trialData.find({}).exec(function (err, recetas) {
-            if (err) { throw err}
-            requestedCandidate.find({}, function (err, autores) {
-                if (err) { throw err}
-                res.render('trial', {
-                    trial: trial,
-                    is_researcher: isResearcher,
-                    multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-                    active_dash: "true",
-                    request_can_list: "true",
-                    wp: "woop woop",
-                    wp2: "woop woop 2"
-
-                });
-            });
-        });
-
-            /*renders in trial.handlebars*/
-           /* res.render('trial', {
+        requestedCandidate.find({}, function (err, reqcan) {
+            if (err) {
+                throw err
+            }
+            res.render('trial', {
                 trial: trial,
+                reqcan: reqcan,
                 is_researcher: isResearcher,
                 multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
                 active_dash: "true",
                 request_can_list: "true",
-                wp: "woop woop"
-            });*/
+                wp: "woop woop",
+                wp2: "woop woop 2"
+
+            });
+        });
+
+        /*renders in trial.handlebars*/
+        /* res.render('trial', {
+         trial: trial,
+         is_researcher: isResearcher,
+         multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
+         active_dash: "true",
+         request_can_list: "true",
+         wp: "woop woop"
+         });*/
 
 
         /*requestedCandidate.find({}, function (err,result) {
