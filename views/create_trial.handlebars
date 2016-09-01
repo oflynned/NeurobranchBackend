@@ -31,15 +31,18 @@
                     <div class="center-form">
                         <div class="form-create-trial form-create-trial-margin">
                             <div class="form-group">
-                                <input class="form-control" type="text" id="title" name="title" placeholder="Trial Title" required autofocus>
-                                <span title="Trial Title is the first thing that candidates will see when choosing to join a trial." class="fa fa-info-circle errspan" ></span>
+                                <input class="form-control" type="text" id="title" name="title"
+                                       placeholder="Trial Title" required autofocus>
+                                <span title="Trial Title is the first thing that candidates will see when choosing to join a trial."
+                                      class="fa fa-info-circle errspan"></span>
                             </div>
                             <div class="form-group">
                                             <textarea class="form-control description-box" rows="2"
                                                       id="briefdescription"
                                                       name="briefdescription"
                                                       placeholder="Brief Description" required></textarea>
-                                <span title="Brief Description is the short description that candidates will first see when searching for trials under the title." class="fa fa-info-circle errspan" ></span>
+                                <span title="Brief Description is the short description that candidates will first see when searching for trials under the title."
+                                      class="fa fa-info-circle errspan"></span>
                             </div>
 
                             <div class="form-group">
@@ -47,37 +50,80 @@
                                                       id="detaileddescription"
                                                       name="detaileddescription"
                                                       placeholder="Detailed Description" required></textarea>
-                                <span title="Detailed Description is seen when a candidate clicks into a trial providing in depth details about the trial." class="fa fa-info-circle errspan" ></span>
+                                <span title="Detailed Description is seen when a candidate clicks into a trial providing in depth details about the trial."
+                                      class="fa fa-info-circle errspan"></span>
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-4 col-md-4">
                                     <select class="form-control" name="trialtype" id="trialtype" required>
-                                        <option value="def_trialtype_placeholder" disabled>Trial Type</option>
+                                        <option value="" disabled selected>Trial Type</option>
                                         <option value="pharmaceutical">Pharma</option>
                                         <option value="biomedicaldevice">Bio-Device</option>
                                         <option value="consumable">Food</option>
                                         <option value="behavioural">Behavioural</option>
                                     </select>
-                                    <span title="Trial Type is the category of clinical trial being performed." class="fa fa-info-circle errspan" ></span>
+                                    <span title="Trial Type is the category of clinical trial being performed."
+                                          class="fa fa-info-circle errspan"></span>
                                 </div>
 
                                 <div class="col-sm-4 col-md-4">
                                     <input class="form-control" type="text" id="candidatequota" name="candidatequota"
                                            placeholder="Candidate Quota" required>
-                                    <span title="Candidate Quota is the minimum amount of candidates needed in order to be able to set a trial ongoing." class="fa fa-info-circle errspan" ></span>
+                                    <span title="Candidate Quota is the minimum amount of candidates needed in order to be able to set a trial ongoing."
+                                          class="fa fa-info-circle errspan"></span>
+                                </div>
+
+                                <div class="col-sm-4 col-md-4">
+                                    <input class="form-control" type="text" id="duration" name="duration"
+                                           placeholder="Trial Duration" required>
+                                    <span title="Duration is the planned udration of the trial in days"
+                                          class="fa fa-info-circle errspan"></span>
                                 </div>
 
                                 <div class="col-sm-4 col-md-4">
                                     <select class="form-control" name="condition" id="condition" required>
-                                        <option value="def_condition_placeholder" disabled>Condition Type
+                                        <option value="" disabled selected>Condition Type
                                         </option>
                                         <option value="cancer">Cancer</option>
                                     </select>
-                                    <span title="Condition Type is the condition pertaining to the trial. It's used for categorisation." class="fa fa-info-circle errspan" ></span>
+                                    <span title="Condition Type is the condition pertaining to the trial. It's used for categorisation."
+                                          class="fa fa-info-circle errspan"></span>
+                                </div>
+
+                                <div class="col-sm-4 col-md-4">
+                                    <select class="form-control" name="frequency" id="frequency" required>
+                                        <option value="" disabled selected>Frequency</option>
+                                        <option value="daily">Daily</option>
+                                        <option value="2week">Bi-weekly</option>
+                                        <option value="week">Weekly</option>
+                                        <option value="2month">Bi-Monthly</option>
+                                        <option value="month">Monthly</option>
+                                    </select>
+                                    <span title="Frequncy selects the frequncy at which questions are sent"
+                                          class="fa fa-info-circle errspan"></span>
+                                </div>
+
+                                <div class="col-sm-4 col-md-4">
+                                    <select class="form-control" name="screening" id="screening" required>
+                                        <option value="" disabled selected>Screening</option>
+                                        <option value="e">Eligibility Form</option>
+                                        <option value="c">Conditions</option>
+                                        <option value="ec">Eligibility form & Conditions</option>
+                                    </select>
+                                    <span title="Screening lets the database know how you want your candiates to be screened"
+                                          class="fa fa-info-circle errspan"></span>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+
+                    <div class="form-group">
+                        <textarea class="form-control description-box" rows="10" id="form1" name="form1"
+                                  placeholder="Patient Data Protection Form" required></textarea>
+                        <span title="Please input data protection form" class="fa fa-info-circle errspan"></span>
                     </div>
                 </div>
             </div>
@@ -98,8 +144,8 @@
                     <div>
                         <a id="add-question-btn">Add Question</a>
                     </div>
-                    <span title=" Click here to add another question " class="fa fa-info-circle errspan" ></span>
-                    <a>   ----------------Ending---------------</a>
+                    <span title=" Click here to add another question " class="fa fa-info-circle errspan"></span>
+                    <a> ----------------Ending---------------</a>
                 </div>
             </div>
             <div class="row">
@@ -136,47 +182,48 @@
         $('.questiontype').on('change', function () {
             $('.question-holder').append(
                     '<div class="row">' +
-                        '<div class="col-sm-12 col-md-12">' +
-                            '<input class="form-control" type="text" id="answer0" name="answer0" placeholder="Option 0">' +
-                        '</div>' +
+                    '<div class="col-sm-12 col-md-12">' +
+                    '<input class="form-control" type="text" id="answer0" name="answer0" placeholder="Option 0">' +
+                    '</div>' +
                     '</div>'
             );
         });
 
         $('#question-holder').append(
                 '<div id="account-wall question-group-' + questionCount + '">' +
-                    '<a class="remove-field">Remove Question</a>' +
-                    '<div class="form-group"<h4>Question </h4></div>' +
-                        '<div class="form-group">' +
-                            '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' + questionCount + '" placeholder="Question Title">' +
-                            '<span title="Question Title is the text that candidates will read with options (if any) of answers underneath it." class="fa fa-info-circle errspan" ></span>'+
-                        '</div>' +
-                        '<div class="row form-group">' +
-                            '<div class="col-sm-6 col-md-6">' +
-                                '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
-                                    '<option value=" " disabled selected>Question Type' + '</option>' +
-                                    '<option value="checkbox">Checkbox</option>' +
-                                    '<option value="choice">Choice</option>' +
-                                    '<option value="scale">Scale</option>' +
-                                    '<option value="section">Section</option>' +
-                                '</select>' +
-                '<span title="Question Type is the type of question that can be asked:Checkbox is where a candidate can select any amount of answers, including none or all.Requires options for candidate to selectChoice is where a candidate can select only one answer.Requires options for candidate to selectScale is where a candidate can drag a bar to a level between 0 and 100 incorporating colours.Section is where a candidate can write unlimited text into a paragraph" class="fa fa-info-circle errspan" ></span>'+
-                            '</div>' +
+                '<a class="remove-field">Remove Question</a>' +
+                '<div class="form-group"<h4>Question </h4></div>' +
+                '<div class="form-group">' +
+                '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' + questionCount + '" placeholder="Question Title">' +
+                '<span title="Question Title is the text that candidates will read with options (if any) of answers underneath it." class="fa fa-info-circle errspan" ></span>' +
+                '</div>' +
+                '<div class="row form-group">' +
+                '<div class="col-sm-6 col-md-6">' +
+                '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
+                '<option value=" " disabled selected>Question Type' + '</option>' +
+                '<option value="checkbox">Checkbox</option>' +
+                '<option value="choice">Choice</option>' +
+                '<option value="scale">Scale</option>' +
+                '<option value="section">Section</option>' +
+                '</select>' +
+                '<span title="Question Type is the type of question that can be asked:Checkbox is where a candidate can select any amount of answers, including none or all.Requires options for candidate to selectChoice is where a candidate can select only one answer.Requires options for candidate to selectScale is where a candidate can drag a bar to a level between 0 and 100 incorporating colours.Section is where a candidate can write unlimited text into a paragraph" class="fa fa-info-circle errspan" ></span>' +
+                '</div>' +
 
-                            '<div class="col-sm-6 col-md-6">' +
-                                ' <a>---START---</a>'+
-                                '<div class="center-form form-create-trial form-create-trial-margin" id="option-holder">Child </div>'+
-                                '<div>'+
-                                    '<a id="add-option-btn">Add Option</a>'+
-                                '</div>'+
-                                '<span title=" Question Option is the potential option a candidate can choose if the type utilises selection" class="fa fa-info-circle errspan" ></span>'+
-                                '<a>   ---END---</a>'+
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="col-sm-6 col-md-6">' +
+                ' <a>---START---</a>' +
+                '<div class="center-form form-create-trial form-create-trial-margin" id="option-holder">Child </div>' +
+                '<div>' +
+                '<a id="add-option-btn">Add Option</a>' +
+                '</div>' +
+                '<span title=" Question Option is the potential option a candidate can choose if the type utilises selection" class="fa fa-info-circle errspan" ></span>' +
+                '<a>   ---END---</a>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
                 '</div>'
         );
-    };
+    }
+    ;
 
     $('#add-option-btn').click(function () {
         optionCount++;
@@ -207,6 +254,7 @@
                 '<a class="remove-option">Remove Option</a>' +
                 '</div>'
         );
-    };
+    }
+    ;
 
 </script>
