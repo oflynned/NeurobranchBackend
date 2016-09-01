@@ -12,6 +12,7 @@
     "async": "^2.0.0-rc.5",
     "bcryptjs": "*",
     "body-parser": "^1.15.2",
+    "chart.js": "^2.2.2",
     "connect": "*",
     "connect-flash": "*",
     "cookie-parser": "^1.4.1",

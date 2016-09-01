@@ -120,10 +120,7 @@ router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
                     is_researcher: isResearcher,
                     multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
                     active_dash: "true",
-                    request_can_list: "true",
-                    isreqcan: is_req_candidate,
-                    wp: "woop woop",
-                    wp2: "woop woop2",
+                    candidates: [{email: '1'},{ email:'2'},{email:'3'}],
                     questions: result
                 });
             });

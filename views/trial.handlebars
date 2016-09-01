@@ -13,6 +13,7 @@
         <div id="dashboard-content-holder">
             <div class="row text-center">
                 <div class="col-md-6">
+                    <!-- images for the trial -->
                     <img src="{{multimedia}}">
                 </div>
                 <div class="col-md-6 text-left">
@@ -30,70 +31,159 @@
                 </div>
             </div>
 
-
-            <div class="row text-center">
-                <div class="col-md-6">
-                    {{#if is_researcher.show_statistics}}
-                        <div class="page-header">
-                            <h3>Statistics</h3>
-                        </div>
-                        {{#if has_statistics}}
-                            <div>
-                                <h5>Graphs graphs graphs</h5>
-                            </div>
-                        {{else}}
-                            <div>
-                                <h5>No statistics yet for this trial!</h5>
-                            </div>
-                        {{/if}}
-                    {{/if}}
-
-                    {{#if is_researcher}}
-                        <div class="page-header">
-                            <h3>Questions</h3>
-                        </div>
-
-                        {{#each questions}}
-                            <div>
-                                {{title}}
-                            </div>
-                        {{/each}}
-                    {{/if}}
-
-                    <div class="page-header"><h3>Updates</h3></div>
-                    {{#if update.hasupdate}}
+        <div class="row text-center">
+            <div class="col-md-6">
+                <div class="page-header"><h3>About the trial</h3></div>
+                <div>{{trial.detaileddescription}}</div>
+                {{#if is_researcher.show_statistics}}
+                    <div class="page-header">
+                        <h3>Statistics</h3>
+                    </div>
+                    <div id="canvas-holder" style="width:50%">
+                        <canvas id="chart-area" width="300" height="300"></canvas>
+                    </div>
+                    <button id="randomizeData">Randomize Data</button>
+                    <button id="addDataset">Add Dataset</button>
+                    <button id="removeDataset">Remove Dataset</button>
+                    <script>
+                        var randomScalingFactor = function () {
+                            return Math.round(Math.random() * 100);
+                        };
+                        var randomColorFactor = function () {
+                            return Math.round(Math.random() * 255);
+                        };
+                        var randomColor = function (opacity) {
+                            return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+                        };
+                        var config = {
+                            type: 'pie',
+                            data: {
+                                datasets: [{
+                                    data: [
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                    ],
+                                    backgroundColor: [
+                                        "#F7464A",
+                                        "#46BFBD",
+                                        "#FDB45C",
+                                        "#949FB1",
+                                        "#4D5360",
+                                    ],
+                                }, {
+                                    data: [
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                    ],
+                                    backgroundColor: [
+                                        "#F7464A",
+                                        "#46BFBD",
+                                        "#FDB45C",
+                                        "#949FB1",
+                                        "#4D5360",
+                                    ],
+                                }, {
+                                    data: [
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                        randomScalingFactor(),
+                                    ],
+                                    backgroundColor: [
+                                        "#F7464A",
+                                        "#46BFBD",
+                                        "#FDB45C",
+                                        "#949FB1",
+                                        "#4D5360",
+                                    ],
+                                }],
+                                labels: [
+                                    "Red",
+                                    "Green",
+                                    "Yellow",
+                                    "Grey",
+                                    "Dark Grey"
+                                ]
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        };
+                        window.onload = function () {
+                            var ctx = document.getElementById("chart-area").getContext("2d");
+                            window.myPie = new Chart(ctx, config);
+                        };
+                        $('#randomizeData').click(function () {
+                            $.each(config.data.datasets, function (i, piece) {
+                                $.each(piece.data, function (j, value) {
+                                    config.data.datasets[i].data[j] = randomScalingFactor();
+                                    config.data.datasets[i].backgroundColor[j] = randomColor(0.7);
+                                });
+                            });
+                            window.myPie.update();
+                        });
+                        $('#addDataset').click(function () {
+                            var newDataset = {
+                                backgroundColor: [randomColor(0.7), randomColor(0.7), randomColor(0.7), randomColor(0.7), randomColor(0.7)],
+                                data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
+                            };
+                            config.data.datasets.push(newDataset);
+                            window.myPie.update();
+                        });
+                        $('#removeDataset').click(function () {
+                            config.data.datasets.splice(0, 1);
+                            window.myPie.update();
+                        });
+                    </script>
+                    {{#if has_statistics}}
                         <div>
                             <h5>Graphs graphs graphs</h5>
                         </div>
                     {{else}}
                         <div>
-                            <h5>No updates yet for this trial!</h5>
+                            <h5>No statistics yet for this trial!</h5>
                         </div>
                     {{/if}}
-                    <div class="page-header"><h3>About the trial</h3></div>
-                    <div>{{trial.detaileddescription}}</div>
-                    <div><button  class="btn btn-primary">Publish Trial</button></div>
+                {{/if}}
+                <div>
+                    <button class="btn btn-primary">Publish Trial</button>
                 </div>
+            </div>
 
+            {{#if is_researcher}}
                 <div class="col-md-6 text-left">
                     <div class="page-header">
                         <h3>Candidates</h3>
                     </div>
-                    {{#if request_can_list}}
-                        <div>
-                            {{wp}}
-                            {{isreqcan}}
-                            {{reqcan.trialid}}
-                            <p></p>
-                            {{wp2}}
-                        </div>
+                    {{#if candidates}}
+                        {{#each candidates}}
+                            <ul>{{email}}</ul>
+                        {{/each}}
                     {{else}}
                         <div>
                             <h5>No candidates yet for this trial!</h5>
                         </div>
                     {{/if}}
+                    <div class="page-header">
+                        <h3>Questions</h3>
+                    </div>
+
+                    {{#each questions}}
+                        <div>
+                            {{title}}
+                        </div>
+                    {{/each}}
                 </div>
             </div>
+            {{/if}}
         </div>
     </div>
+</div>
 </div>
