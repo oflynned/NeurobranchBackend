@@ -102,7 +102,7 @@ router.get('/cookie-details', function (req, res) {
     res.json(req.user);
 });
 
-router.get('/trials/:trialid', function (req, res) {
+router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
@@ -110,24 +110,24 @@ router.get('/trials/:trialid', function (req, res) {
         /* var isQuestions = req.user.questionSchema;*/
         trial.datecreated = new Date(parseInt(trial.datecreated));
 
-        requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, reqcan) {
+        requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err) {
             if (err) throw err;
-            console.log("here");
-
+            questionSchema.getQuestionByTrialId(req.params.trialid, function (err, result) {
+                if(err) throw err;
+                console.log(result);
+                res.render('trial', {
+                    trial: trial,
+                    is_researcher: isResearcher,
+                    multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
+                    active_dash: "true",
+                    request_can_list: "true",
+                    isreqcan: is_req_candidate,
+                    wp: "woop woop",
+                    wp2: "woop woop2",
+                    questions: result
+                });
+            });
         });
-
-
-        res.render('trial', {
-            trial: trial,
-            is_researcher: isResearcher,
-            multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-            active_dash: "true",
-            request_can_list: "true",
-            isreqcan: is_req_candidate,
-            wp: "woop woop",
-            wp2: "woop woop2"
-        });
-
     });
 });
 

@@ -66,11 +66,7 @@ function trimString(input, length) {
     if (input != null) {
         var trimmedString = input.substr(0, length);
         trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
-        if (trimmedString.charAt(trimmedString.length - 1) == ".") {
-            return trimmedString + "..";
-        } else {
-            return trimmedString + "...";
-        }
+        return trimmedString.charAt(trimmedString.length - 1) == "." ? trimmedString + ".." : trimmedString + "...";
     }
     return "";
 }
@@ -83,7 +79,7 @@ function generateTile(trialName, description, image, trialid) {
         '<img src="' + image + '">' +
         '<div class="caption">' +
         '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
-        '<p>' + description + '</p>' + //trimString(description, MAX_LENGTH) + '</p>' +
+        '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
         '</div>' +
         '</div>' +
         '</div>'

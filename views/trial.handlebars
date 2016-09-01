@@ -24,13 +24,6 @@
                     <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
                     {{#if trial.datestarted}}
                         <div><strong>Date Started:</strong> {{trial.datestarted}}</div>
-                    {{else}}
-                        <div><strong>Date Started:</strong> to be set</div>
-                    {{/if}}
-                    {{#if trial.dateended}}
-                        <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
-                    {{else}}
-                        <div><strong>Date Ended:</strong> to be set</div>
                     {{/if}}
                     <br>
                     <div>{{trial.briefdescription}}</div>
@@ -46,7 +39,7 @@
                         </div>
                         {{#if has_statistics}}
                             <div>
-                                <h5>Ayyy stats here</h5>
+                                <h5>Graphs graphs graphs</h5>
                             </div>
                         {{else}}
                             <div>
@@ -59,9 +52,10 @@
                         <div class="page-header">
                             <h3>Questions</h3>
                         </div>
-                        {{#each question}}
+
+                        {{#each questions}}
                             <div>
-                                {{question.title}}
+                                {{title}}
                             </div>
                         {{/each}}
                     {{/if}}
@@ -69,7 +63,7 @@
                     <div class="page-header"><h3>Updates</h3></div>
                     {{#if update.hasupdate}}
                         <div>
-                            <h5>Ayyy updates here</h5>
+                            <h5>Graphs graphs graphs</h5>
                         </div>
                     {{else}}
                         <div>
@@ -87,7 +81,6 @@
                     </div>
                     {{#if request_can_list}}
                         <div>
-                            <h5>updates below</h5>
                             {{wp}}
                             {{isreqcan}}
                             {{reqcan.trialid}}
