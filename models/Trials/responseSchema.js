@@ -8,6 +8,7 @@
 var mongoose = require('mongoose');
 
 var responseSchema = mongoose.Schema({
+    trialid: String,
     questionid: String,
     candidateid: String,
     response: {}
@@ -37,6 +38,10 @@ module.exports.getResponseByQuestionId = function (questionid, callback) {
 
 module.exports.getResponseByCandidateId = function (candidateid, callback) {
     response.find({candidateid: candidateid}, callback);
+};
+
+module.exports.getResponseByTrialId = function (trialid, callback) {
+    response.find({trialid: trialid}, callback);
 };
 
 module.exports.getResponseByQuestionIdCandidateId = function (candidateid, questionid, callback) {

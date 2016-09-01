@@ -581,13 +581,13 @@ app.get('/api/get-questions', function (req, res) {
         res.json(result);
     });
 });
-app.get('/api/get-questions/:questionid', function (req, res) {
+app.get('/api/get-questions/questionid/:questionid', function (req, res) {
     questionData.getQuestionById(req.params.questionid, function (err, result) {
         if (err) throw err;
         res.json(result);
     });
 });
-app.get('/api/get-questions/:trialid', function (req, res) {
+app.get('/api/get-questions/trialid/:trialid', function (req, res) {
     questionData.getQuestionByTrialId(req.params.trialid, function (err, result) {
         if (err) throw err;
         res.json(result);
@@ -665,6 +665,7 @@ app.post('/api/create-response/', function (req, res) {
     console.log(req.body);
 
     var responseDataParams = {
+        trialid: req.body.trialid,
         questionid: req.body.questionid,
         candidateid: req.body.candidateid,
         response: req.body.response
@@ -687,6 +688,12 @@ app.get('/api/get-responses/id/:_id', function (req, res) {
 });
 app.get('/api/get-responses/questionid/:questionid', function (req, res) {
     responseData.getResponseByQuestionId(req.params.questionid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-responses/trialid/:trialid', function (req, res) {
+    responseData.getResponseByTrialId(req.params.trialid, function (err, result) {
         if (err) throw err;
         res.json(result);
     });
