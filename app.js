@@ -330,18 +330,18 @@ app.post('/reset/:token', function (req, res) {
                     req.flash('error', 'Password reset token is invalid or has expired.');
                     return res.redirect('back');
                 }
-                console.log("before saving");
+
                 user.password = req.body.password;
                 user.resetPasswordToken = undefined;
                 user.resetPasswordExpires = undefined;
 
-                console.log('xxxxxxxxxxxx');
                 bcrypt.genSalt(10 , function (err ,salt) {
                     bcrypt.hash(user.password, salt, function (err, hash) {
                         user.password =hash;
                         console.log(user.password);
 
                         user.save(function (err) {
+                            if(err) throw err;
                             req.logIn(user, function (err) {
                                 done(err, user);
                             });
@@ -349,8 +349,6 @@ app.post('/reset/:token', function (req, res) {
 
                     });
                 });
-                console.log('xxxxxxxxxxxx');
-                console.log("after saving");
             });
         },
         function (user, done) {
@@ -457,7 +455,7 @@ app.post('/api/create-trial', function (req, res) {
     //log q documents with this id as trialid
     //to be implemented lol
 
-    console.log(req.body);
+    //console.log(req.body);
 
     var trialParams = {
         title: req.body.title,
@@ -471,36 +469,46 @@ app.post('/api/create-trial', function (req, res) {
         screening: req.body.screening,
         form1: req.body.form1,
         datecreated: Date.now(),
-        datestarted: "0",
-        dateended: "0",
+        datestarted: undefined,
+        dateended: undefined,
         candidatequota: req.body.candidatequota,
         state: "created",
         researcherid: req.user.id
     };
 
-    trialData.createTrial(new trialData(trialParams), function () {
+    trialData.createTrial(new trialData(trialParams), function() {
         trialData.getLatestTrialByResearcher(req.user.id, function (err, result) {
+            var trialId = result[0]["_id"];
+
             for (var removeAttribute in trialParams) {
                 delete req.body[removeAttribute];
             }
-            req.body['trialid'] = result.trialid;
-            console.log(req.body);
 
-            /*
-             var i=0;
-             for(var key in req.body) {
-             ++i;
-             var name = key + i;
-             if(name == "questiontitle" + i ||
-             name == "questiontype" + i){
-             var questionParams = {};
-             questionParams[name] = req.body[name];
-             questionParams["trialid"] = "test" + i;
+            var i=1;
+            var questionParams= {};
+            for(var att in req.body) {
+                if(att == 'questiontitle'+i) {
+                    questionParams['title'] = req.body[att];
+                }
+                if(att == 'questiontype'+i) {
+                    questionParams['questiontype'] = req.body[att];
+                }
+                if(att == 'answers'+i) {
+                    var tempSplit = req.body[att];
+                    tempSplit = tempSplit.replace("\r", "").split("\n");
+                    var questionAnswers = {};
+                    for(var j=0; j<tempSplit.length; j++) {
+                        questionAnswers['answer' + j] = tempSplit[j];
+                    }
 
-             questionData.createQuestion(new questionData(questionParams));
-             }
-             }*/
-
+                    questionParams['trialid'] = trialId;
+                    questionParams['answers'] = questionAnswers;
+                    questionData.createQuestion(new questionData(questionParams));
+                    console.log(questionParams);
+                    i++;
+                    questionParams = {};
+                }
+            }
         });
     });
 

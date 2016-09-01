@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="page-header">
-                        <h4>Multimedia</h4>
+                        <h4>Waiver</h4>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                                         <option value="consumable">Food</option>
                                         <option value="behavioural">Behavioural</option>
                                     </select>
-                                    <span title="Trial Type is the category of clinical trial being performed."
+                                    <span title="Trial type is the category of clinical trial being performed."
                                           class="fa fa-info-circle errspan"></span>
                                 </div>
 
@@ -77,7 +77,7 @@
                                 <div class="col-sm-4 col-md-4">
                                     <input class="form-control" type="text" id="duration" name="duration"
                                            placeholder="Trial Duration" required>
-                                    <span title="Duration is the planned udration of the trial in days"
+                                    <span title="Duration is the planned duration of the trial in days"
                                           class="fa fa-info-circle errspan"></span>
                                 </div>
 
@@ -95,10 +95,10 @@
                                     <select class="form-control" name="frequency" id="frequency" required>
                                         <option value="" disabled selected>Frequency</option>
                                         <option value="daily">Daily</option>
-                                        <option value="2week">Bi-weekly</option>
-                                        <option value="week">Weekly</option>
-                                        <option value="2month">Bi-Monthly</option>
-                                        <option value="month">Monthly</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="fortnightly">Fortnightly</option>
+                                        <option value="monthly">Monthly</option>
+
                                     </select>
                                     <span title="Frequncy selects the frequncy at which questions are sent"
                                           class="fa fa-info-circle errspan"></span>
@@ -119,7 +119,6 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-6">
-
                     <div class="form-group">
                         <textarea class="form-control description-box" rows="10" id="form1" name="form1"
                                   placeholder="Patient Data Protection Form" required></textarea>
@@ -129,7 +128,7 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <!-- title -->
                     <div class="page-header">
                         <h4>Question Details</h4>
@@ -137,15 +136,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 col-md-6">
-                    <a>----------------Beginning---------------</a>
-                    <div class="center-form form-create-trial form-create-trial-margin" id="question-holder">Parent
-                    </div>
-                    <div>
-                        <a id="add-question-btn">Add Question</a>
-                    </div>
-                    <span title=" Click here to add another question " class="fa fa-info-circle errspan"></span>
-                    <a> ----------------Ending---------------</a>
+                <div class="col-sm-12 col-md-12">
+                    <div class="center-form form-create-trial form-create-trial-margin" id="question-holder"></div>
+                    <div><a id="add-question-btn">Add Question</a></div>
                 </div>
             </div>
             <div class="row">
@@ -163,7 +156,7 @@
         integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script>
     var questionCount = 1;
-    var optionCount = 1;
+    var optionCount = {};
     addQuestion();
     addOption();
 
@@ -190,46 +183,32 @@
         });
 
         $('#question-holder').append(
-                '<div id="account-wall question-group-' + questionCount + '">' +
-                '<a class="remove-field">Remove Question</a>' +
-                '<div class="form-group"<h4>Question </h4></div>' +
-                '<div class="form-group">' +
-                '<input class="form-control questiontitle' + questionCount + '" type="text" name="questiontitle' + questionCount + '" placeholder="Question Title">' +
-                '<span title="Question Title is the text that candidates will read with options (if any) of answers underneath it." class="fa fa-info-circle errspan" ></span>' +
-                '</div>' +
-                '<div class="row form-group">' +
-                '<div class="col-sm-6 col-md-6">' +
-                '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
-                '<option value=" " disabled selected>Question Type' + '</option>' +
-                '<option value="checkbox">Checkbox</option>' +
-                '<option value="choice">Choice</option>' +
-                '<option value="scale">Scale</option>' +
-                '<option value="section">Section</option>' +
-                '</select>' +
-                '<span title="Question Type is the type of question that can be asked:Checkbox is where a candidate can select any amount of answers, including none or all.Requires options for candidate to selectChoice is where a candidate can select only one answer.Requires options for candidate to selectScale is where a candidate can drag a bar to a level between 0 and 100 incorporating colours.Section is where a candidate can write unlimited text into a paragraph" class="fa fa-info-circle errspan" ></span>' +
-                '</div>' +
-
-                '<div class="col-sm-6 col-md-6">' +
-                ' <a>---START---</a>' +
-                '<div class="center-form form-create-trial form-create-trial-margin" id="option-holder">Child </div>' +
-                '<div>' +
-                '<a id="add-option-btn">Add Option</a>' +
-                '</div>' +
-                '<span title=" Question Option is the potential option a candidate can choose if the type utilises selection" class="fa fa-info-circle errspan" ></span>' +
-                '<a>   ---END---</a>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
+                '<div id="' + questionCount + '">' +
+                    '<a class="remove-field">Remove Question</a>' +
+                    '<div class="form-group"' +
+                        '<h4>Question</h4>' +
+                    '</div>' +
+                    '<div class="form-group col-sm-12 col-md-12">' +
+                        '<input class="form-control" type="text" name="questiontitle' + questionCount + '" placeholder="Question Title">' +
+                            '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
+                                '<option value=" " disabled selected>Question Type' + '</option>' +
+                                '<option value="checkbox">Checkbox</option>' +
+                                '<option value="choice">Choice</option>' +
+                                '<option value="scale">Scale</option>' +
+                                '<option value="section">Section</option>' +
+                            '</select>' +
+                        '<textarea class="form-control" name="answers' + questionCount + '" placeholder="Separate answers with a new line"/>' +
+                    '</div>' +
                 '</div>'
         );
     }
-    ;
 
     $('#add-option-btn').click(function () {
-        optionCount++;
+        ++optionCount;
         addOption();
+        console.log(optionCount);
         $('.remove-option').click(function () {
-            optionCount--;
+            --optionCount;
             $(this).closest('div').remove();
         });
 
@@ -240,21 +219,17 @@
         $('.optiontype').on('change', function () {
             $('.option-holder').append(
                     '<div class="row">' +
-                    '<div class="col-sm-12 col-md-12">' +
-                    '<input class="form-control" type="text" id="option0" name="option0" placeholder="Option 0">' +
+                    '<input class="form-control" type="text" id="option" name="option" placeholder="Option">' +
                     '</div>' +
                     '</div>'
             );
-
         });
 
         $('#option-holder').append(
                 '<div class="row">' +
-                '<input class="form-control" type="text" id="option' + optionCount + '" name="option' + optionCount + '" placeholder="Option">' +
+                '<input class="form-control" type="text" id="option' + optionCount[questionCount] + '" name="option' + optionCount + '" placeholder="Option">' +
                 '<a class="remove-option">Remove Option</a>' +
                 '</div>'
         );
     }
-    ;
-
 </script>

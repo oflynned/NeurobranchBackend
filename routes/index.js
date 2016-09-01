@@ -31,13 +31,6 @@ router.get('/users/create-trial', ensureAuthenticated, function (req, res) {
             active_dash: "true"
         });
 });
-router.get('/users/create-questions', ensureAuthenticated, function (req, res) {
-    res.render('create_question',
-        {
-            user: req.user,
-            active_dash: "true"
-        });
-});
 router.get('/users/verify-candidates', ensureAuthenticated, function (req, res) {
 
 });

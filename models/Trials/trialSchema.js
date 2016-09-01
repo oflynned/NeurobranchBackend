@@ -51,7 +51,7 @@ module.exports.getTrialsByResearcherId = function (researcherid, callback) {
 };
 
 module.exports.getLatestTrialByResearcher = function (researcherid, callback) {
-    trialData.find({researcherid: researcherid}, callback).sort({$natural:-1}).limit(1);
+    trialData.find({researcherid: researcherid}, callback).sort({$natural:-1}).limit(1).select("_id");
 };
 
 
