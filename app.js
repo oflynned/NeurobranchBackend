@@ -11,20 +11,17 @@ var flash = require('connect-flash');
 var crypto = require('crypto');
 var session = require('express-session');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");
 var redis = require('redis');
 var redisClient = redis.createClient(); // default setting.
-var mandrillTransport = require('nodemailer-mandrill-transport');
 
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
 var users = require(Globals.USERS_ROUTE);
 
 var util = require('util');
-var generator = require('mongoose-gen');
 var bcrypt = require('bcrypt');
 var async = require('async');
 var app = express();
@@ -70,7 +67,7 @@ app.use(function (req, res, next) {
 var host = "localhost:3000";
 app.use(bodyParser.urlencoded({"extended" : false}));
 
-app.get('/', function (req, res, next) {
+app.get('/', function (req, res) {
     res.render('mainpage');
 });
 

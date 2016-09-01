@@ -106,8 +106,6 @@ router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
-        var is_req_candidate = req.user.requestedCandidate;
-        /* var isQuestions = req.user.questionSchema;*/
         trial.datecreated = new Date(parseInt(trial.datecreated));
 
         requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err) {
@@ -121,7 +119,8 @@ router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
                     multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
                     active_dash: "true",
                     candidates: [{email: '1'},{ email:'2'},{email:'3'}],
-                    questions: result
+                    questions: result,
+                    is_create: trial.datecreated
                 });
             });
         });
