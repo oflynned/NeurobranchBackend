@@ -106,25 +106,28 @@ router.get('/trials/:trialid', function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
-        var isQuestions = req.user.questionSchema;
+        var is_req_candidate = req.user.requestedCandidate;
+        /* var isQuestions = req.user.questionSchema;*/
         trial.datecreated = new Date(parseInt(trial.datecreated));
 
         requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, reqcan) {
             if (err) throw err;
-            var is_req_candidate = req.user.requestedCandidate;
-            res.render('trial', {
-                trial: trial,
-                is_researcher: isResearcher,
-                multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-                active_dash: "true",
-                request_can_list: "true",
-                isreqcan: is_req_candidate,
-                reqcan: reqcan,
-                wp: "woop woop",
-                wp2: "woop woop 2"
+            console.log("here");
 
-            });
         });
+
+
+        res.render('trial', {
+            trial: trial,
+            is_researcher: isResearcher,
+            multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
+            active_dash: "true",
+            request_can_list: "true",
+            isreqcan: is_req_candidate,
+            wp: "woop woop",
+            wp2: "woop woop2"
+        });
+
     });
 });
 
