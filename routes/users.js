@@ -110,24 +110,18 @@ router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
 
         requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, reqcan) {
             if (err) throw err;
-            questionSchema.getQuestionByTrialId(req.params.trialid, function (err, result) {
+            questionSchema.getQuestionsByTrialId(req.params.trialid, function (err, questions) {
                 if (err) throw err;
-                console.log(result);
-                candidateSchema.getCandidateByMockUserId(req.params.userid, function (err, canid) {
+                requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, candidateids) {
                     if (err) throw err;
-                    console.log("***");
-                    console.log(canid);
-                    console.log("***");
-
-
+                    console.log(candidateids);
                     res.render('trial', {
                         trial: trial,
                         is_researcher: isResearcher,
                         multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
                         active_dash: "true",
                         candidates: reqcan[0]["users"],
-                        questions: result,
-
+                        questions: questions,
                         is_create: trial.datecreated
 
                     });

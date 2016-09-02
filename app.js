@@ -148,7 +148,7 @@ app.get('/api/verify-candidate/:id', function (req, res) {
     res.redirect('/users/verified');
 });
 
-//send email Verification
+//email verification
 app.post('/send',function(req,res) {
     console.log('email--->' + req.body.to);
     console.log('forename--->' + req.body.forename);
@@ -253,9 +253,6 @@ app.post('/emailverify',function (req, res, next) {
     
 
 });
-
-/*BEGIN PASSWORD RESET*/
-
 app.post('/forgot', function (req, res, next) {
     async.waterfall([
         function (done) {
@@ -301,8 +298,6 @@ app.post('/forgot', function (req, res, next) {
         res.redirect('/');
     });
 });
-
-/*password reset happens here*/
 app.get('/reset/:token', function (req, res) {
     researcherAccount.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function (err, user) {
         if (!user) {
@@ -314,8 +309,6 @@ app.get('/reset/:token', function (req, res) {
         });
     });
 });
-
-
 app.post('/reset/:token', function (req, res) {
     async.waterfall([
         function (done) {
@@ -365,7 +358,6 @@ app.post('/reset/:token', function (req, res) {
         res.redirect('/');
     });
 });
-/*END PASSWORD RESET */
 
 //researchers
 app.post('/api/create-researcher', function (req, res) {
@@ -784,13 +776,13 @@ app.get('/api/get-verified-candidates', function (req, res) {
         res.json(result);
     });
 });
-app.get('/api/get-verified-candidates/:trialid', function (req, res) {
+app.get('/api/get-verified-candidates/trialid/:trialid', function (req, res) {
     verifiedCandidatesData.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, result) {
         if (err) throw err;
         res.json(result.users);
     });
 });
-app.get('/api/get-verified-candidates/:_id', function (req, res) {
+app.get('/api/get-verified-candidates/listid/:_id', function (req, res) {
     verifiedCandidatesData.getVerifiedCandidatesById(req.params._id, function (err, result) {
         if (err) throw err;
         res.json(result.users);
@@ -799,17 +791,12 @@ app.get('/api/get-verified-candidates/:_id', function (req, res) {
 app.delete('/api/delete-verified-candidates/:_id', function (req, res) {
 
 });
-/*INSERT LIST HERE*/
+
 //requested candidate lists
-app.post('/api/create-requested-candidates/:trialid', function (req, res) {
-    var trialid = req.params.trialid;
-    var users = req.body;
-    var requestedCandidatesDataParams = {
-        trialid: trialid,
-        users
-    };
-    requestedCandidatesData.create(new requestedCandidatesData(requestedCandidatesDataParams));
-    res.redirect('/api/get-exclusions');
+app.post('/api/create-requested-candidate', function (req, res) {
+    requestedCandidatesData.createRequestedCandidates(req.body.trialid, req.body.userid, function(err, result) {
+        console.log(result);
+    });
 });
 app.get('/api/get-requested-candidates', function (req, res) {
     requestedCandidatesData.getRequestedCandidates(function (err, result) {
@@ -817,17 +804,23 @@ app.get('/api/get-requested-candidates', function (req, res) {
         res.json(result);
     });
 });
-app.get('/api/get-requested-candidates/:trialid', function (req, res) {
+app.get('/api/get-requested-candidates/trialid/:trialid', function (req, res) {
     requestedCandidatesData.getRequestedCandidatesByTrialId(req.params.trialid, function (err, result) {
         if (err) throw err;
-        res.json(result.users);
+        res.json(result);
     });
 });
-app.get('/api/get-requested-candidates/:_id', function (req, res) {
+app.get('/api/get-requested-candidates/listid/:_id', function (req, res) {
     requestedCandidatesData.getRequestedCandidatesById(req.params._id, function (err, result) {
         if (err) throw err;
         res.json(result.users);
     });
+});
+app.get('/api/remove-requested-candidate/trial-id/:trialid/candidate-id/:candidateid', function (req, res) {
+     requestedCandidatesData.removeRequestedCandidate(req.params.trialid, req.params.userid, function (err) {
+         if(err) throw err;
+         res.redirect('/users/trials/' + req.params.trialid);
+     })
 });
 app.delete('/api/delete-requested-candidates/:_id', function (req, res) {
 

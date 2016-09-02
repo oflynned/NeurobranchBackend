@@ -47,10 +47,6 @@ module.exports.getCandidateByEmail = function (email, callback) {
     candidate.findOne({email: email}, callback);
 };
 
-module.exports.getCandidateByMockUserId = function (userid, callback) {
-    candidate.findOne({userid: userid}, callback);
-};
-
 module.exports.comparePasswords = function (candidatePassword, hash, callback) {
     bcrypt.compare(candidatePassword, hash, function (err, isMatch) {
         if (err) throw err;

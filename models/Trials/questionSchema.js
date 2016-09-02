@@ -32,7 +32,7 @@ module.exports.getQuestionById = function (id, callback) {
     question.find({_id: id}, callback);
 };
 
-module.exports.getQuestionByTrialId = function (trialid, callback) {
+module.exports.getQuestionsByTrialId = function (trialid, callback) {
     question.find({trialid: trialid}, callback);
 };
 
