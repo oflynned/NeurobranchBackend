@@ -3,28 +3,19 @@ client = pymongo.MongoClient()
 db = client.neurobranch_db
 db.requestedcandidates.insert(
     {
-		"trialid":"57c05a111d34acd4b3e6c7f5",
+		"trialid":"57c84cbdaa16e708285b9985",
         "users": [
             {
-            "password": "passowrd1",
-            "email": "andrew@email.com",
-            "isverified": "no"
+            "userid": "1"
             },
             {
-            "password": "passowrd2",
-            "email": "ben@email.com",
-            "isverified": "no"
+            "userid": "2"
             },
             {
-            "password": "passowrd3",
-            "email": "charlie@email.com",
-            "isverified": "no"
+            "userid": "3"
             },
             {
-            "password": "passowrd4",
-            "email": "derek@email.com",
-            "isverified": "no"
+            "userid": "4"
             }]
     }
 )
-
