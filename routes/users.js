@@ -102,7 +102,7 @@ router.get('/cookie-details', function (req, res) {
     res.json(req.user);
 });
 
-router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
+router.get('/trials/:trialid', function (req, res) {
     trialData.getTrialById(req.params.trialid, function (err, trial) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
