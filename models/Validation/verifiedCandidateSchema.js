@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 
 var verifiedCandidateSchema = mongoose.Schema({
     trialid: String,
-    users: {}
+    userid: String
 });
 
 var verifiedCandidates = module.exports = mongoose.model('VerifiedCandidates', verifiedCandidateSchema);

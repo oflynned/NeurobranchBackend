@@ -1,4 +1,4 @@
-<div id="page-content-wrapper">
+<div id="page-content-wrapper dashboard" style="margin-left: 250px">
     <div class="container-fluid content-main">
         <div class="row">
             <div class="col-lg-12">
@@ -17,38 +17,105 @@
                     <img src="{{multimedia}}">
                 </div>
                 <div class="col-md-6 text-left">
-                    <div><strong>Hosted by:</strong> {{trial.researcherid}}</div>
+                    <div><strong>Condition:</strong> {{trial.condition}}</div>
                     <div><strong>Type:</strong> {{trial.trialtype}}</div>
                     <div><strong>Institute:</strong> {{trial.institute}}</div>
-                    <div><strong>Condition:</strong> {{trial.condition}}</div>
-                    <div><strong>State:</strong> {{trial.state}}</div>
                     <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
                     {{#if trial.datestarted}}
                         <div><strong>Date Started:</strong> {{trial.datestarted}}</div>
                     {{/if}}
+                    {{#if trial.dateended}}
+                        <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
+                    {{/if}}
+                    <br>
+                    <div><strong>State:</strong> {{trial.state}}</div>
+                    <div><strong>Trial Duration:</strong> {{trial.duration}}</div>
+                    <div><strong>Candidate Quota:</strong> {{trial.candidatequota}}</div>
+                    <div><strong>Question Frequency:</strong> {{trial.frequency}}</div>
                     <br>
                     <div>{{trial.briefdescription}}</div>
+
+                    <button class="btn btn-primary">Publish Trial</button>
+                    <button class="btn btn-success" disabled>Trial Active</button>
+                    <button class="btn btn-danger">Cancel Trial</button>
+
                 </div>
             </div>
 
-            <div class="row text-center">
+            <div class="row text-left">
                 <div class="col-md-6">
                     <!-- about -->
                     <div class="page-header"><h3>About the trial</h3></div>
                     <div>{{trial.detaileddescription}}</div>
                 </div>
-                <div class="col-md-6 text-center">
+
+                <div class="col-md-6">
+                    {{#if is_researcher}}
+                        <div class="page-header">
+                            <h3>Questions</h3>
+                        </div>
+
+                    <ol>
+                        {{#each questions}}
+                                <li><strong>Title:</strong> {{title}}</li>
+                                <strong>Type:</strong> {{questiontype}}
+                                <ol>
+                                    {{#each answers}}
+                                        <li>
+                                            {{this}}
+                                        </li>
+                                    {{/each}}
+                                </ol>
+                        {{/each}}
+                        </ol>
+                    {{else}}
+                        <div>
+                            <h5>Please sign in as this researcher in order to see more details</h5>
+                        </div>
+                    {{/if}}
+                </div>
+
+            </div>
+            <div class="row text-left">
+                <!-- stats -->
+                <div class="col-md-6">
+                    {{#if is_researcher}}
+                        <div class="page-header">
+                            <h3>Statistics</h3>
+                        </div>
+                        <div>
+                            {{#if statistics}}
+                                <h5>Graphs here</h5>
+                            {{else}}
+                                {{#if trial.datestarted}}
+                                    <h5>No data is currently available for this trial</h5>
+                                {{else}}
+                                    <h5>No data is currently available for this trial as it hasn't been started yet.
+                                        Your trial currently has 0 candidates, and requires a minimum of
+                                        {{trial.candidatequota}} to be started</h5>
+                                {{/if}}
+                            {{/if}}
+                        </div>
+                    {{else}}
+                        <div>
+                            <h5>Please sign in as this researcher in order to see more details</h5>
+                        </div>
+                    {{/if}}
+                </div>
+                <div class="col-md-3">
                     <div class="page-header">
-                        <h3>Candidates</h3>
+                        <h3>Candidates Requested to Join</h3>
                     </div>
                     {{#if is_researcher}}
-                        {{#if candidates}}
-                            {{#each candidates}}
-                                <li>{{candidateid}}</li>
-                            {{/each}}
+                        {{#if req_candidates}}
+                            <ul>
+                                {{#each req_candidates}}
+                                    <li>{{userid}}</li>
+                                {{/each}}
+                            </ul>
                         {{else}}
                             <div>
-                                <h5>No candidates yet for this trial!</h5>
+                                <h5>No candidates have currently requested to join this trial</h5>
                             </div>
                         {{/if}}
                     {{else}}
@@ -57,33 +124,16 @@
                         </div>
                     {{/if}}
                 </div>
-            </div>
-            <div class="row text-center">
-                <!-- stats -->
-                <div class="col-md-6">
-                    {{#if is_researcher.show_statistics}}
-                        <div class="page-header">
-                            <h3>Statistics</h3>
-                        </div>
-                        <!-- chart -->
-
-                    {{else}}
-                        <div>
-                            <h5>Please sign in as this researcher in order to see more details</h5>
-                        </div>
-                    {{/if}}
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-3 text-left">
+                    <div class="page-header">
+                        <h3>Verified Candidates</h3>
+                    </div>
                     {{#if is_researcher}}
-                        <div class="page-header">
-                            <h3>Questions</h3>
-                        </div>
-
-                        {{#each questions}}
-                            <div>
-                                {{title}}
-                            </div>
-                        {{/each}}
+                        <ul>
+                            {{#each ver_candidates}}
+                                <li>{{userid}}</li>
+                            {{/each}}
+                        </ul>
                     {{else}}
                         <div>
                             <h5>Please sign in as this researcher in order to see more details</h5>
@@ -92,10 +142,5 @@
                 </div>
             </div>
         </div>
-        {{#if is_create}}
-            <div class="col-md-2 center-block">
-                <button class="btn btn-primary">Publish Trial</button>
-            </div>
-        {{/if}}
     </div>
 </div>

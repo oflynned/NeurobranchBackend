@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 
 var requestedCandidateSchema = mongoose.Schema({
     trialid: String,
-    users: []
+    userid: String
 });
 
 var requestedCandidates = module.exports = mongoose.model('RequestedCandidates', requestedCandidateSchema);
@@ -21,12 +21,12 @@ module.exports.getRequestedCandidatesWithLimit = function (limit, callback) {
     requestedCandidates.find(callback).skip(requestedCandidates - limit).sort({$natural:-1}).limit(limit);
 };
 
-module.exports.createRequestedCandidates = function (trialid, requestedCandidate, callback) {
-    requestedCandidates.findOneAndUpdate({trialid: trialid}, {$push: {users: {userid: requestedCandidate}}},{safe: true, upsert: true}, callback);
+module.exports.createRequestedCandidates = function (requestedCandidate, callback) {
+    requestedCandidate.save(callback);
 };
 
 module.exports.getRequestedCandidatesByTrialId = function (trialid, callback) {
-    requestedCandidates.find({trialid: trialid}, callback).select("users");
+    requestedCandidates.find({trialid: trialid}, callback).sort({$natural:-1});
 };
 
 module.exports.removeRequestedCandidate = function (trialid, userid, callback) {

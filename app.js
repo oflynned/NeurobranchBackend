@@ -768,7 +768,7 @@ app.post('/api/create-verified-candidates/:trialid', function (req, res) {
         users
     };
     verifiedCandidatesData.create(new verifiedCandidatesData(verifiedCandidatesDataParams));
-    res.redirect('/api/get-exclusions');
+    res.redirect('/');
 });
 app.get('/api/get-verified-candidates', function (req, res) {
     verifiedCandidatesData.getVerifiedCandidates(function (err, result) {
@@ -794,9 +794,8 @@ app.delete('/api/delete-verified-candidates/:_id', function (req, res) {
 
 //requested candidate lists
 app.post('/api/create-requested-candidate', function (req, res) {
-    requestedCandidatesData.createRequestedCandidates(req.body.trialid, req.body.userid, function(err, result) {
-        console.log(result);
-    });
+    requestedCandidatesData.create(new requestedCandidatesData(req.body));
+    res.redirect('/');
 });
 app.get('/api/get-requested-candidates', function (req, res) {
     requestedCandidatesData.getRequestedCandidates(function (err, result) {

@@ -107,24 +107,19 @@ router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
         trial.datecreated = new Date(parseInt(trial.datecreated));
-
-        requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, reqcan) {
+        questionSchema.getQuestionsByTrialId(req.params.trialid, function (err, questions) {
             if (err) throw err;
-            questionSchema.getQuestionsByTrialId(req.params.trialid, function (err, questions) {
+            requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, req_candidates) {
                 if (err) throw err;
-                requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, candidateids) {
-                    if (err) throw err;
-                    console.log(candidateids);
-                    res.render('trial', {
-                        trial: trial,
-                        is_researcher: isResearcher,
-                        multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-                        active_dash: "true",
-                        candidates: reqcan[0]["users"],
-                        questions: questions,
-                        is_create: trial.datecreated
-
-                    });
+                res.render('trial', {
+                    trial: trial,
+                    is_researcher: isResearcher,
+                    multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
+                    active_dash: "true",
+                    req_candidates: req_candidates,
+                    //ver_candidates: ver_candidates,
+                    questions: questions,
+                    is_create: trial.datecreated
                 });
             });
         });
