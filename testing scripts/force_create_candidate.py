@@ -8,7 +8,6 @@ db.candidateaccounts.insert(
             "email":"1@1.com",
             "isverified":"no",
             "userid":"1"
-
     }
 )
 

@@ -4,7 +4,7 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-
+var candidateSchema = require('../models/Accounts/candidateAccountSchema.js');
 var questionSchema = require('../models/Trials/questionSchema');
 var requestedCandidate = require('../models/Validation/requestedCandidateSchema');
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
@@ -111,17 +111,26 @@ router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
         requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, reqcan) {
             if (err) throw err;
             questionSchema.getQuestionByTrialId(req.params.trialid, function (err, result) {
-                if(err) throw err;
+                if (err) throw err;
                 console.log(result);
-                res.render('trial', {
-                    trial: trial,
-                    is_researcher: isResearcher,
-                    multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-                    active_dash: "true",
-                    candidates: reqcan[0]["users"],
-                    questions: result,
-                    is_create: trial.datecreated
+                candidateSchema.getCandidateByMockUserId(req.params.userid, function (err, canid) {
+                    if (err) throw err;
+                    console.log("***");
+                    console.log(canid);
+                    console.log("***");
 
+
+                    res.render('trial', {
+                        trial: trial,
+                        is_researcher: isResearcher,
+                        multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
+                        active_dash: "true",
+                        candidates: reqcan[0]["users"],
+                        questions: result,
+
+                        is_create: trial.datecreated
+
+                    });
                 });
             });
         });
