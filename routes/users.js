@@ -108,7 +108,7 @@ router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
         var isResearcher = req.isAuthenticated() ? {show_statistics: "true"} : null;
         trial.datecreated = new Date(parseInt(trial.datecreated));
 
-        requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err) {
+        requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, reqcan) {
             if (err) throw err;
             questionSchema.getQuestionByTrialId(req.params.trialid, function (err, result) {
                 if(err) throw err;
@@ -118,9 +118,10 @@ router.get('/trials/:trialid', ensureAuthenticated, function (req, res) {
                     is_researcher: isResearcher,
                     multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
                     active_dash: "true",
-                    candidates: [{email: '1'},{ email:'2'},{email:'3'}],
+                    candidates: reqcan[0]["users"],
                     questions: result,
                     is_create: trial.datecreated
+
                 });
             });
         });

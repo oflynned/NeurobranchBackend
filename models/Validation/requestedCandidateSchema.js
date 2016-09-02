@@ -26,7 +26,7 @@ module.exports.createRequestedCandidates = function (requestedCandidates, callba
 };
 
 module.exports.getRequestedCandidatesByTrialId = function (id, callback) {
-    requestedCandidates.find({trialid: id}, callback);
+    requestedCandidates.find({trialid: id}, callback).select("users");
 };
 
 module.exports.getRequestedCandidatesById = function (id, callback) {
