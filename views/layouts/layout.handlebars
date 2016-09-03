@@ -19,9 +19,6 @@
     <link href="/css/tile.css" rel="stylesheet">
     <link href="/css/main_content.css" rel="stylesheet">
     <link href="/css/footer.css" rel="stylesheet">
-
-    <!-- graphs -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -71,68 +68,67 @@
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand"><a href="#"></a></li>
                     <li><a href="/users/dashboard">Overview</a></li>
-                    <li><a href="/users/notifications">Notifications</a></li>
                     <li><a href="/users/create-trial">New Trial</a></li>
                     <li><a href="/users/settings">Settings</a></li>
                     <li><a href="/users/help">Help</a></li>
                 </ul>
             </div>
-        </div>
     {{/if}}
 {{/if}}
 
 {{{ body }}}
+
+    <!-- footer at base of page for additional information -->
+    <footer class="footer">
+        <div class="container footer-wrapper">
+            <div id="footer-content-links" class="row text-center">
+                <div id="footer-about" class="col-md-3 col-centered">
+                    <ul class="caption">About</ul>
+                    <ul><a href="/users/goals">What Our Goal Is</a></ul>
+                    <ul><a href="/users/aboutneurobranch">About Neurobranch</a></ul>
+                    <ul><a href="/users/aboutglassbyte">About GlassByte</a></ul>
+                </div>
+                <div id="footer-contact" class="col-md-3 col-centered">
+                    <ul class="caption">Contact</ul>
+                    <ul><a href="/users/faq">FAQ</a></ul>
+                    <ul><a href="/users/support">Support</a></ul>
+                    <ul><a href="/users/termsofuse">Terms of Use</a></ul>
+                    <ul><a href="/users/cookiepolicy">Cookie Policy</a></ul>
+                    <ul><a href="/users/privacypolicy">Privacy Policy</a></ul>
+                </div>
+                <div id="footer-discover" class="col-md-3">
+                    <ul class="caption">Learn</ul>
+                    <ul><a href="#">Category 1</a></ul>
+                    <ul><a href="#">Category 2</a></ul>
+                    <ul><a href="#">Category 3</a></ul>
+                    <ul><a href="#">Category 4</a></ul>
+                    <ul><a href="#">Category 5</a></ul>
+                </div>
+                <div id="footer-discover2" class="col-md-3">
+                    <ul class="caption"><br></ul>
+                    <ul><a href="#">Category 6</a></ul>
+                    <ul><a href="#">Category 7</a></ul>
+                    <ul><a href="#">Category 8</a></ul>
+                    <ul><a href="#">Category 9</a></ul>
+                    <ul><a href="#">Category 10</a></ul>
+                </div>
+            </div>
+            <div id="footer-non-list" class="tagline">
+                <p class="text-muted text-center">Neurobranch &copy; <span id="year">year</span> powered by GlassByte.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CDN script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <!-- self scripts -->
+    <script src="/js/year.js"></script>
 </body>
-
-<footer class="footer">
-    <div class="container footer-wrapper">
-        <div id="footer-content-links" class="row text-center">
-            <div id="footer-about" class="col-md-3 col-centered">
-                <ul class="caption">About</ul>
-                <ul><a href="/users/goals">What Our Goal Is</a></ul>
-                <ul><a href="/users/aboutneurobranch">About Neurobranch</a></ul>
-                <ul><a href="/users/aboutglassbyte">About GlassByte</a></ul>
-            </div>
-            <div id="footer-contact" class="col-md-3 col-centered">
-                <ul class="caption">Contact</ul>
-                <ul><a href="/users/faq">FAQ</a></ul>
-                <ul><a href="/users/support">Support</a></ul>
-                <ul><a href="/users/termsofuse">Terms of Use</a></ul>
-                <ul><a href="/users/cookiepolicy">Cookie Policy</a></ul>
-                <ul><a href="/users/privacypolicy">Privacy Policy</a></ul>
-            </div>
-            <div id="footer-discover" class="col-md-3">
-                <ul class="caption">Learn</ul>
-                <ul><a href="#">Category 1</a></ul>
-                <ul><a href="#">Category 2</a></ul>
-                <ul><a href="#">Category 3</a></ul>
-                <ul><a href="#">Category 4</a></ul>
-                <ul><a href="#">Category 5</a></ul>
-            </div>
-            <div id="footer-discover2" class="col-md-3">
-                <ul class="caption"><br></ul>
-                <ul><a href="#">Category 6</a></ul>
-                <ul><a href="#">Category 7</a></ul>
-                <ul><a href="#">Category 8</a></ul>
-                <ul><a href="#">Category 9</a></ul>
-                <ul><a href="#">Category 10</a></ul>
-            </div>
-        </div>
-        <div id="footer-non-list" class="tagline">
-            <p class="text-muted text-center">Neurobranch &copy; <span id="year"></span> powered by GlassByte.
-            </p>
-        </div>
-    </div>
-</footer>
-
-<!-- CDN script -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
-<!-- self scripts -->
-<script src="/js/year.js"></script>
 </html>

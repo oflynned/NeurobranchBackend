@@ -1,4 +1,4 @@
-<div id="page-content-wrapper dashboard" style="margin-left: 250px">
+<div id="page-content-wrapper dashboard">
     <div class="container-fluid content-main">
         <div class="row">
             <div class="col-lg-12">
@@ -55,8 +55,8 @@
                             <h3>Questions</h3>
                         </div>
 
-                    <ol>
-                        {{#each questions}}
+                        <ol>
+                            {{#each questions}}
                                 <li><strong>Title:</strong> {{title}}</li>
                                 <strong>Type:</strong> {{questiontype}}
                                 <ol>
@@ -66,80 +66,79 @@
                                         </li>
                                     {{/each}}
                                 </ol>
-                        {{/each}}
+                            {{/each}}
                         </ol>
                     {{else}}
                         <div>
-                            <h5>Please sign in as this researcher in order to see more details</h5>
+                            Please sign in as this researcher in order to see more details
                         </div>
                     {{/if}}
                 </div>
-
             </div>
-            <div class="row text-left">
-                <!-- stats -->
-                <div class="col-md-6">
-                    {{#if is_researcher}}
-                        <div class="page-header">
-                            <h3>Statistics</h3>
-                        </div>
-                        <div>
-                            {{#if statistics}}
-                                <h5>Graphs here</h5>
-                            {{else}}
-                                {{#if trial.datestarted}}
-                                    <h5>No data is currently available for this trial</h5>
-                                {{else}}
-                                    <h5>No data is currently available for this trial as it hasn't been started yet.
-                                        Your trial currently has 0 candidates, and requires a minimum of
-                                        {{trial.candidatequota}} to be started</h5>
-                                {{/if}}
-                            {{/if}}
-                        </div>
-                    {{else}}
-                        <div>
-                            <h5>Please sign in as this researcher in order to see more details</h5>
-                        </div>
-                    {{/if}}
+            {{#if is_researcher}}
+                <div class="page-header">
+                    <h3>Statistics</h3>
                 </div>
-                <div class="col-md-3">
-                    <div class="page-header">
-                        <h3>Candidates Requested to Join</h3>
-                    </div>
-                    {{#if is_researcher}}
-                        {{#if req_candidates}}
-                            <ul>
-                                {{#each req_candidates}}
-                                    <li>{{userid}}</li>
-                                {{/each}}
-                            </ul>
+                <div>
+                    {{#if statistics}}
+                        Graphs here
+                    {{else}}
+                        {{#if trial.datestarted}}
+                            No data is currently available for this trial
                         {{else}}
-                            <div>
-                                <h5>No candidates have currently requested to join this trial</h5>
-                            </div>
+                            No data is currently available for this trial as it hasn't been started yet.
+                            Your trial currently has <strong>0</strong> verified candidates, and requires a
+                            minimum of <strong>{{trial.candidatequota}}</strong> to be started.<br>
+                            Please view the notifications section in the side bar in order to manage candidate
+                            verification.
                         {{/if}}
-                    {{else}}
-                        <div>
-                            <h5>Please sign in as this researcher in order to see more details</h5>
-                        </div>
                     {{/if}}
                 </div>
-                <div class="col-md-3 text-left">
-                    <div class="page-header">
-                        <h3>Verified Candidates</h3>
-                    </div>
-                    {{#if is_researcher}}
+            {{else}}
+                <div>
+                    Please sign in as this researcher in order to see more details
+                </div>
+            {{/if}}
+        </div>
+        <!-- stats -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h3>Candidate Requests</h3>
+                </div>
+                {{#if is_researcher}}
+                    {{#if req_candidates}}
                         <ul>
-                            {{#each ver_candidates}}
+                            {{#each req_candidates}}
                                 <li>{{userid}}</li>
                             {{/each}}
                         </ul>
                     {{else}}
                         <div>
-                            <h5>Please sign in as this researcher in order to see more details</h5>
+                            No candidates have currently requested to join this trial
                         </div>
                     {{/if}}
+                {{else}}
+                    <div>
+                        Please sign in as this researcher in order to see more details
+                    </div>
+                {{/if}}
+            </div>
+            <div class="col-md-6 text-left">
+                <div class="page-header">
+                    <h3>Verified Candidates</h3>
                 </div>
+                {{#if is_researcher}}
+                    <ul>
+                        {{#each ver_candidates}}
+                            <li>{{userid}}</li>
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    <div>
+                        Please sign in as this researcher in order to see more details
+                    </div>
+                {{/if}}
             </div>
         </div>
     </div>
