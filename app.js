@@ -617,7 +617,7 @@ app.get('/api/get-questions/questionid/:questionid', function (req, res) {
     });
 });
 app.get('/api/get-questions/trialid/:trialid', function (req, res) {
-    questionData.getQuestionByTrialId(req.params.trialid, function (err, result) {
+    questionData.getQuestionsByTrialId(req.params.trialid, function (err, result) {
         if (err) throw err;
         res.json(result);
     });
