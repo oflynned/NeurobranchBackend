@@ -10,10 +10,24 @@ mongoose.createConnection('localhost:27017/neurobranch_db');
 
 var trialSchema = require('../models/Trials/trialSchema');
 var trialData = mongoose.model('Trials', trialSchema);
+var requestedCandidatesSchema = require('../models/Validation/requestedCandidateSchema');
+var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCandidatesSchema);
 
 var MAX_LENGTH = 300;
 
 //dashboard
+/*router.post('/reject_can/:id',function(req, res, next){
+    console.log("success");
+    var id = req.body.userid;
+
+    requestedCandidatesData.removeRequestedCandidate(req.params.userid , function (err, rej) {
+        if (err) throw err;
+
+    });
+    res.redirect('/users/trials/'+id);
+
+});*/
+
 router.get('/users/dashboard', ensureAuthenticated, function (req, res) {
     generateDashboard(req.user.id, res);
 });
@@ -51,8 +65,6 @@ router.get('/users/help', function (req, res) {
         active_dash: "true"
     })
 });
-
-
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {

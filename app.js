@@ -520,42 +520,20 @@ app.delete('/api/delete-trial/:trialid', function (req, res) {
 });
 
 app.post('/verify_can/:id',function(req, res){
-    var id = mongojs.ObjectId(req.params.id);
 
-    db.requestedcandidates.findAndModify(
-        {
-            "query": { "_id": id },
-            "remove": true
-        },
-        function(err,doc) {
-            if (doc) {
-                db.verifiedcandidates.insert(doc,function(err,doc){
 
-                });
-            } else {
-              console.log("didnt work");
-            }
-        });
+    res.redirect('/users/trials/'+id);
 });
 
-app.post('/reject_can/:id',function(req, res){
-    console.log("success");
-    var id = mongodb.ObjectId(req.params.id);
+app.post('/reject_can/:id',function(req, res, next){
+    var id = req.body.userid;
 
-    db.requestedcandidates.findAndModify(
-        {
-            "query": { "_id": id },
-            "remove": true
-        },
-        function(err,doc) {
-            if (doc) {
-                db.verifiedcandidates.insert(doc,function(err,doc){
+    requestedCandidatesData.removeRequestedCandidate(req.params.userid , function (err, rej) {
+        if (err) throw err;
 
-                });
-            } else {
-                console.log("didnt work");
-            }
-        });
+    });
+    /*res.redirect('/users/trials/'+id);*/
+
 });
 
 
