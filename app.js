@@ -519,6 +519,26 @@ app.delete('/api/delete-trial/:trialid', function (req, res) {
     //TODO
 });
 
+app.post('/verify_can/:id',function(req, res){
+    var id = mongojs.ObjectId(req.params.id);
+
+    db.requestedcandidates.findAndModify(
+        {
+            "query": { "_id": id },
+            "remove": true
+        },
+        function(err,doc) {
+            if (doc) {
+                db.verifiedcandidates.insert(doc,function(err,doc){
+
+                });
+            } else {
+              console.log("didnt work");
+            }
+        });
+});
+
+
 //debug trials
 app.get('/debug/create-trial/:researcherid', function (req, res) {
     var trialParams = {
