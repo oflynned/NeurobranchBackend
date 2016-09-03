@@ -110,7 +110,24 @@
                     {{#if req_candidates}}
                         <ol>
                             {{#each req_candidates}}
-                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a> <form id="{{userid}}" action="/verify_can/{{userid}}" method="post"><button id="{{userid}}" type="verify_can" class="btn btn-success">verify</button></form ><form id="{{userid}}" action="/reject_can/{{userid}}" method="post"><button id="{{userid}}" type="remove_can" class="btn btn-danger">remove</button></form></li>
+                                <div class="row">
+                                    <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a>
+                                        <form id="form_verify_{{userid}}"
+                                              action="/api/create-verified-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
+                                              method="post">
+                                            <button id="ver_{{userid}}" class="btn btn-success">
+                                                Verify
+                                            </button>
+                                        </form>
+                                        <form id="form_delete_{{userid}}"
+                                              action="/api/remove-requested-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
+                                              method="post">
+                                            <button id="del_{{userid}}" class="btn btn-danger">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    </li>
+                                </div>
                             {{/each}}
                         </ol>
                     {{else}}
@@ -131,7 +148,7 @@
                 {{#if is_researcher}}
                     <ul>
                         {{#each ver_candidates}}
-                            <li><a href="/users/candidates/{{userid}}">{{userid}} </a></li>
+                            <li><a href="/users/candidates/{{userid}}">{{userid}}</a></li>
                         {{/each}}
                     </ul>
                 {{else}}

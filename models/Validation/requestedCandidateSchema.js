@@ -29,8 +29,12 @@ module.exports.getRequestedCandidatesByTrialId = function (trialid, callback) {
     requestedCandidates.find({trialid: trialid}, callback).sort({$natural:-1});
 };
 
+module.exports.getRequestedCandidatesByUserId = function (userid, callback) {
+    requestedCandidates.find({userid: userid}, callback).sort({$natural:-1});
+};
+
 module.exports.removeRequestedCandidate = function (trialid, userid, callback) {
-    requestedCandidates.find({trialid: trialid}).remove({users:[{userid: userid}]}, callback);
+    requestedCandidates.findOneAndRemove({trialid: trialid, userid: userid}, callback);
 };
 
 module.exports.getRequestedCandidatesById = function (id, callback) {
