@@ -36,3 +36,4 @@ module.exports.removeRequestedCandidate = function (trialid, userid, callback) {
 module.exports.getRequestedCandidatesById = function (id, callback) {
     requestedCandidates.find({_id: id}, callback);
 };
+

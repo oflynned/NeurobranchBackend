@@ -7,6 +7,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var candidateSchema = require('../models/Accounts/candidateAccountSchema.js');
 var questionSchema = require('../models/Trials/questionSchema');
 var requestedCandidate = require('../models/Validation/requestedCandidateSchema');
+var verifiedCandidate = require('../models/Validation/verifiedCandidateSchema');
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
 
@@ -102,15 +103,19 @@ router.get('/trials/:trialid', function (req, res) {
             if (err) throw err;
             requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, req_candidates) {
                 if (err) throw err;
-                res.render('trial', {
-                    trial: trial,
-                    is_researcher: isResearcher,
-                    multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-                    active_dash: "true",
-                    req_candidates: req_candidates,
-                    //ver_candidates: ver_candidates,
-                    questions: questions,
-                    is_create: trial.datecreated
+                verifiedCandidate.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, ver_candidates) {
+                    if (err) throw err;
+
+                    res.render('trial', {
+                        trial: trial,
+                        is_researcher: isResearcher,
+                        multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
+                        active_dash: "true",
+                        req_candidates: req_candidates,
+                        ver_candidates: ver_candidates,
+                        questions: questions,
+                        is_create: trial.datecreated
+                    });
                 });
             });
         });

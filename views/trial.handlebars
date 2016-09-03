@@ -110,7 +110,7 @@
                     {{#if req_candidates}}
                         <ol>
                             {{#each req_candidates}}
-                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a></li>
+                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a> <button id="{{userid}}" type="verify_can" class="btn btn-success">verify</button><button  id="{{userid}}"  type=  "remove_can" class="btn btn-danger">remove</button></li>
                             {{/each}}
                         </ol>
                     {{else}}
@@ -131,7 +131,7 @@
                 {{#if is_researcher}}
                     <ul>
                         {{#each ver_candidates}}
-                            <li><a href="/users/candidates/{{userid}}">{{userid}}</a></li>
+                            <li><a href="/users/candidates/{{userid}}">{{userid}} </a></li>
                         {{/each}}
                     </ul>
                 {{else}}
