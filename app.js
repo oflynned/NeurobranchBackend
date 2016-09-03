@@ -103,9 +103,10 @@ var verifiedCandidatesData = mongoose.model('VerifiedCandidates', verifiedCandid
 var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCandidatesSchema);
 
 //candidates
-app.post('/api/create-candidate', function (req) {
+app.post('/api/create-candidate', function (req, res) {
     req.body["isverified"] = "false";
     candidateAccount.createCandidate(new candidateAccount(req.body));
+    res.redirect('/');
 });
 app.get('/api/get-candidates', function (req, res) {
     candidateAccount.getCandidates(function (err, result) {
