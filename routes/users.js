@@ -134,7 +134,6 @@ router.get('/candidates/:candidateid/:trialid', ensureAuthenticated, function (r
         res.render('candidateprofile', {
             candidate: candidate,
             trialid: req.params.trialid,
-            is_req: req.params.is_req,
             is_researcher: isResearcher,
             active_dash: "true",
         });
