@@ -538,7 +538,7 @@ app.post('/verify_can/:id',function(req, res){
         });
 });
 
-app.post('/reject_can:id',function(req, res){
+app.post('/reject_can/:id',function(req, res){
     console.log("success");
     var id = mongodb.ObjectId(req.params.id);
 
