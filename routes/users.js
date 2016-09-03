@@ -56,16 +56,9 @@ function generateFrontNews(limit, res) {
     }, limit);
 }
 
+//top bar
 router.get('/mainpage', function (req, res) {
     generateFrontNews(4, res);
-});
-router.get('/news', function (req, res) {
-    res.render('news', {
-        news_section_1: "section 1",
-        news_section_2: "section 2",
-        news_section_3: "section 3",
-        active_news: "true"
-    });
 });
 router.get('/login', function (req, res) {
     res.render('login', {
@@ -82,7 +75,11 @@ router.get('/verified', function (req, res) {
         researcher: req.user
     })
 });
-
+router.get('/dashboard', ensureAuthenticated, function (req, res) {
+    res.render('dashboard', {
+        active_dash: "true"
+    });
+});
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/users/login'
@@ -90,12 +87,6 @@ router.post('/login', passport.authenticate('local', {
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/users/login');
-});
-
-router.get('/dashboard', ensureAuthenticated, function (req, res) {
-    res.render('dashboard', {
-        active_dash: "true"
-    });
 });
 
 router.get('/cookie-details', function (req, res) {
@@ -125,8 +116,30 @@ router.get('/trials/:trialid', function (req, res) {
         });
     });
 });
-
-//create trial
+router.get('/candidates/:candidateid', ensureAuthenticated, function (req, res) {
+    candidateSchema.getCandidateById(req.params.candidateid, function (err, candidate) {
+        if (err) throw err;
+        var isResearcher = req.isAuthenticated();
+        res.render('candidateprofile', {
+            candidate: candidate,
+            is_researcher: isResearcher,
+            active_dash: "true",
+        });
+    });
+});
+router.get('/candidates/:candidateid/:trialid', ensureAuthenticated, function (req, res) {
+    candidateSchema.getCandidateById(req.params.candidateid, function (err, candidate) {
+        if (err) throw err;
+        var isResearcher = req.isAuthenticated();
+        res.render('candidateprofile', {
+            candidate: candidate,
+            trialid: req.params.trialid,
+            is_req: req.params.is_req,
+            is_researcher: isResearcher,
+            active_dash: "true",
+        });
+    });
+});
 router.get('/create-trial', ensureAuthenticated, function (req, res) {
     res.render('create_trial', {
         active_dash: "true"
@@ -138,7 +151,6 @@ router.get('/create-question', ensureAuthenticated, function (req, res) {
     });
 });
 
-//options
 router.get('/settings', ensureAuthenticated, function (req, res) {
     res.render('settings', {
         active_settings: "true"
