@@ -538,6 +538,26 @@ app.post('/verify_can/:id',function(req, res){
         });
 });
 
+app.post('/reject_can:id',function(req, res){
+    console.log("success");
+    var id = mongodb.ObjectId(req.params.id);
+
+    db.requestedcandidates.findAndModify(
+        {
+            "query": { "_id": id },
+            "remove": true
+        },
+        function(err,doc) {
+            if (doc) {
+                db.verifiedcandidates.insert(doc,function(err,doc){
+
+                });
+            } else {
+                console.log("didnt work");
+            }
+        });
+});
+
 
 //debug trials
 app.get('/debug/create-trial/:researcherid', function (req, res) {

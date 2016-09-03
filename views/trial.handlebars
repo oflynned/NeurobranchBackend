@@ -110,7 +110,7 @@
                     {{#if req_candidates}}
                         <ol>
                             {{#each req_candidates}}
-                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a> <button id="{{userid}}" type="verify_can" class="btn btn-success">verify</button><button  id="{{userid}}"  type=  "remove_can" class="btn btn-danger">remove</button></li>
+                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a> <form id="{{userid}}" action="/verify_can/{{userid}}" method="post"><button id="{{userid}}" type="verify_can" class="btn btn-success">verify</button></form ><form id="{{userid}}" action="/reject_can/{{userid}}" method="post"><button id="{{userid}}" type="remove_can" class="btn btn-danger">remove</button></form></li>
                             {{/each}}
                         </ol>
                     {{else}}
