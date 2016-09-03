@@ -81,7 +81,7 @@
                 </div>
                 <div>
                     {{#if statistics}}
-                        Graphs here
+                        Responses & graphs here
                     {{else}}
                         {{#if trial.datestarted}}
                             No data is currently available for this trial
@@ -108,11 +108,11 @@
                 </div>
                 {{#if is_researcher}}
                     {{#if req_candidates}}
-                        <ul>
+                        <ol>
                             {{#each req_candidates}}
-                                <li>{{userid}}</li>
+                                <li><a href="/users/candidates/{{userid}}">{{userid}}</a></li>
                             {{/each}}
-                        </ul>
+                        </ol>
                     {{else}}
                         <div>
                             No candidates have currently requested to join this trial
@@ -131,7 +131,7 @@
                 {{#if is_researcher}}
                     <ul>
                         {{#each ver_candidates}}
-                            <li>{{userid}}</li>
+                            <li><a href="/users/candidates/{{userid}}">{{userid}}</a></li>
                         {{/each}}
                     </ul>
                 {{else}}
