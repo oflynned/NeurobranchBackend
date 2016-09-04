@@ -231,12 +231,7 @@ app.get('/verify',function(req,res) {
                         if(reply !== 1) {
                             return callback(true,"Issue in redis");
                         }
-                       /* callback(null,"Email is verified");*/
-
-                        /*researcherAccount.getResearcherById(req.params.id, function (err, doc) {
-                            doc.isverified = "true";
-                            doc.save();
-                        });*/
+                        /*req.body["isverified"] = "true";*/
                         res.redirect('/users/verified');
                     });
                 } else {
@@ -250,10 +245,35 @@ app.get('/verify',function(req,res) {
         res.end("<h1>Request is from unknown source");
     }
 });
-app.post('/emailverify',function (req, res, next) {
-    
 
+
+app.post('/api/emailverify/:id', function (req, res) {
+    researcherData.verifyResearcher(req.params.id,  function(err) {
+        if(err) throw err;
+        var rData = {
+            isverified:"true"
+        };
+        res.redirect('/users/verified');
+    });
 });
+
+
+app.post('/api/create-verified-candidate/trialid/:trialid/candidateid/:userid', function (req, res) {
+    requestedCandidatesData.removeRequestedCandidate(req.params.trialid, req.params.userid, function(err) {
+        if(err) throw err;
+        var candidateData = {
+            trialid: req.params.trialid,
+            userid: req.params.userid
+        };
+
+        res.redirect('/users/trials/' + req.params.trialid);
+        verifiedCandidatesData.create(new verifiedCandidatesData(candidateData, function(err) {
+            if(err) throw err;
+            res.redirect('/users/trials/' + req.params.trialid);
+        }));
+    });
+});
+
 app.post('/forgot', function (req, res, next) {
     async.waterfall([
         function (done) {
@@ -444,7 +464,6 @@ app.post('/api/create-trial', function (req, res) {
     //retrieve trial by search with latest id
     //log q documents with this id as trialid
     //to be implemented lol
-
     //console.log(req.body);
 
     var trialParams = {
@@ -533,7 +552,7 @@ app.post('/reject_can/:id',function(req, res, next){
         if (err) throw err;
 
     });
-    /*res.redirect('/users/trials/'+id);*/
+    res.redirect('/users/trials/'+id);
 
 });
 

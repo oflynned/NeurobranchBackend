@@ -17,6 +17,14 @@ var candidateAccountSchema = mongoose.Schema({
     isverified: {
         type: String,
         safe: true
+    },
+    trialrequested: {
+        type: String,
+        safe: true
+    },
+    trialverified: {
+        type: String,
+        safe: true
     }
 });
 
