@@ -152,6 +152,8 @@ app.get('/api/verify-candidate/:id', function (req, res) {
 //email verification
 app.post('/send',function(req,res) {
     console.log('email--->' + req.body.to);
+    /*req.body["isverified"] = "false";
+    researcherAccount.createResearcher(new researcherAccount(req.body));*/
 
     async.waterfall([
         function(callback) {
@@ -185,8 +187,8 @@ app.post('/send',function(req,res) {
             callback(null,mailOptions,rand);
         },
         function(mailData,secretKey,callback) {
-            req.body["isverified"] = "false";
-            researcherAccount.createResearcher(new researcherAccount(req.body));
+           /* req.body["isverified"] = "false";
+            researcherAccount.createResearcher(new researcherAccount(req.body));*/
 
 
             console.log(mailData);
