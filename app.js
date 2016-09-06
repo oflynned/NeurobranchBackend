@@ -152,9 +152,6 @@ app.get('/api/verify-candidate/:id', function (req, res) {
 //email verification
 app.post('/send',function(req,res) {
     console.log('email--->' + req.body.to);
-    console.log('forename--->' + req.body.forename);
-    req.body["isverified"] = "false";
-    researcherAccount.createResearcher(new researcherAccount(req.body));
 
     async.waterfall([
         function(callback) {
@@ -170,7 +167,13 @@ app.post('/send',function(req,res) {
         },
         function(callback) {
             "use strict";
+            console.log("1");
+            console.log(req.body._id);
+            console.log("2");
+            console.log(req.body);
+            console.log("3");
             let rand=Math.floor((Math.random() * 100) + 54);
+            console.log(rand);
             let encodedMail = new Buffer(req.body.to).toString('base64');
             let link="http://"+req.get('host')+"/verify?mail="+encodedMail+"&id="+rand;
             let mailOptions={

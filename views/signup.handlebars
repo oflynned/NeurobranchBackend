@@ -8,7 +8,7 @@
             forename = $("#forename").val();
             surname = $("#surname").val();
             $("#message").text("Sending E-mail...Please wait");
-            $.post("/send",{to:to , forename:forename , surname:surname},function(response) {
+            $.post("/send",{to:to },function(response) {
                 if(response.error) {
                     $("#message").empty().html("Error - " + response.data);
                 } else {
