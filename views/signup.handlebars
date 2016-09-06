@@ -2,13 +2,17 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
     $(document).ready(function(){
-        var from,to,subject,text, forename, surname;
+        var from,to,subject,text, forename, surname, institute, password, email, username;
         $("#send_email").click(function(){
             to = $("#to").val();
             forename = $("#forename").val();
             surname = $("#surname").val();
+            institute = $("#institute").val();
+            password = $("#password").val();
+            email = $("#email").val();
+            username = $("#username").val();
             $("#message").text("Sending E-mail...Please wait");
-            $.post("/send",{to:to },function(response) {
+            $.post("/send",{to:to, forename:forename, surname:surname, institute:institute, password:password , email:email, username:username},function(response) {
                 if(response.error) {
                     $("#message").empty().html("Error - " + response.data);
                 } else {
@@ -33,14 +37,14 @@
             <div class="account-wall center-form">
                 <img class="form-image" src="/img/neurobranch_logo.png"
                      alt="">
-                <form class="form-signin" method="post" action="/api/create-researcher">
+                <form class="form-signin"  >
                     <!-- fields -->
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Forename" name="forename" id="forename" required
                            autofocus>
                     <input type="text" class="form-control" placeholder="Surname" name="surname" id="surname" required>
-                    <input type="text" class="form-control" placeholder="Username" name="username" required>
-                    <select class="form-control" name="institute" id="institute">
+                    <input type="text" class="form-control" placeholder="Username" name="username" id="username"required>
+                    <select class="form-control" name="institute" id="institute" name="institute">
                         <option value="def_institute_placeholder" disabled selected>Institute</option>
                         <option value="Dublin City University">Dublin City University</option>
                         <option value="Trinity College Dublin">Trinity College Dublin</option>
@@ -49,10 +53,9 @@
                 </div>
 
                 <input type="email" class="form-control" placeholder="Email" name="email" id="to" required>
-                <input type="email" class="form-control" placeholder="Confirm email" name="conf_email" required>
-                <input type="password" class="form-control" placeholder="Password" name="password" required>
-                <input type="password" class="form-control" placeholder="Confirm password" name="conf_pass"
-                       required>
+                <input type="email" class="form-control" placeholder="Confirm email" name="conf_email" id="email"required>
+                <input type="password" class="form-control" placeholder="Password" name="password" id="password"required>
+                <input type="password" class="form-control" placeholder="Confirm password" name="conf_pass" required>
 
                 <button id="send_email"class="btn btn-lg btn-primary btn-block" >Sign up</button>
                 <span id="message"></span>

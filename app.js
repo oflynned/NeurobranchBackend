@@ -152,30 +152,31 @@ app.get('/api/verify-candidate/:id', function (req, res) {
 //email verification
 app.post('/send',function(req,res) {
     console.log('email--->' + req.body.to);
-    /*req.body["isverified"] = "false";
-    researcherAccount.createResearcher(new researcherAccount(req.body));*/
+    req.body["email"]=req.body.to;
+    req.body["isverified"] = "false";
+    researcherAccount.createResearcher(new researcherAccount(req.body));
+    console.log("*****");
+    console.log("1");
+    console.log(req.body);
+    var id = req.body.id;
+    console.log(req.body.id);
+    console.log(req.params.id);
+    console.log(id);
+    console.log(req.body.ObjectId);
+    console.log(req.params.ObjectId);
+    console.log("*****");
 
     async.waterfall([
         function(callback) {
             redisClient.exists(req.body.to,function(err,reply) {
-                if(err) {
-                    return callback(true,"Error in redis");
-                }
-                if(reply === 1) {
-                    return callback(true,"Email already requested");
-                }
+                if(err) {return callback(true,"Error in redis");}
+                if(reply === 1) {return callback(true,"Email already requested");}
                 callback(null);
             });
         },
         function(callback) {
             "use strict";
-            console.log("1");
-            console.log(req.body._id);
-            console.log("2");
-            console.log(req.body);
-            console.log("3");
             let rand=Math.floor((Math.random() * 100) + 54);
-            console.log(rand);
             let encodedMail = new Buffer(req.body.to).toString('base64');
             let link="http://"+req.get('host')+"/verify?mail="+encodedMail+"&id="+rand;
             let mailOptions={
@@ -187,9 +188,8 @@ app.post('/send',function(req,res) {
             callback(null,mailOptions,rand);
         },
         function(mailData,secretKey,callback) {
-           /* req.body["isverified"] = "false";
+            /*req.body["isverified"] = "false";
             researcherAccount.createResearcher(new researcherAccount(req.body));*/
-
 
             console.log(mailData);
             smtpTransport.sendMail(mailData, function(error, response){
@@ -389,6 +389,8 @@ app.post('/reset/:token', function (req, res) {
 app.post('/api/create-researcher', function (req, res) {
     req.body["isverified"] = "false";
     researcherAccount.createResearcher(new researcherAccount(req.body));
+    console.log("----");
+    console.log(req.body);
     res.redirect("/users/login");
 });
 app.get('/api/verify-researcher/:id', function (req, res) {
