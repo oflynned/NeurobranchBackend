@@ -1,6 +1,10 @@
 <!-- Page Content -->
 <div id="page-content-wrapper">
     <link rel="stylesheet" type="text/css" href="/css/info.css">
+    <!--link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" /-->
+    <link href="/css/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <!--link href="/css/style2.css" rel="stylesheet" type="text/css" /-->
+    <!--link href="/css/chosen.min.css" rel="stylesheet" type="text/css" /-->
     <div class="container-fluid content-main">
         <!--"/api/create-trial"-->
         <form action="/api/create-trial" method="post" role="form">
@@ -53,6 +57,20 @@
                                 <span title="Detailed Description is seen when a candidate clicks into a trial providing in depth details about the trial."
                                       class="fa fa-info-circle errspan"></span>
                             </div>
+
+                            <div class="row">
+                                    <div class="form-group">
+                                        <select class="tags form-control" name="tags" multiple="multiple">
+                                            <option>tag1</option>
+                                            <option>tag2</option>
+                                            <option>tag3</option>
+                                            <option>tag4</option>
+                                        </select>
+                                        <span title="Condition Type is the condition pertaining to the trial. It's used for categorisation."
+                                              class="fa fa-info-circle errspan"></span>
+                                    </div>
+                            </div>
+
 
                             <div class="row">
                                 <div class="col-sm-4 col-md-4">
@@ -131,14 +149,104 @@
                 <div class="col-lg-12">
                     <!-- title -->
                     <div class="page-header">
+                        <h4>Eligibility Form Details</h4>
+                    </div>
+                    <form class="form-horizontal" id="form_main">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class=" control-label" for="eligibiltyform">Eligiblity Form</label>
+                                <label class="checkbox-inline" for="eligibiltyform-0">
+                                    <input type="checkbox" name="eligibiltyform" id="eligibiltyform" value="1">
+                                    Yes </label>
+                            </div>
+                        </fieldset>
+                    </form>
+
+
+                    <form class="form-horizontal" id="form_main2">
+                        <fieldset>
+                            <div id="e-questionlist">
+                                <div class="form-group">
+                                    <label for="e-q1title" class="control-label">1. Eligibilty Question </label>
+                                    <input type="text" class="form-control col-md-4 qtitle" name="e-q1_title" placeholder="Enter Title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="e-q1_type">Question Type</label>
+                                    <select  class="form-control e-qtype" name="e-q1_type">
+                                        <option data-cat="">Select Answer Type</option>
+                                        <option data-cat="choice">Checkbox</option>
+                                        <option data-cat="choice">Radio</option>
+                                        <option data-cat="">Text</option>
+                                        <option data-cat="">Scale</option>
+                                    </select>
+                                </div>
+                                <div class="form-group hide questions_answers">
+                                    <label for="e-no_of_options">No Of Answers</label>
+                                    <select  class="form-control e-no_of_options" name="e-q1_no_of_options" ><option value="0">Select no of Answers</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+                                <div class="form-group hide e-answers">
+                                    <label>Answers</label>
+                                    <div class="col-lg-12 e-answers_content"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <a href="#" id="e-add-more" class="btn btn-info">Add More</a>
+                                <a href="#" id="e-btn-remove" class="btn btn-warning pull-right">Remove</a>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- title -->
+                    <div class="page-header">
                         <h4>Question Details</h4>
                     </div>
+
+
+                    <form class="form-horizontal" id="form_main2">
+                        <fieldset>
+
+                            <div id="questionlist">
+                                <div class="form-group">
+                                    <label for="q1title" class=" control-label">1. Question Title</label>
+                                    <input type="text" class="form-control col-md-4 qtitle" name="q1_title" placeholder="Enter Title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="q1_type">Question Type</label>
+                                    <select  class="form-control qtype" name="q1_type">
+                                        <option data-cat="">Select Answer Type</option>
+                                        <option data-cat="choice">Checkbox</option>
+                                        <option data-cat="choice">Radio</option>
+                                        <option data-cat="">Text</option>
+                                        <option data-cat="">Scale</option>
+                                    </select>
+                                </div>
+                                <div class="form-group hide questions_answers">
+                                    <label for="no_of_options">No Of Answers</label>
+                                    <select  class="form-control no_of_options" name="q1_no_of_options" ><option value="0">Select no of Answers</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+                                <div class="form-group hide answers">
+                                    <label>Answers</label>
+                                    <div class="col-lg-12 answers_content"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <a href="#" id="add-more" class="btn btn-info">Add More</a>
+                                <a href="#" id="btn-remove" class="btn btn-warning pull-right">Remove</a>
+                            </div>
+
+                        </fieldset>
+                    </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-12">
-                    <div class="center-form form-create-trial form-create-trial-margin" id="question-holder"></div>
-                    <div><a id="add-question-btn">Add Question</a></div>
+
                 </div>
             </div>
             <div class="row">
@@ -154,82 +262,10 @@
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js"
         integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-<script>
-    var questionCount = 1;
-    var optionCount = {};
-    addQuestion();
-    addOption();
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/modernizr-2.6.2.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.js"></script>
 
-    $('#add-question-btn').click(function () {
-        ++questionCount;
-        addQuestion();
-
-        $('.remove-field').click(function () {
-            questionCount--;
-            $(this).closest('div').remove();
-        });
-    });
-
-
-    function addQuestion() {
-        $('.questiontype').on('change', function () {
-            $('.question-holder').append(
-                    '<div class="row">' +
-                    '<div class="col-sm-12 col-md-12">' +
-                    '<input class="form-control" type="text" id="answer0" name="answer0" placeholder="Option 0">' +
-                    '</div>' +
-                    '</div>'
-            );
-        });
-
-        $('#question-holder').append(
-                '<div id="' + questionCount + '">' +
-                    '<a class="remove-field">Remove Question</a>' +
-                    '<div class="form-group"' +
-                        '<h4>Question</h4>' +
-                    '</div>' +
-                    '<div class="form-group col-sm-12 col-md-12">' +
-                        '<input class="form-control" type="text" name="questiontitle' + questionCount + '" placeholder="Question Title">' +
-                            '<select class="form-control questiontype' + questionCount + '" name="questiontype' + questionCount + '">' +
-                                '<option value=" " disabled selected>Question Type' + '</option>' +
-                                '<option value="checkbox">Checkbox</option>' +
-                                '<option value="choice">Choice</option>' +
-                                '<option value="scale">Scale</option>' +
-                                '<option value="section">Section</option>' +
-                            '</select>' +
-                        '<textarea class="form-control" name="answers' + questionCount + '" placeholder="Separate answers with a new line"/>' +
-                    '</div>' +
-                '</div>'
-        );
-    }
-
-    $('#add-option-btn').click(function () {
-        ++optionCount;
-        addOption();
-        console.log(optionCount);
-        $('.remove-option').click(function () {
-            --optionCount;
-            $(this).closest('div').remove();
-        });
-
-    });
-
-
-    function addOption() {
-        $('.optiontype').on('change', function () {
-            $('.option-holder').append(
-                    '<div class="row">' +
-                    '<input class="form-control" type="text" id="option" name="option" placeholder="Option">' +
-                    '</div>' +
-                    '</div>'
-            );
-        });
-
-        $('#option-holder').append(
-                '<div class="row">' +
-                '<input class="form-control" type="text" id="option' + optionCount[questionCount] + '" name="option' + optionCount + '" placeholder="Option">' +
-                '<a class="remove-option">Remove Option</a>' +
-                '</div>'
-        );
-    }
-</script>
+<script type="text/javascript" src="/js/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="/js/custom.js"></script>
