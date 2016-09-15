@@ -59,7 +59,7 @@ var yAxis = d3.svg.axis()
       *
       * specifiing the area of x and y scales
       * */
-    xScale.domain(data.map(function (d) {return d.months;}));
+     xScale.domain(data.map(function (d) {return d.months;}));
      yScale.domain([0,d3.max(data, function (d) {return d.usr;}) ] );
      /**
       * drawing the bars in the bar graph
@@ -68,7 +68,7 @@ var yAxis = d3.svg.axis()
      svg.selectAll('rect').data(data).enter().append('rect').attr({
          'x': function (d) {return xScale(d.months);},
          'y': function (d) {return yScale(d.usr);},
-         'x': function (d) {return xScale(d.months);},
+         'width': xScale.rangeBand(),
          'height': function (d) {return height - yScale(d.usr);}
      });
      /**
