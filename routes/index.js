@@ -11,22 +11,23 @@ mongoose.createConnection('localhost:27017/neurobranch_db');
 var trialSchema = require('../models/Trials/trialSchema');
 var trialData = mongoose.model('Trials', trialSchema);
 var requestedCandidatesSchema = require('../models/Validation/requestedCandidateSchema');
+var researcherData = require('../models/Accounts/researcherAccountSchema');
 var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCandidatesSchema);
 
 var MAX_LENGTH = 300;
 
 //dashboard
 /*router.post('/reject_can/:id',function(req, res, next){
-    console.log("success");
-    var id = req.body.userid;
+ console.log("success");
+ var id = req.body.userid;
 
-    requestedCandidatesData.removeRequestedCandidate(req.params.userid , function (err, rej) {
-        if (err) throw err;
+ requestedCandidatesData.removeRequestedCandidate(req.params.userid , function (err, rej) {
+ if (err) throw err;
 
-    });
-    res.redirect('/users/trials/'+id);
+ });
+ res.redirect('/users/trials/'+id);
 
-});*/
+ });*/
 
 router.get('/users/dashboard', ensureAuthenticated, function (req, res) {
     generateDashboard(req.user.id, res);
@@ -39,11 +40,21 @@ router.get('/users/notifications', ensureAuthenticated, function (req, res) {
         });
 });
 router.get('/users/create-trial', ensureAuthenticated, function (req, res) {
-    res.render('create_trial',
-        {
-            user: req.user,
-            active_dash: "true"
-        });
+    researcherData.getResearcherById(req.params.id, function (err, isver) {
+        if (err) throw err;
+
+        console.log("1");
+        console.log(req.user);
+        console.log(req.user.isverified);
+
+        res.render('create_trial',
+            {
+
+                user: req.user,
+                active_dash: "true",
+                is_ver:req.user.isverified
+            });
+    });
 });
 router.get('/users/verify-candidates', ensureAuthenticated, function (req, res) {
 
