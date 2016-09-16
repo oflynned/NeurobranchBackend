@@ -10,6 +10,13 @@
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-selection.v1.js"></script>
+
+
+
         <!-- container for holding trial data -->
         <div id="dashboard-content-holder">
             <div class="row text-center">
@@ -76,59 +83,32 @@
                     {{/if}}
                 </div>
             </div>
+
             {{#if is_researcher}}
                 <div class="page-header">
                     <h3>Statistics</h3>
                 </div>
                 <div>
+                    <p>here everywhere
+                    </p>
 
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
-
-                    <!--a> style taken from d3 page</a-->
-                    <style>
-
-                        .chart div {
-                            font: 10px sans-serif;
-                            background-color: steelblue;
-                            text-align: right;
-                            padding: 3px;
-                            margin: 1px;
-                            color: white;
-                        }
-
-
-                    </style>
-                    <!--a> javascript script acting on graph</a-->
                     <script>
+                        var dataArray= [10, 20 , 40 , 420, 90]
+                        var canvas = d3.select("p")
+                                .append("svg")
+                                .attr("width",500)
+                                .attr("height", 500);
 
-                        var x = d3.scale.linear()
-                                .domain([0, d3.max(data)])
-                                .range([200, 420000]);
-
-                        d3.select(".chart")
-                                .selectAll("div")
-                                .data(data)
-                                .enter().append("div")
-                                .style("width", function(d) { return x(d) + "px"; })
-                                .text(function(d) { return d; });
+                        var bars = canvas.selectAll("rect")
+                                .data(dataArray)
+                                .enter()
+                                .append("rect")
+                                .attr("width", function(d){
+                                    return d;})
+                                .attr("height", 50)
+                                .attr("y",function(d,i){return i*100});
 
                     </script>
-
-                    <!--a> BAR chart displaying !!!!!!! , static though</a-->
-                    <div class="chart">
-                        <div style="width: 40px;">4</div>
-                        <div style="width: 80px;">8</div>
-                        <div style="width: 150px;">15</div>
-                        <div style="width: 160px;">16</div>
-                        <div style="width: 230px;">23</div>
-                        <div style="width: 420px;">42</div>
-
-                    </div>
-
-
-
-
-
 
 
                     {{#if statistics}}
