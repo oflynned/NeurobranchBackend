@@ -25,7 +25,8 @@ var trialSchema = mongoose.Schema({
     dateended: String,
     candidatequota: String,
     state: String,
-    researcherid: String
+    researcherid: String,
+    window: String
 });
 
 var trialData = module.exports = mongoose.model('Trials', trialSchema);
@@ -44,6 +45,10 @@ module.exports.createTrial = function (trialData, callback) {
 
 module.exports.getTrialById = function (id, callback) {
     trialData.findOne({_id: id}, callback);
+};
+
+module.exports.getTrialsByList = function(list, callback) {
+    trialData.find({id: {$in: [list]}}, callback);
 };
 
 module.exports.getTrialsByResearcherId = function (researcherid, callback) {
