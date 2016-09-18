@@ -9,13 +9,15 @@ var mongoose = require('mongoose');
 
 var eligibilitySchema = mongoose.Schema({
     trialid: String,
+    researcherid: String,
     eligibilitytype: String,
     title: String,
     passmark: String,
+    datecreated: String,
     answers: {}
 });
 
-var eligibility = module.exports = mongoose.model('eligibilitys', eligibilitySchema);
+var eligibility = module.exports = mongoose.model('Eligibility', eligibilitySchema);
 
 module.exports.getEligibility = function (callback) {
     eligibility.find(callback).sort({$natural:-1});

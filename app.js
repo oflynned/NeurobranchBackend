@@ -77,6 +77,7 @@ var exclusionSchema = require('./models/Trials/exclusionSchema');
 var inclusionSchema = require('./models/Trials/inclusionSchema');
 var requestedCandidatesSchema = require('./models/Validation/requestedCandidateSchema');
 var questionSchema = require('./models/Trials/questionSchema');
+var eligibilitySchema = require('./models/Trials/eligibilitySchema');
 var researcherAccountsSchema = require('./models/Accounts/researcherAccountSchema');
 var researcherSchema = require('./models/Trials/researcherSchema');
 var responseSchema = require('./models/Trials/responseSchema');
@@ -91,6 +92,7 @@ var conditionsData = mongoose.model('Conditions', conditionsSchema);
 //base interactions
 var trialData = mongoose.model('Trials', trialSchema);
 var questionData = mongoose.model('Questions', questionSchema);
+var eligibilityData = mongoose.model('Eligibility', eligibilitySchema);
 
 //meta data about trials
 var exclusionsData = mongoose.model('Exclusions', exclusionSchema);
@@ -488,20 +490,32 @@ app.post('/api/create-trial', function (req, res) {
         dateended: undefined,
         candidatequota: req.body.candidatequota,
         state: "created",
-        passmark: req.body.duration,
         researcherid: req.user.id
     };
+
+    var eligibilityParams = {
+        passmark: req.body.passmark,
+        datecreated: Date.now(),
+        researcherid: req.user.id
+
+    };
+
 
     trialData.createTrial(new trialData(trialParams), function () {
         trialData.getLatestTrialByResearcher(req.user.id, function (err, result) {
             var trialId = result[0]["_id"];
+            eligibilityParams['trialid'] = trialId;
+            eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
+
 
             for (var removeAttribute in trialParams) {
                 delete req.body[removeAttribute];
             }
 
             var i = 1;
+            var z=1;
             var questionParams = {};
+
             for (var att in req.body) {
                 if (att == 'questiontitle' + i) {
                     questionParams['title'] = req.body[att];
@@ -526,10 +540,43 @@ app.post('/api/create-trial', function (req, res) {
                     questionParams = {};
                 }
             }
+                /***
+                 *
+                 * @type {{}}
+                 * for future ? need to ask ed about implementation
+                 */
+            /*var eligibilityParams= {};
+            for (var att in req.body) {
+                if (att == 'questiontitle' + z) {
+                    questionParams['title'] = req.body[att];
+                }
+                if (att == 'questiontype' + z) {
+                    questionParams['questiontype'] = req.body[att];
+                }
+                if (att == 'answers' + z) {
+                    var tempSplit = req.body[att];
+                    tempSplit = tempSplit.replace("\r", "").split("\n");
+                    var questionAnswers = {};
+                    for (var j = 0; j < tempSplit.length; j++) {
+                        questionAnswers['answer' + j] = tempSplit[j];
+                    }
+
+                    eligibilityParams['trialid'] = trialId;
+                    eligibilityParams['answers'] = questionAnswers;
+                    eligibilityParams['passmark'] = "eligibility wokrs";
+                    eligibilityData.createEligibility(new eligibilityData(eligibilityParams));
+
+
+                    console.log(questionParams);
+                    z++;
+                    eligibilityParams = {};
+                }
+            }*/
+
+            });
         });
     });
-
-    res.redirect('/users/dashboard');
+        res.redirect('/users/dashboard');
 });
 app.get('/api/get-trials', function (req, res) {
     trialData.getTrials(function (err, result) {
