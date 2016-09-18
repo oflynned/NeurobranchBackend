@@ -276,6 +276,34 @@ app.post('/api/emailverify/:id', function (req, res) {
         res.redirect('/users/verified');
     });
 });
+/* buttons*/
+app.post('/api/activatetrial/:id', function (req, res) {
+    trialData.getTrialById(req.params.id, function (err, activate) {
+        if (err) throw err;
+        activate.state = "active";
+        activate.save();
+    });
+    res.redirect('/users/trials/' + req.params.id);
+});
+
+app.post('/api/publishtrial/:id', function (req, res) {
+    trialData.getTrialById(req.params.id, function (err, publishate) {
+        if (err) throw err;
+        publishate.state = "published";
+        publishate.save();
+    });
+    res.redirect('/users/trials/' + req.params.id);
+});
+
+app.post('/api/canceltrial/:id', function (req, res) {
+    trialData.getTrialById(req.params.id, function (err, cancelate) {
+        if (err) throw err;
+        cancelate.state = "canceled";
+        cancelate.save();
+    });
+    res.redirect('/users/trials/' + req.params.id);
+});
+/* end of buttons*/
 
 app.post('/forgot', function (req, res, next) {
     async.waterfall([
@@ -508,75 +536,75 @@ app.post('/api/create-trial', function (req, res) {
             eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
 
 
-            for (var removeAttribute in trialParams) {
-                delete req.body[removeAttribute];
-            }
-
-            var i = 1;
-            var z=1;
-            var questionParams = {};
-
-            for (var att in req.body) {
-                if (att == 'questiontitle' + i) {
-                    questionParams['title'] = req.body[att];
+                for (var removeAttribute in trialParams) {
+                    delete req.body[removeAttribute];
                 }
-                if (att == 'questiontype' + i) {
-                    questionParams['questiontype'] = req.body[att];
-                }
-                if (att == 'answers' + i) {
-                    var tempSplit = req.body[att];
-                    tempSplit = tempSplit.replace("\r", "").split("\n");
-                    var questionAnswers = {};
-                    for (var j = 0; j < tempSplit.length; j++) {
-                        questionAnswers['answer' + j] = tempSplit[j];
+
+                var i = 1;
+                var z = 1;
+                var questionParams = {};
+
+                for (var att in req.body) {
+                    if (att == 'questiontitle' + i) {
+                        questionParams['title'] = req.body[att];
                     }
+                    if (att == 'questiontype' + i) {
+                        questionParams['questiontype'] = req.body[att];
+                    }
+                    if (att == 'answers' + i) {
+                        var tempSplit = req.body[att];
+                        tempSplit = tempSplit.replace("\r", "").split("\n");
+                        var questionAnswers = {};
+                        for (var j = 0; j < tempSplit.length; j++) {
+                            questionAnswers['answer' + j] = tempSplit[j];
+                        }
 
-                    questionParams['trialid'] = trialId;
-                    questionParams['answers'] = questionAnswers;
-                    questionData.createQuestion(new questionData(questionParams));
+                        questionParams['trialid'] = trialId;
+                        questionParams['answers'] = questionAnswers;
+                        questionData.createQuestion(new questionData(questionParams));
 
-                    console.log(questionParams);
-                    i++;
-                    questionParams = {};
+                        console.log(questionParams);
+                        i++;
+                        questionParams = {};
+                    }
                 }
-            }
                 /***
                  *
                  * @type {{}}
                  * for future ? need to ask ed about implementation
                  */
-            /*var eligibilityParams= {};
-            for (var att in req.body) {
-                if (att == 'questiontitle' + z) {
-                    questionParams['title'] = req.body[att];
-                }
-                if (att == 'questiontype' + z) {
-                    questionParams['questiontype'] = req.body[att];
-                }
-                if (att == 'answers' + z) {
-                    var tempSplit = req.body[att];
-                    tempSplit = tempSplit.replace("\r", "").split("\n");
-                    var questionAnswers = {};
-                    for (var j = 0; j < tempSplit.length; j++) {
-                        questionAnswers['answer' + j] = tempSplit[j];
-                    }
+                /*var eligibilityParams= {};
+                 for (var att in req.body) {
+                 if (att == 'questiontitle' + z) {
+                 questionParams['title'] = req.body[att];
+                 }
+                 if (att == 'questiontype' + z) {
+                 questionParams['questiontype'] = req.body[att];
+                 }
+                 if (att == 'answers' + z) {
+                 var tempSplit = req.body[att];
+                 tempSplit = tempSplit.replace("\r", "").split("\n");
+                 var questionAnswers = {};
+                 for (var j = 0; j < tempSplit.length; j++) {
+                 questionAnswers['answer' + j] = tempSplit[j];
+                 }
 
-                    eligibilityParams['trialid'] = trialId;
-                    eligibilityParams['answers'] = questionAnswers;
-                    eligibilityParams['passmark'] = "eligibility wokrs";
-                    eligibilityData.createEligibility(new eligibilityData(eligibilityParams));
+                 eligibilityParams['trialid'] = trialId;
+                 eligibilityParams['answers'] = questionAnswers;
+                 eligibilityParams['passmark'] = "eligibility wokrs";
+                 eligibilityData.createEligibility(new eligibilityData(eligibilityParams));
 
 
-                    console.log(questionParams);
-                    z++;
-                    eligibilityParams = {};
-                }
-            }*/
+                 console.log(questionParams);
+                 z++;
+                 eligibilityParams = {};
+                 }
+                 }*/
 
             });
         });
     });
-        res.redirect('/users/dashboard');
+    res.redirect('/users/dashboard');
 });
 app.get('/api/get-trials', function (req, res) {
     trialData.getTrials(function (err, result) {
