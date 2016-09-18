@@ -47,6 +47,10 @@ module.exports.getTrialById = function (id, callback) {
     trialData.findOne({_id: id}, callback);
 };
 
+module.exports.getTrialsByList = function(list, callback) {
+    trialData.find({id: {$in: [list]}}, callback);
+};
+
 module.exports.getTrialsByResearcherId = function (researcherid, callback) {
     trialData.find({researcherid: researcherid}, callback).sort({$natural:-1});
 };

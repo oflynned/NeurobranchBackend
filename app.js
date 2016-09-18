@@ -148,6 +148,20 @@ app.get('/api/verify-candidate/:id', function (req, res) {
     });
     res.redirect('/users/verified');
 });
+app.get('/api/get-candidate-subscriptions/:id', function (req, res) {
+    candidateAccount.getCandidateById(req.params.id, function (err, result) {
+        res.json(result.subscribed);
+    })
+});
+
+app.get('/api/get-candidate-trials/:id', function (req, res) {
+    candidateAccount.getCandidateById(req.params.id, function (err, result) {
+        var trials = result.subscribed;
+        trialData.getTrialsByList(trials.trialid, function (err, result) {
+            res.json(result);
+        })
+    });
+});
 
 //email verification
 app.post('/send', function (req, res) {
@@ -804,7 +818,7 @@ app.post('/api/create-verified-candidate/trialid/:trialid/candidateid/:userid', 
             trialid: req.params.trialid,
             userid: req.params.userid
         };
-        
+
         verifiedCandidatesData.create(new verifiedCandidatesData(candidateData, function (err) {
             if (err) throw err;
         }));
