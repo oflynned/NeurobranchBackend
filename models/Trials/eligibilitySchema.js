@@ -11,6 +11,7 @@ var eligibilitySchema = mongoose.Schema({
     trialid: String,
     eligibilitytype: String,
     title: String,
+    passmark: String,
     answers: {}
 });
 

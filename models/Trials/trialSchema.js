@@ -26,6 +26,7 @@ var trialSchema = mongoose.Schema({
     candidatequota: String,
     state: String,
     researcherid: String,
+    passmark: String,
     window: String
 });
 

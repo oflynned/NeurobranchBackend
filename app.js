@@ -488,6 +488,7 @@ app.post('/api/create-trial', function (req, res) {
         dateended: undefined,
         candidatequota: req.body.candidatequota,
         state: "created",
+        passmark: req.body.duration,
         researcherid: req.user.id
     };
 
@@ -519,6 +520,7 @@ app.post('/api/create-trial', function (req, res) {
                     questionParams['trialid'] = trialId;
                     questionParams['answers'] = questionAnswers;
                     questionData.createQuestion(new questionData(questionParams));
+
                     console.log(questionParams);
                     i++;
                     questionParams = {};
