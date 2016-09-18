@@ -1,18 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Survey</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/jquery-ui.css" rel="stylesheet" type="text/css" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <link href="css/chosen.min.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
+
 <div class="container">
   <div class="panel">
     <div class="panel-body">
-      <form class="form-horizontal" id="form_main">
+      <div class="form-horizontal" id="form_main">
         <fieldset>
           
           <!-- Form Name -->
@@ -21,25 +18,25 @@
           <!-- Text input-->
           <div class="form-group">
             <label class="control-label" for="Title">Title</label>
-              <input id="Title" name="Title" type="text" placeholder="Enter Title for Questionaire" class="form-control input-md" required="">
+              <input id="title" name="title" type="text" placeholder="Enter Title for Questionaire" class="form-control input-md" required="">
           </div>
           
           <!-- Text input-->
           <div class="form-group">
             <label class="control-label" for="txtbriefdesc">Brief Description</label>
-              <input id="txtbriefdesc" name="txtbriefdesc" type="text" placeholder="Enter Brief Description Here" class="form-control input-md" required="">
+              <input id="briefdescription" name="briefdescription" type="text" placeholder="Enter Brief Description Here" class="form-control input-md" required="">
             </div>
           
           <!-- Textarea -->
           <div class="form-group">
             <label class="control-label" for="txtlongdesc">Long Description</label>
-              <textarea class="form-control" id="txtlongdesc" name="txtlongdesc"></textarea>
+              <textarea class="form-control" id="detaileddescription" name="detaileddescription"></textarea>
           </div>
           
           <!-- Button Drop Down -->
           <div class="form-group">
             <label class=" control-label" for="qtype">Questionnaire Type</label>
-              <select name="qtype" class="form-control">
+              <select name="trialtype" id="trialtype" class="form-control" >
                 <option>Type1</option>
                 <option>Type2</option>
                 <option>Type3</option>
@@ -49,11 +46,11 @@
           </div>
           <div class="form-group">
             <label class="control-label" for="qtags"> Quota</label>
-              <input id="qqouta" name="qqouta" type="number" placeholder="Questionnaire Quota" min="0" max="10" class="form-control input-md" required="" autocomplete="off">
+              <input id="candidatequota" name="candidatequota" type="number" placeholder="Questionnaire Quota" min="0" max="10" class="form-control input-md" required="" autocomplete="off">
            </div>
           <div class="form-group">
             <label class="control-label" for="qtags"> Tags</label>
-             <select class="tags form-control" name="tags" multiple="multiple">
+             <select class="tags form-control" name="condition" id="condition" multiple="multiple">
              <option>tag1</option>
              <option>tag2</option>
              <option>tag3</option>
@@ -64,13 +61,13 @@
           <!-- Textarea -->
           <div class="form-group">
             <label class=" control-label" for="qdesc2">Second Description</label>
-              <textarea class="form-control" id="qdesc2" name="qdesc2"></textarea>
+              <textarea class="form-control" id="waiverform" name="waiverform"></textarea>
           </div>
           
           <!-- Text input-->
           <div class="form-group">
             <label class=" control-label" for="qduration">Duration</label>
-              <input id="qduration" name="qduration" type="text" placeholder="Questionnaire Duration" class="form-control input-md" required="">
+              <input id="duration" name="duration" type="text" placeholder="Questionnaire Duration" class="form-control input-md" required="">
           </div>
           
           <!-- Multiple Checkboxes (inline) -->
@@ -81,8 +78,8 @@
                 Yes </label>
           </div>
           </fieldset>
-          </form>
-      <form class="form-horizontal" id="form_main2">
+          </div>
+      <div class="form-horizontal" id="form_main2">
         <fieldset>
         <div id="e-questionlist">
           <div class="form-group">
@@ -113,11 +110,11 @@
           </div>
          
         </fieldset>
-        </form>
+        </div>
       
       
       
-      <form class="form-horizontal" id="form_main2">
+      <div class="form-horizontal" id="form_main2">
         <fieldset>
           
           <div id="questionlist">
@@ -154,12 +151,11 @@
           </div>
           
         </fieldset>
-      </form>
+      </div>
     </div>
   </div>
 </div>
 
-</body>
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/modernizr-2.6.2.min.js"></script>
@@ -167,4 +163,4 @@
 
 <script type="text/javascript" src="js/chosen.jquery.min.js"></script>
 <script type="text/javascript" src="js/custom.js"></script>
-</html>
+
