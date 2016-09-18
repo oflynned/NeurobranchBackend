@@ -25,7 +25,8 @@ var trialSchema = mongoose.Schema({
     dateended: String,
     candidatequota: String,
     state: String,
-    researcherid: String
+    researcherid: String,
+    window: String
 });
 
 var trialData = module.exports = mongoose.model('Trials', trialSchema);

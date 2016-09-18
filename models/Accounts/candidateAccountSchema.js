@@ -25,17 +25,19 @@ var candidateAccountSchema = mongoose.Schema({
     trialverified: {
         type: String,
         safe: true
-    }
+    },
+    //contains trial ids for query on server
+    subscribed: []
 });
 
 var candidate = module.exports = mongoose.model('CandidateAccounts', candidateAccountSchema);
 
 module.exports.getCandidatesWithLimit = function (limit, callback) {
-    candidate.find(callback).skip(candidate - limit).sort({$natural:-1}).limit(limit);
+    candidate.find(callback).skip(candidate - limit).sort({$natural: -1}).limit(limit);
 };
 
 module.exports.getCandidates = function (callback) {
-    candidate.find(callback).sort({$natural:-1});
+    candidate.find(callback).sort({$natural: -1});
 };
 
 module.exports.createCandidate = function (newCandidate, callback) {
@@ -45,6 +47,14 @@ module.exports.createCandidate = function (newCandidate, callback) {
             newCandidate.save(callback);
         });
     });
+};
+
+module.exports.subscribeCandidate = function (candidateid, trialid, callback) {
+    candidate.findOneAndUpdate(
+        {_id: candidateid},
+        {$push: {"subscribed": {trialid: trialid}}},
+        {safe: true, upsert: true, new: true},
+        callback);
 };
 
 module.exports.getCandidateById = function (id, callback) {

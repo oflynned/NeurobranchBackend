@@ -65,7 +65,7 @@ app.use(function (req, res, next) {
 });
 
 var host = "localhost:3000";
-app.use(bodyParser.urlencoded({"extended" : false}));
+app.use(bodyParser.urlencoded({"extended": false}));
 
 app.get('/', function (req, res) {
     res.render('mainpage');
@@ -150,61 +150,64 @@ app.get('/api/verify-candidate/:id', function (req, res) {
 });
 
 //email verification
-app.post('/send',function(req,res) {
+app.post('/send', function (req, res) {
     console.log('email--->' + req.body.to);
-    req.body["email"]=req.body.to;
+    req.body["email"] = req.body.to;
     req.body["isverified"] = "false";
-    researcherAccount.createResearcher(new researcherAccount(req.body),function(err ,reresult)
-        {
-            console.log("*****");
-            console.log(reresult.id);
-            console.log("*****");
+    researcherAccount.createResearcher(new researcherAccount(req.body), function (err, reresult) {
+        console.log("*****");
+        console.log(reresult.id);
+        console.log("*****");
 
-            async.waterfall([
-                function(callback) {
-                    redisClient.exists(req.body.to,function(err,reply) {
-                        if(err) {return callback(true,"Error in redis");}
-                        if(reply === 1) {return callback(true,"Email already requested");}
-                        callback(null);
-                    });
-                },
-                function(callback) {
-                    "use strict";
-                    /*let rand=Math.floor((Math.random() * 100) + 54);*/
-                    let rand=reresult.id;
-                    let encodedMail = new Buffer(req.body.to).toString('base64');
-                    let link="http://"+req.get('host')+"/verify?mail="+encodedMail+"&id="+rand;
-                    let mailOptions={
-                        from : 'teztneuro@gmail.com',
-                        to : req.body.to,
-                        subject : "Please confirm your Email account",
-                        html : "Hello "+ req.body.forename + ",<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
-                    };
-                    callback(null,mailOptions,rand);
-                },
-                function(mailData,secretKey,callback) {
-                    smtpTransport.sendMail(mailData, function(error, response){
-                        if(error){
-                            console.log(error);
-                            return callback(true,"Error in sending email");
-                        }
-                        console.log("Message sent: " + JSON.stringify(response));
-                        redisClient.set(req.body.to,secretKey);
-                        redisClient.expire(req.body.to,600); // expiry for 10 minutes.
-                        callback(null,"Email sent Successfully");
-                    });
-                }
-            ],function(err,data) {
-                console.log(err,data);
-                res.json({error : err === null ? false : true, data : data});
-            });
-
+        async.waterfall([
+            function (callback) {
+                redisClient.exists(req.body.to, function (err, reply) {
+                    if (err) {
+                        return callback(true, "Error in redis");
+                    }
+                    if (reply === 1) {
+                        return callback(true, "Email already requested");
+                    }
+                    callback(null);
+                });
+            },
+            function (callback) {
+                "use strict";
+                /*let rand=Math.floor((Math.random() * 100) + 54);*/
+                let rand = reresult.id;
+                let encodedMail = new Buffer(req.body.to).toString('base64');
+                let link = "http://" + req.get('host') + "/verify?mail=" + encodedMail + "&id=" + rand;
+                let mailOptions = {
+                    from: 'teztneuro@gmail.com',
+                    to: req.body.to,
+                    subject: "Please confirm your Email account",
+                    html: "Hello " + req.body.forename + ",<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
+                };
+                callback(null, mailOptions, rand);
+            },
+            function (mailData, secretKey, callback) {
+                smtpTransport.sendMail(mailData, function (error, response) {
+                    if (error) {
+                        console.log(error);
+                        return callback(true, "Error in sending email");
+                    }
+                    console.log("Message sent: " + JSON.stringify(response));
+                    redisClient.set(req.body.to, secretKey);
+                    redisClient.expire(req.body.to, 600); // expiry for 10 minutes.
+                    callback(null, "Email sent Successfully");
+                });
+            }
+        ], function (err, data) {
+            console.log(err, data);
+            res.json({error: err === null ? false : true, data: data});
         });
-});
-app.get('/verify',function(req,res) {
-    console.log(req.protocol+":/"+req.get('host'));
 
-    if((req.protocol+"://"+req.get('host')) === ("http://"+host)) {
+    });
+});
+app.get('/verify', function (req, res) {
+    console.log(req.protocol + ":/" + req.get('host'));
+
+    if ((req.protocol + "://" + req.get('host')) === ("http://" + host)) {
         console.log("Domain is matched. Information is from Authentic email");
         researcherAccount.getResearcherById(req.query.id, function (err, reverificate) {
             reverificate.isverified = "true";
@@ -249,29 +252,12 @@ app.get('/verify',function(req,res) {
 
 
 app.post('/api/emailverify/:id', function (req, res) {
-    researcherData.verifyResearcher(req.params.id,  function(err) {
-        if(err) throw err;
+    researcherData.verifyResearcher(req.params.id, function (err) {
+        if (err) throw err;
         var rData = {
-            isverified:"true"
+            isverified: "true"
         };
         res.redirect('/users/verified');
-    });
-});
-
-
-app.post('/api/create-verified-candidate/trialid/:trialid/candidateid/:userid', function (req, res) {
-    requestedCandidatesData.removeRequestedCandidate(req.params.trialid, req.params.userid, function(err) {
-        if(err) throw err;
-        var candidateData = {
-            trialid: req.params.trialid,
-            userid: req.params.userid
-        };
-
-        res.redirect('/users/trials/' + req.params.trialid);
-        verifiedCandidatesData.create(new verifiedCandidatesData(candidateData, function(err) {
-            if(err) throw err;
-            res.redirect('/users/trials/' + req.params.trialid);
-        }));
     });
 });
 
@@ -321,7 +307,10 @@ app.post('/forgot', function (req, res, next) {
     });
 });
 app.get('/reset/:token', function (req, res) {
-    researcherAccount.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function (err, user) {
+    researcherAccount.findOne({
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: {$gt: Date.now()}
+    }, function (err, user) {
         if (!user) {
             req.flash('error', 'Password reset token is invalid or has expired.');
             return res.redirect('/help');
@@ -347,13 +336,13 @@ app.post('/reset/:token', function (req, res) {
                 user.resetPasswordToken = undefined;
                 user.resetPasswordExpires = undefined;
 
-                bcrypt.genSalt(10 , function (err ,salt) {
+                bcrypt.genSalt(10, function (err, salt) {
                     bcrypt.hash(user.password, salt, function (err, hash) {
-                        user.password =hash;
+                        user.password = hash;
                         console.log(user.password);
 
                         user.save(function (err) {
-                            if(err) throw err;
+                            if (err) throw err;
                             req.logIn(user, function (err) {
                                 done(err, user);
                             });
@@ -368,8 +357,8 @@ app.post('/reset/:token', function (req, res) {
                 to: user.email,
                 from: 'teztneuro@gmail.com',
                 subject: 'Your password has been changed',
-                text: 'Hello '+user.forename+ ','+'\n\n' +
-                'This is a confirmation that the password for your account ' + user.email +' has just been changed to' + user.password + '\n'
+                text: 'Hello ' + user.forename + ',' + '\n\n' +
+                'This is a confirmation that the password for your account ' + user.email + ' has just been changed to' + user.password + '\n'
             };
             smtpTransport.sendMail(mailOptions, function (err) {
                 req.flash('success', 'Success! Your password has been changed.');
@@ -488,7 +477,7 @@ app.post('/api/create-trial', function (req, res) {
         researcherid: req.user.id
     };
 
-    trialData.createTrial(new trialData(trialParams), function() {
+    trialData.createTrial(new trialData(trialParams), function () {
         trialData.getLatestTrialByResearcher(req.user.id, function (err, result) {
             var trialId = result[0]["_id"];
 
@@ -496,20 +485,20 @@ app.post('/api/create-trial', function (req, res) {
                 delete req.body[removeAttribute];
             }
 
-            var i=1;
-            var questionParams= {};
-            for(var att in req.body) {
-                if(att == 'questiontitle'+i) {
+            var i = 1;
+            var questionParams = {};
+            for (var att in req.body) {
+                if (att == 'questiontitle' + i) {
                     questionParams['title'] = req.body[att];
                 }
-                if(att == 'questiontype'+i) {
+                if (att == 'questiontype' + i) {
                     questionParams['questiontype'] = req.body[att];
                 }
-                if(att == 'answers'+i) {
+                if (att == 'answers' + i) {
                     var tempSplit = req.body[att];
                     tempSplit = tempSplit.replace("\r", "").split("\n");
                     var questionAnswers = {};
-                    for(var j=0; j<tempSplit.length; j++) {
+                    for (var j = 0; j < tempSplit.length; j++) {
                         questionAnswers['answer' + j] = tempSplit[j];
                     }
 
@@ -542,20 +531,20 @@ app.delete('/api/delete-trial/:trialid', function (req, res) {
     //TODO
 });
 
-app.post('/verify_can/:id',function(req, res){
+app.post('/verify_can/:id', function (req, res) {
 
 
-    res.redirect('/users/trials/'+id);
+    res.redirect('/users/trials/' + id);
 });
 
-app.post('/reject_can/:id',function(req, res, next){
+app.post('/reject_can/:id', function (req, res, next) {
     var id = req.body.userid;
 
-    requestedCandidatesData.removeRequestedCandidate(req.params.userid , function (err, rej) {
+    requestedCandidatesData.removeRequestedCandidate(req.params.userid, function (err, rej) {
         if (err) throw err;
 
     });
-    res.redirect('/users/trials/'+id);
+    res.redirect('/users/trials/' + id);
 
 });
 
@@ -800,20 +789,26 @@ app.get('/debug/edit-inclusions/:userid/:count', function (req, res) {
     res.redirect('/debug/get-inclusions');
 });
 
+app.get('/api/subscribe-user/trialid/:trialid/candidateid/:id', function (req, res) {
+    candidateAccount.subscribeCandidate(req.params.id, req.params.trialid, function (err) {
+        if (err) throw err;
+        res.redirect('/users/trials/' + req.params.trialid);
+    });
+});
+
 //verified candidate lists
 app.post('/api/create-verified-candidate/trialid/:trialid/candidateid/:userid', function (req, res) {
-    requestedCandidatesData.removeRequestedCandidate(req.params.trialid, req.params.userid, function(err) {
-        if(err) throw err;
+    requestedCandidatesData.removeRequestedCandidate(req.params.trialid, req.params.userid, function (err) {
+        if (err) throw err;
         var candidateData = {
             trialid: req.params.trialid,
             userid: req.params.userid
         };
-
-        res.redirect('/users/trials/' + req.params.trialid);
-        verifiedCandidatesData.create(new verifiedCandidatesData(candidateData, function(err) {
-            if(err) throw err;
-            res.redirect('/users/trials/' + req.params.trialid);
+        
+        verifiedCandidatesData.create(new verifiedCandidatesData(candidateData, function (err) {
+            if (err) throw err;
         }));
+        res.redirect('/api/subscribe-user/trialid/' + candidateData.trialid + '/candidateid/' + candidateData.userid);
     });
 });
 app.get('/api/get-verified-candidates', function (req, res) {
@@ -834,8 +829,11 @@ app.get('/api/get-verified-candidates/listid/:_id', function (req, res) {
         res.json(result.users);
     });
 });
-app.delete('/api/delete-verified-candidates/:_id', function (req, res) {
-
+app.get('/api/delete-verified-candidates/trialid/:trialid/id/:_id', function (req, res) {
+    verifiedCandidatesData.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, result) {
+        if (err) throw err;
+        //fuck it -- don't need this rn -- was going to remove verified candidates from list for debug
+    })
 });
 
 //requested candidate lists
@@ -868,10 +866,10 @@ app.get('/api/get-requested-candidates/listid/:_id', function (req, res) {
     });
 });
 app.post('/api/remove-requested-candidate/trialid/:trialid/candidateid/:userid', function (req, res) {
-     requestedCandidatesData.removeRequestedCandidate(req.params.trialid, req.params.userid, function (err) {
-         if(err) throw err;
-         res.redirect('/users/trials/' + req.params.trialid);
-     })
+    requestedCandidatesData.removeRequestedCandidate(req.params.trialid, req.params.userid, function (err) {
+        if (err) throw err;
+        res.redirect('/users/trials/' + req.params.trialid);
+    })
 });
 app.get('/api/delete-requested-candidates/:_id', function (req, res) {
 
