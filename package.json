@@ -35,6 +35,7 @@
     "mongoose-query-random": "^1.0.1",
     "mongoose-simple-random": "^0.3.3",
     "multer": "^1.1.0",
+    "node-schedule": "^1.1.1",
     "nodemailer": "~2.5.0",
     "nodemailer-mandrill-transport": "^1.1.0",
     "nodemon": "^1.10.2",

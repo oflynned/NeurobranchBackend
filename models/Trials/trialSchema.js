@@ -36,12 +36,26 @@ module.exports.getTrials = function (callback) {
     trialData.find(callback).sort({$natural:-1});
 };
 
+module.exports.getTrialsByState = function (state, callback) {
+    trialData.find({state: state}, callback);
+};
+
 module.exports.getTrialsWithLimit = function (limit, callback) {
     trialData.find(callback).skip(trialData - limit).sort({$natural:-1}).limit(limit);
 };
 
 module.exports.createTrial = function (trialData, callback) {
     trialData.save(callback);
+};
+
+//update the id associated with the current day to also be stored in responses for reference
+module.exports.updateLastWindow = function (id, windowid, callback) {
+    trialData.findOneAndUpdate({_id: id, state: 'active'}, {lastwindow: windowid}, null, callback);
+};
+
+//update the last day of the window at 00:00 by checking a change in the day
+module.exports.updateCurrentDuration = function (id, newTime, callback) {
+    trialData.findOneAndUpdate({_id: id, state: 'active'}, {currentduration: newTime}, null, callback);
 };
 
 module.exports.deleteTrial = function (id, callback) {
@@ -57,7 +71,7 @@ module.exports.getTrialsByList = function(list, callback) {
 };
 
 module.exports.getTrialsByExcluded = function (list, callback) {
-    trialData.find({_id: {$nin: list}}, callback).sort({$natural:-1});
+    trialData.find({_id: {$nin: list}, state: 'created'}, callback).sort({$natural:-1});
 };
 
 module.exports.getTrialsByResearcherId = function (researcherid, callback) {

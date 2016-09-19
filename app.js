@@ -15,7 +15,8 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");
 var redis = require('redis');
-var redisClient = redis.createClient(); // default setting.
+var redisClient = redis.createClient();
+var schedule = require('node-schedule');
 
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
@@ -158,12 +159,12 @@ app.get('/api/get-candidate-subscriptions/:id', function (req, res) {
 
 app.get('/api/get-candidate-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
-        var trials = result.subscribed.reduce(function(keys, element){
+        var trials = result.subscribed.reduce(function (keys, element) {
             for (var key in element) {
                 keys.push(element[key]);
             }
             return keys;
-        },[]);
+        }, []);
 
         trialData.getTrialsByList(trials, function (err, result) {
             res.json(result);
@@ -172,17 +173,18 @@ app.get('/api/get-candidate-trials/:id', function (req, res) {
 });
 app.get('/api/get-candidate-excluded-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
-        var trials = result.subscribed.reduce(function(keys, element){
+        var trials = result.subscribed.reduce(function (keys, element) {
             for (var key in element) {
                 keys.push(element[key]);
             }
             return keys;
-        },[]);
+        }, []);
         if (trials.length == 0) {
             trialData.getTrials(function (err, trials) {
                 res.json(trials);
             });
-        } else {trialData.getTrialsByExcluded(trials, function (err, trials) {
+        } else {
+            trialData.getTrialsByExcluded(trials, function (err, trials) {
                 if (err) throw err;
                 res.json(trials);
             });
@@ -197,47 +199,47 @@ app.post('/send', function (req, res) {
     req.body["isverified"] = "false";
     researcherAccount.createResearcher(new researcherAccount(req.body), function (err, reresult) {
         /*async.waterfall([
-            /*function (callback) {
->>>>>>> 4b54d8042471d76f2aac6ec6d9bc3a0a7191fa3c
-                redisClient.exists(req.body.to, function (err, reply) {
-                    if (err) {
-                        return callback(true, "Error in redis");
-                    }
-                    if (reply === 1) {
-                        return callback(true, "Email already requested");
-                    }
-                    callback(null);
-                });
-            },*/
-            /*function (callback) {
-                "use strict";
-                let rand = reresult.id;
-                let encodedMail = new Buffer(req.body.to).toString('base64');
-                let link = "http://" + req.get('host') + "/verify?mail=" + encodedMail + "&id=" + rand;
-                let mailOptions = {
-                    from: 'teztneuro@gmail.com',
-                    to: req.body.to,
-                    subject: "Please confirm your Email account",
-                    html: "Hello " + req.body.forename + ",<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
-                };
-                callback(null, mailOptions, rand);
-            },*/
-           /* function (mailData, secretKey, callback) {
-                smtpTransport.sendMail(mailData, function (error, response) {
-                    if (error) {
-                        console.log(error);
-                        return callback(true, "Error in sending email");
-                    }
-                    console.log("Message sent: " + JSON.stringify(response));
-                    redisClient.set(req.body.to, secretKey);
-                    redisClient.expire(req.body.to, 600); // expiry for 10 minutes.
-                    callback(null, "Email sent Successfully");
-                });
-            }*/
+         /*function (callback) {
+         >>>>>>> 4b54d8042471d76f2aac6ec6d9bc3a0a7191fa3c
+         redisClient.exists(req.body.to, function (err, reply) {
+         if (err) {
+         return callback(true, "Error in redis");
+         }
+         if (reply === 1) {
+         return callback(true, "Email already requested");
+         }
+         callback(null);
+         });
+         },*/
+        /*function (callback) {
+         "use strict";
+         let rand = reresult.id;
+         let encodedMail = new Buffer(req.body.to).toString('base64');
+         let link = "http://" + req.get('host') + "/verify?mail=" + encodedMail + "&id=" + rand;
+         let mailOptions = {
+         from: 'teztneuro@gmail.com',
+         to: req.body.to,
+         subject: "Please confirm your Email account",
+         html: "Hello " + req.body.forename + ",<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
+         };
+         callback(null, mailOptions, rand);
+         },*/
+        /* function (mailData, secretKey, callback) {
+         smtpTransport.sendMail(mailData, function (error, response) {
+         if (error) {
+         console.log(error);
+         return callback(true, "Error in sending email");
+         }
+         console.log("Message sent: " + JSON.stringify(response));
+         redisClient.set(req.body.to, secretKey);
+         redisClient.expire(req.body.to, 600); // expiry for 10 minutes.
+         callback(null, "Email sent Successfully");
+         });
+         }*/
         /*], function (err, data) {
-            console.log(err, data);
-            res.json({error: err !== null, data: data});
-        });*/
+         console.log(err, data);
+         res.json({error: err !== null, data: data});
+         });*/
 
     });
 });
@@ -296,16 +298,19 @@ app.post('/api/emailverify/:id', function (req, res) {
         res.redirect('/users/verified');
     });
 });
-
 app.post('/api/set-trial-state/id/:id/state/:state', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trial) {
         if (err) throw err;
         if (req.params.state == "created") {
             trial.state = "created";
+            trial.datecreated = Date.now();
         } else if (req.params.state == "active") {
             trial.state = "active";
-        } else if (req.params.state == "cancelled") {
-            trial.state = "cancelled";
+            trial.datestarted = Date.now();
+            trial.currentduration = Date.now();
+        } else if (req.params.state == "ended") {
+            trial.state = "ended";
+            trial.dateended = Date.now();
         }
         trial.save();
     });
@@ -525,7 +530,8 @@ app.post('/api/create-trial', function (req, res) {
         candidatequota: req.body.trial_candidatequota,
         state: "created",
         researcherid: req.user.id,
-        currentduration: 0
+        currentduration: 0,
+        lastwindow: 0
     };
     trialData.createTrial(new trialData(trialParams));
 
@@ -601,16 +607,8 @@ app.post('/api/delete-trial/:trialid', function (req, res) {
         res.redirect('/users/dashboard');
     });
 });
-app.post('/api/modify-trial-state/trialid/:trialid/state/:state', function (req, res) {
-    trialData.getTrialById(req.params.trialid, function (err) {
-        if (err) throw err;
-        res.redirect('/');
-    });
-});
 
 app.post('/verify_can/:id', function (req, res) {
-
-
     res.redirect('/users/trials/' + id);
 });
 app.post('/reject_can/:id', function (req, res, next) {
@@ -964,6 +962,74 @@ app.use('/', routes);
 app.use('/users', users);
 
 app.set('port', (process.env.PORT || Globals.PORT));
+
+app.get('/api/update-trials-service', function (req, res) {
+    trialData.getTrialsByState('active', function (err, trials) {
+        if (err) throw err;
+        for (var trial in trials) {
+            var currentTrial = parseInt(trials[trial]['currentduration'] / (1000*60));
+            var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
+            console.log(currentDay - currentTrial + " mins difference");
+
+            //every 5 mins
+            if (currentDay - currentTrial > 5) {
+                trialData.getTrialById(trials[trial]['id'], function (err, result) {
+                    result.currentduration = Date.now();
+                    var window = parseInt(result.lastwindow);
+                    window += 1;
+                    result.lastwindow = window;
+                    console.log(result.lastwindow + " " + result.duration);
+
+                    //check if window is now at end of trial duration
+                    if(parseInt(result.lastwindow) > parseInt(result.duration)) {
+                        result.state = "ended";
+                        result.dateended = Date.now();
+                    }
+
+                    result.save();
+                })
+            }
+        }
+        res.redirect('/');
+    });
+});
+
+//scheduling
+schedule.scheduleJob(new schedule.RecurrenceRule(), function() {
+    console.log('checking trials');
+    trialData.getTrialsByState('active', function (err, trials) {
+        if (err) throw err;
+        var trialsUpdated = 0;
+        for (var trial in trials) {
+            var currentTrial = parseInt(trials[trial]['currentduration'] / (1000 * 60));
+            var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
+
+            //update window per day
+            if (currentDay - currentTrial > 60 * 24) {
+                trialData.getTrialById(trials[trial]['id'], function (err, result) {
+                    result.currentduration = Date.now();
+                    var window = parseInt(result.lastwindow);
+                    window += 1;
+                    result.lastwindow = window;
+                    console.log(result.lastwindow + " " + result.duration);
+
+                    //check if window is now at end of trial duration
+                    if(parseInt(result.lastwindow) > parseInt(result.duration)) {
+                        result.state = "ended";
+                        result.dateended = Date.now();
+                    }
+
+                    result.save();
+                    trialsUpdated += 1;
+                });
+            }
+        }
+        console.log(trialsUpdated + " updated this schedule");
+    });
+});
+
 app.listen(app.get('port'), function () {
     console.log('Server started on port ' + app.get('port'));
 });
+
+

@@ -107,6 +107,9 @@ router.get('/trials/:trialid', function (req, res) {
                 verifiedCandidate.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, ver_candidates) {
                     if (err) throw err;
 
+                    trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
+                    trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
+
                     res.render('trial', {
                         trial: trial,
                         is_researcher: isResearcher,
@@ -115,9 +118,9 @@ router.get('/trials/:trialid', function (req, res) {
                         req_candidates: req_candidates,
                         ver_candidates: ver_candidates,
                         questions: questions,
-                        is_created: trial.state == "created" ? 'true' : null,
-                        is_active: trial.state == "active" ? 'true' : null,
-                        is_cancelled: trial.state == "cancelled" ? 'true' : null,
+                        is_created: trial.state == "created" ? true : null,
+                        is_active: trial.state == "active" ? true : null,
+                        is_cancelled: trial.state == "cancelled" ? true : null,
                         can_be_activated: trial.candidatequota >= ver_candidates.length ? true : null
                     });
                 });

@@ -11,12 +11,12 @@
         <!-- container for holding trial data -->
         <div id="dashboard-content-holder">
             <div class="row text-center">
+                <!--
                 <div class="col-md-6">
-                    <!-- images for the trial -->
                     <img src="{{multimedia}}">
-                </div>
+                </div> -->
                 <div class="col-md-6 text-left">
-                    <div><strong>Condition:</strong> {{trial.condition}}</div>
+                    <div><strong>Tags:</strong> {{#each trial.condition}}{{/each}}</div>
                     <div><strong>Type:</strong> {{trial.trialtype}}</div>
                     <div><strong>Institute:</strong> {{trial.institute}}</div>
                     <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
@@ -26,7 +26,8 @@
                     {{#if trial.dateended}}
                         <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
                     {{/if}}
-                    <br>
+                </div>
+                <div class="col-md-6 text-left">
                     <div><strong>State:</strong> {{trial.state}}</div>
                     <div><strong>Trial Duration:</strong> {{trial.duration}}</div>
                     <div><strong>Candidate Quota:</strong> {{trial.candidatequota}}</div>
@@ -39,7 +40,7 @@
                             <form id="form_verify_{{userid}}"
                                   action="/api/set-trial-state/id/{{trial._id}}/state/active"
                                   method="post">
-                                <button id="ver_{{userid}}" class="btn btn-success" disabled>
+                                <button id="ver_{{userid}}" class="btn btn-success">
                                     Activate Trial
                                 </button>
                             </form>
@@ -47,7 +48,7 @@
                             <form id="form_verify_{{userid}}"
                                   action="/api/set-trial-state/id/{{trial._id}}/state/active"
                                   method="post">
-                                <button id="ver_{{userid}}" class="btn btn-success">
+                                <button id="ver_{{userid}}" class="btn btn-success" disabled>
                                     Activate Trial
                                 </button>
                             </form>
@@ -95,6 +96,13 @@
                           method="post">
                         <button id="ver_{{userid}}" class="btn btn-danger">
                             Force Delete Trial
+                        </button>
+                    </form>
+                    <form id="form_verify_{{userid}}"
+                          action="/api/set-trial-state/id/{{trial._id}}/state/ended"
+                          method="post">
+                        <button id="ver_{{userid}}" class="btn btn-info">
+                            Force End Trial
                         </button>
                     </form>
                 </div>
