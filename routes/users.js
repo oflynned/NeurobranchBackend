@@ -121,7 +121,8 @@ router.get('/trials/:trialid', function (req, res) {
                         is_created: trial.state == "created" ? true : null,
                         is_active: trial.state == "active" ? true : null,
                         is_cancelled: trial.state == "cancelled" ? true : null,
-                        can_be_activated: trial.candidatequota >= ver_candidates.length ? true : null
+                        is_ended: trial.state == "ended" ? true : null,
+                        can_be_activated: parseInt(ver_candidates.length) >= parseInt(trial.candidatequota) ? true : null
                     });
                 });
             });

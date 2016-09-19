@@ -156,6 +156,12 @@ app.get('/api/get-candidate-subscriptions/:id', function (req, res) {
         res.json(result.subscribed);
     })
 });
+app.get('/api/can-candidate-respond/trialid/:trialid/userid/:userid', function (req, res) {
+    //get latest window for trial
+    //get last window id from past candidate responses already
+    //check if null if no responses so far
+
+});
 
 app.get('/api/get-candidate-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
@@ -967,7 +973,7 @@ app.get('/api/update-trials-service', function (req, res) {
     trialData.getTrialsByState('active', function (err, trials) {
         if (err) throw err;
         for (var trial in trials) {
-            var currentTrial = parseInt(trials[trial]['currentduration'] / (1000*60));
+            var currentTrial = parseInt(trials[trial]['currentduration'] / (1000 * 60));
             var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
             console.log(currentDay - currentTrial + " mins difference");
 
@@ -981,7 +987,7 @@ app.get('/api/update-trials-service', function (req, res) {
                     console.log(result.lastwindow + " " + result.duration);
 
                     //check if window is now at end of trial duration
-                    if(parseInt(result.lastwindow) > parseInt(result.duration)) {
+                    if (parseInt(result.lastwindow) > parseInt(result.duration)) {
                         result.state = "ended";
                         result.dateended = Date.now();
                     }
@@ -995,37 +1001,43 @@ app.get('/api/update-trials-service', function (req, res) {
 });
 
 //scheduling
-schedule.scheduleJob(new schedule.RecurrenceRule(), function() {
-    console.log('checking trials');
+var rule = new schedule.RecurrenceRule();
+rule.minute = new schedule.Range(0, 59, 1);
+
+schedule.scheduleJob(rule, function () {
+    console.log("invoking schedule");
     trialData.getTrialsByState('active', function (err, trials) {
         if (err) throw err;
-        var trialsUpdated = 0;
-        for (var trial in trials) {
-            var currentTrial = parseInt(trials[trial]['currentduration'] / (1000 * 60));
-            var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
+        if (trials.length == 0) {
+            console.log("No trials to be updated");
+        } else {
+            for (var trial in trials) {
+                var currentTrial = parseInt(trials[trial]['currentduration'] / (1000 * 60));
+                var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
 
-            //update window per day
-            if (currentDay - currentTrial > 60 * 24) {
-                trialData.getTrialById(trials[trial]['id'], function (err, result) {
-                    result.currentduration = Date.now();
-                    var window = parseInt(result.lastwindow);
-                    window += 1;
-                    result.lastwindow = window;
-                    console.log(result.lastwindow + " " + result.duration);
+                //update window per day
+                if (currentDay - currentTrial > 5) {
+                    trialData.getTrialById(trials[trial]['id'], function (err, result) {
+                        result.currentduration = Date.now();
+                        var window = parseInt(result.lastwindow);
+                        window += 1;
+                        result.lastwindow = window;
+                        console.log("Updating record");
 
-                    //check if window is now at end of trial duration
-                    if(parseInt(result.lastwindow) > parseInt(result.duration)) {
-                        result.state = "ended";
-                        result.dateended = Date.now();
-                    }
-
-                    result.save();
-                    trialsUpdated += 1;
-                });
+                        //check if window is now at end of trial duration
+                        if (parseInt(result.lastwindow) > parseInt(result.duration)) {
+                            result.state = "ended";
+                            result.dateended = Date.now();
+                            console.log("Ending trial");
+                        }
+                        result.save();
+                    });
+                } else {
+                    console.log("No update");
+                }
             }
         }
-        console.log(trialsUpdated + " updated this schedule");
-    });
+    })
 });
 
 app.listen(app.get('port'), function () {

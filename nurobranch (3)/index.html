@@ -1,159 +1,179 @@
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <title>Survey</title>
-<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link href="css/jquery-ui.css" rel="stylesheet" type="text/css" />
-<link href="css/style.css" rel="stylesheet" type="text/css" />
-<link href="css/chosen.min.css" rel="stylesheet" type="text/css" />
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<link href="css/style.css" rel="stylesheet" type="text/css"/>
+<link href="css/chosen.min.css" rel="stylesheet" type="text/css"/>
 
 <div class="container">
-  <div class="panel">
-    <div class="panel-body">
-      <div class="form-horizontal" id="form_main">
-        <div>
-          
-          <!-- Form Name -->
-          <legend>Questionnaire Details</legend>
-          
-          <!-- Text input-->
-          <div class="form-group">
-            <label class="control-label" for="Title">Title</label>
-              <input id="title" name="title" type="text" placeholder="Enter Title for Questionaire" class="form-control input-md" required="">
-          </div>
-          
-          <!-- Text input-->
-          <div class="form-group">
-            <label class="control-label" for="txtbriefdesc">Brief Description</label>
-              <input id="briefdescription" name="briefdescription" type="text" placeholder="Enter Brief Description Here" class="form-control input-md" required="">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="form-horizontal" id="form_main">
+                <div>
+
+                    <!-- Form Name -->
+                    <legend>Questionnaire Details</legend>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="Title">Title</label>
+                        <input id="title" name="title" type="text" placeholder="Enter Title for Questionaire"
+                               class="form-control input-md" required="">
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="txtbriefdesc">Brief Description</label>
+                        <input id="briefdescription" name="briefdescription" type="text"
+                               placeholder="Enter Brief Description Here" class="form-control input-md" required="">
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="control-label" for="txtlongdesc">Long Description</label>
+                        <textarea class="form-control" id="detaileddescription" name="detaileddescription"></textarea>
+                    </div>
+
+                    <!-- Button Drop Down -->
+                    <div class="form-group">
+                        <label class=" control-label" for="qtype">Questionnaire Type</label>
+                        <select name="trialtype" id="trialtype" class="form-control">
+                            <option>Type1</option>
+                            <option>Type2</option>
+                            <option>Type3</option>
+                            <option>Type4</option>
+                            <option>Type5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="qtags"> Quota</label>
+                        <input id="candidatequota" name="candidatequota" type="number" placeholder="Questionnaire Quota"
+                               min="0" max="10" class="form-control input-md" required="" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="qtags"> Tags</label>
+                        <select class="tags form-control" name="condition" id="condition" multiple="multiple">
+                            <option>tag1</option>
+                            <option>tag2</option>
+                            <option>tag3</option>
+                            <option>tag4</option>
+                        </select>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class=" control-label" for="qdesc2">Second Description</label>
+                        <textarea class="form-control" id="waiverform" name="waiverform"></textarea>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class=" control-label" for="qduration">Duration</label>
+                        <input id="duration" name="duration" type="text" placeholder="Questionnaire Duration"
+                               class="form-control input-md" required="">
+                    </div>
+
+                    <!-- Multiple Checkboxes (inline) -->
+                    <div class="form-group">
+                        <label class=" control-label" for="eligibiltyform">Eligiblity</label>
+                        <label class="checkbox-inline" for="eligibiltyform-0">
+                            <input type="checkbox" name="eligibiltyform" id="eligibiltyform" value="1">
+                            Yes </label>
+                    </div>
+                </div>
             </div>
-          
-          <!-- Textarea -->
-          <div class="form-group">
-            <label class="control-label" for="txtlongdesc">Long Description</label>
-              <textarea class="form-control" id="detaileddescription" name="detaileddescription"></textarea>
-          </div>
-          
-          <!-- Button Drop Down -->
-          <div class="form-group">
-            <label class=" control-label" for="qtype">Questionnaire Type</label>
-              <select name="trialtype" id="trialtype" class="form-control" >
-                <option>Type1</option>
-                <option>Type2</option>
-                <option>Type3</option>
-                <option>Type4</option>
-                <option>Type5</option>
-              </select>
-          </div>
-          <div class="form-group">
-            <label class="control-label" for="qtags"> Quota</label>
-              <input id="candidatequota" name="candidatequota" type="number" placeholder="Questionnaire Quota" min="0" max="10" class="form-control input-md" required="" autocomplete="off">
-           </div>
-          <div class="form-group">
-            <label class="control-label" for="qtags"> Tags</label>
-             <select class="tags form-control" name="condition" id="condition" multiple="multiple">
-             <option>tag1</option>
-             <option>tag2</option>
-             <option>tag3</option>
-             <option>tag4</option>
-             </select>
-          </div>
-          
-          <!-- Textarea -->
-          <div class="form-group">
-            <label class=" control-label" for="qdesc2">Second Description</label>
-              <textarea class="form-control" id="waiverform" name="waiverform"></textarea>
-          </div>
-          
-          <!-- Text input-->
-          <div class="form-group">
-            <label class=" control-label" for="qduration">Duration</label>
-              <input id="duration" name="duration" type="text" placeholder="Questionnaire Duration" class="form-control input-md" required="">
-          </div>
-          
-          <!-- Multiple Checkboxes (inline) -->
-          <div class="form-group">
-            <label class=" control-label" for="eligibiltyform">Eligiblity</label>
-              <label class="checkbox-inline" for="eligibiltyform-0">
-                <input type="checkbox" name="eligibiltyform" id="eligibiltyform" value="1">
-                Yes </label>
-          </div>
-          </div>
-          </div>
-      <div class="form-horizontal" id="form_main2">
-        <div>
-        <div id="e-questionlist">
-          <div class="form-group">
-            <label for="e-q1title" class="control-label">1. Eligibilty Question </label>
-            <input type="text" class="form-control col-md-4 qtitle" name="e-q1_title" placeholder="Enter Title" required>
-          </div>
-          <div class="form-group">
-            <label for="e-q1_type">Question Type</label>
-            <select  class="form-control e-qtype" name="e-q1_type">
-            <option data-cat="">Select Answer Type</option>
-              <option data-cat="choice">Checkbox</option>
-              <option data-cat="choice">Radio</option>
-              <option data-cat="">Text</option>
-              <option data-cat="">Scale</option>
-            </select>
-          </div>
-          <div class="form-group hide questions_answers">
-            <label for="e-no_of_options">No Of Answers</label>
-              <select  class="form-control e-no_of_options" name="e-q1_no_of_options" ><option value="0">Select no of Answers</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div> 
-          <div class="form-group hide e-answers">
-            <label>Answers</label>
-           <div class="col-lg-12 e-answers_content"></div>
-          </div>
-         </div>
-         
-          <div class="form-group">
-          <a href="#" id="e-add-more" class="btn btn-info">Add More</a><a href="#" id="e-btn-remove" class="btn btn-warning pull-right">Remove</a>
-          </div>
-         
-        </div>
-        </div>
-      
-      
-      
-      <div class="form-horizontal" id="form_main2">
-        <div>
-          
-          <div id="questionlist">
-          <div class="form-group">
-            <label for="q1title" class=" control-label">1. Question Title</label>
-            <input type="text" class="form-control col-md-4 qtitle" name="q1_title" placeholder="Enter Title" required>
-          </div>
-          <div class="form-group">
-            <label for="q1_type">Question Type</label>
-            <select  class="form-control qtype" name="q1_type">
-            <option data-cat="">Select Answer Type</option>
-              <option data-cat="choice">Checkbox</option>
-              <option data-cat="choice">Radio</option>
-              <option data-cat="">Text</option>
-              <option data-cat="">Scale</option>
-            </select>
-          </div>
-          <div class="form-group hide questions_answers">
-            <label for="no_of_options">No Of Answers</label>
-              <select  class="form-control no_of_options" name="q1_no_of_options" ><option value="0">Select no of Answers</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div> 
-          <div class="form-group hide answers">
-            <label>Answers</label>
-           <div class="col-lg-12 answers_content"></div>
-          </div>
-         </div>
-         <div class="form-group">
-              <label class="" for="">
-                <input type="submit" name="btnsubmit" id="btnsubmit" class=" btn btn-primary" value="Save">
-              </label>
+            <div class="form-horizontal" id="form_main2">
+                <div>
+                    <div id="e-questionlist">
+                        <div class="form-group">
+                            <label for="e-q1title" class="control-label">1. Eligibilty Question </label>
+                            <input type="text" class="form-control col-md-4 qtitle" name="e-q1_title"
+                                   placeholder="Enter Title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="e-q1_type">Question Type</label>
+                            <select class="form-control e-qtype" name="e-q1_type">
+                                <option data-cat="">Select Answer Type</option>
+                                <option data-cat="choice">Checkbox</option>
+                                <option data-cat="choice">Radio</option>
+                                <option data-cat="">Text</option>
+                                <option data-cat="">Scale</option>
+                            </select>
+                        </div>
+                        <div class="form-group hide questions_answers">
+                            <label for="e-no_of_options">No Of Answers</label>
+                            <select class="form-control e-no_of_options" name="e-q1_no_of_options">
+                                <option value="0">Select no of Answers</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select></div>
+                        <div class="form-group hide e-answers">
+                            <label>Answers</label>
+                            <div class="col-lg-12 e-answers_content"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <a href="#" id="e-add-more" class="btn btn-info">Add More</a><a href="#" id="e-btn-remove"
+                                                                                        class="btn btn-warning pull-right">Remove</a>
+                    </div>
+
+                </div>
             </div>
-          <div class="form-group">
-          
-          <a href="#" id="add-more" class="btn btn-info">Add More</a><a href="#" id="btn-remove" class="btn btn-warning pull-right">Remove</a>
-          </div>
-          
+
+
+            <div class="form-horizontal" id="form_main2">
+                <div>
+
+                    <div id="questionlist">
+                        <div class="form-group">
+                            <label for="q1title" class=" control-label">1. Question Title</label>
+                            <input type="text" class="form-control col-md-4 qtitle" name="q1_title"
+                                   placeholder="Enter Title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="q1_type">Question Type</label>
+                            <select class="form-control qtype" name="q1_type">
+                                <option data-cat="">Select Answer Type</option>
+                                <option data-cat="choice">Checkbox</option>
+                                <option data-cat="choice">Radio</option>
+                                <option data-cat="">Text</option>
+                                <option data-cat="">Scale</option>
+                            </select>
+                        </div>
+                        <div class="form-group hide questions_answers">
+                            <label for="no_of_options">No Of Answers</label>
+                            <select class="form-control no_of_options" name="q1_no_of_options">
+                                <option value="0">Select no of Answers</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select></div>
+                        <div class="form-group hide answers">
+                            <label>Answers</label>
+                            <div class="col-lg-12 answers_content"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="" for="">
+                            <input type="submit" name="btnsubmit" id="btnsubmit" class=" btn btn-primary" value="Save">
+                        </label>
+                    </div>
+                    <div class="form-group">
+
+                        <a href="#" id="add-more" class="btn btn-info">Add More</a><a href="#" id="btn-remove"
+                                                                                      class="btn btn-warning pull-right">Remove</a>
+                    </div>
+
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>

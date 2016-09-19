@@ -1,11 +1,5 @@
 <!-- Page Content -->
 <div id="page-content-wrapper">
-    <link rel="stylesheet" type="text/css" href="/css/info.css">
-    <!--link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" /-->
-    <link href="/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
-    <!--link href="/css/style2.css" rel="stylesheet" type="text/css" /-->
-    <!--link href="/css/chosen.min.css" rel="stylesheet" type="text/css" /-->
-
     {{#if is_ver }}
         <div class="container-fluid content-main">
             <!--"/api/create-trial"-->
@@ -59,7 +53,7 @@
 
                 <div class="form-group">
                     <label class=" control-label" for="qtype">Trial Type</label>
-                    <select name="trial_trialtype" id="trialtype" class="form-control" >
+                    <select name="trial_trialtype" id="trialtype" class="form-control">
                         <option name="behavioural">Behavioural</option>
                         <option name="biomedical">Biomedical Device</option>
                         <option name="food">Food</option>
@@ -103,6 +97,7 @@
                         <input type="text" class="form-control col-md-4 qtitle" id="e-q1_title" name="e-q1_title"
                                placeholder="Enter Title" required>
                     </div>
+
                     <div class="form-group">
                         <label for="e-q1_type">Question Type</label>
                         <select class="form-control e-qtype" name="e-q1_type">
@@ -130,8 +125,8 @@
                 </div>
 
                 <div class="form-group">
-                    <a href="#" id="e-add-more" class="btn btn-info">Add More</a><a href="#" id="e-btn-remove"
-                                                                                    class="btn btn-warning pull-right">Remove</a>
+                    <a href="#" id="e-add-more" class="btn btn-info">Add More</a>
+                    <a href="#" id="e-btn-remove" class="btn btn-warning pull-right">Remove</a>
                 </div>
 
                 <div id="questionlist">
@@ -166,9 +161,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-
-                    <a href="#" id="add-more" class="btn btn-info">Add More</a><a href="#" id="btn-remove"
-                                                                                  class="btn btn-warning pull-right">Remove</a>
+                    <a href="#" id="add-more" class="btn btn-info">Add More</a>
+                    <a href="#" id="btn-remove" class="btn btn-warning pull-right">Remove</a>
                 </div>
                 <div class="row">
                     <div class="col-md-2 col-md-offset-5 center-text center-form">
@@ -179,7 +173,6 @@
                 </div>
             </form>
         </div>
-
     {{else}}
         <div>
             Your Profile is not verified, please
@@ -191,13 +184,3 @@
         </div>
     {{/if}}
 </div>
-
-<script src="https://code.jquery.com/jquery-3.1.0.min.js"
-        integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/js/modernizr-2.6.2.min.js"></script>
-<script type="text/javascript" src="/js/jquery-ui.js"></script>
-
-<script type="text/javascript" src="/js/chosen.jquery.min.js"></script>
-<script type="text/javascript" src="/js/custom.js"></script>
