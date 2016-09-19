@@ -35,15 +35,25 @@
                     <div>{{trial.briefdescription}}</div>
 
                     {{#if is_created}}
+                        {{#if can_be_activated}}
+                            <form id="form_verify_{{userid}}"
+                                  action="/api/set-trial-state/id/{{trial._id}}/state/active"
+                                  method="post">
+                                <button id="ver_{{userid}}" class="btn btn-success" disabled>
+                                    Activate Trial
+                                </button>
+                            </form>
+                        {{else}}
+                            <form id="form_verify_{{userid}}"
+                                  action="/api/set-trial-state/id/{{trial._id}}/state/active"
+                                  method="post">
+                                <button id="ver_{{userid}}" class="btn btn-success">
+                                    Activate Trial
+                                </button>
+                            </form>
+                        {{/if}}
                         <form id="form_verify_{{userid}}"
-                              action="/api/activatetrial/{{trial._id}}"
-                              method="post">
-                            <button id="ver_{{userid}}" class="btn btn-success">
-                                Activate Trial
-                            </button>
-                        </form>
-                        <form id="form_verify_{{userid}}"
-                              action="/api/canceltrial/{{trial._id}}"
+                              action="/api/delete-trial/{{trial._id}}"
                               method="post" disabled="">
                             <button id="ver_{{userid}}" class="btn btn-danger">
                                 Cancel Trial
@@ -58,17 +68,9 @@
                             </button>
                         </form>
                         <form id="form_verify_{{userid}}"
-                              action="/api/set-trial-state/id/{{trial._id}}/state/created"
+                              action="/api/delete-trial/{{trial._id}}"
                               method="post">
                             <button id="ver_{{userid}}" class="btn btn-danger">
-                                Cancel Trial
-                            </button>
-                        </form>
-                    {{else if is_cancelled}}
-                        <form id="form_verify_{{userid}}"
-                              action="/api/set-trial-state/id/{{trial._id}}/state/created"
-                              method="post">
-                            <button id="ver_{{userid}}" class="btn btn-danger" disabled>
                                 Cancel Trial
                             </button>
                         </form>
@@ -89,10 +91,10 @@
                         </button>
                     </form>
                     <form id="form_verify_{{userid}}"
-                          action="/api/set-trial-state/id/{{trial._id}}/state/cancelled"
+                          action="/api/delete-trial/{{trial._id}}"
                           method="post">
                         <button id="ver_{{userid}}" class="btn btn-danger">
-                            Force Cancelled Trial
+                            Force Delete Trial
                         </button>
                     </form>
                 </div>
@@ -241,7 +243,7 @@
                 </div>
                 {{#if is_researcher}}
                     {{#if req_candidates}}
-                        <ol>
+                        <ul>
                             {{#each req_candidates}}
                                 <div class="row">
                                     <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a>
@@ -262,7 +264,7 @@
                                     </li>
                                 </div>
                             {{/each}}
-                        </ol>
+                        </ul>
                     {{else}}
                         <div>
                             No candidates have currently requested to join this trial
@@ -279,11 +281,17 @@
                     <h3>Verified Candidates</h3>
                 </div>
                 {{#if is_researcher}}
-                    <ul>
-                        {{#each ver_candidates}}
-                            <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a></li>
-                        {{/each}}
-                    </ul>
+                    {{#if ver_candidates}}
+                        <ul>
+                            {{#each ver_candidates}}
+                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a></li>
+                            {{/each}}
+                        </ul>
+                    {{else}}
+                        <div>
+                            No candidates have currently been verified as candidates for this trial
+                        </div>
+                    {{/if}}
                 {{else}}
                     <div>
                         Please sign in as this researcher in order to see more details

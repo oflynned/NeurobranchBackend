@@ -2,19 +2,22 @@
  * Created by ed on 01/08/16.
  */
 /**
- * This scheama contains the specific metadata about the eligibility being asked
+ * This schema contains the specific metadata about the eligibility being asked
  */
 
 var mongoose = require('mongoose');
 
+var answerSchema = mongoose.Schema({
+    title: String,
+});
+
 var eligibilitySchema = mongoose.Schema({
     trialid: String,
+    candidateid: String,
     researcherid: String,
-    eligibilitytype: String,
-    title: String,
     passmark: String,
-    datecreated: String,
-    answers: {}
+    mark: String,
+    answers: []
 });
 
 var eligibility = module.exports = mongoose.model('Eligibility', eligibilitySchema);
@@ -35,10 +38,6 @@ module.exports.getEligibilityById = function (id, callback) {
     eligibility.find({_id: id}, callback);
 };
 
-module.exports.getEligibilityByTrialId = function (trialid, callback) {
-    eligibility.find({trialid: trialid}, callback);
-};
-
-module.exports.getEligibilityByAllParams = function (eligibilityid, trialid, callback) {
-    eligibility.find({trialid: trialid, _id: eligibilityid}, callback);
+module.exports.getEligibilityByTrialCandidate = function (trialid, candidateid, callback) {
+    eligibility.find({trialid: trialid, candidateid: candidateid}, callback);
 };

@@ -14,11 +14,10 @@ var trialSchema = mongoose.Schema({
     detaileddescription: String,
     trialtype: String,
     institute: String,
-    condition: String,
+    tags: String,
     duration: String,
     frequency: String,
     waiverform: String,
-    eligibilityform: String,
     datecreated: String,
     datepublished: String,
     datestarted: String,
@@ -27,7 +26,8 @@ var trialSchema = mongoose.Schema({
     state: String,
     researcherid: String,
     passmark: String,
-    currentduration: String
+    currentduration: String,
+    lastwindow: String
 });
 
 var trialData = module.exports = mongoose.model('Trials', trialSchema);
@@ -44,16 +44,20 @@ module.exports.createTrial = function (trialData, callback) {
     trialData.save(callback);
 };
 
+module.exports.deleteTrial = function (id, callback) {
+    trialData.findOneAndRemove({_id: id}, callback);
+};
+
 module.exports.getTrialById = function (id, callback) {
     trialData.findOne({_id: id}, callback);
 };
 
 module.exports.getTrialsByList = function(list, callback) {
-    trialData.find({id: {$in: [list]}}, callback);
+    trialData.find({_id: {$in: list}}, callback).sort({$natural:-1});
 };
 
 module.exports.getTrialsByExcluded = function (list, callback) {
-    trialData.find({id: {$nin: [list]}, state: 'created'}, callback);
+    trialData.find({_id: {$nin: list}}, callback).sort({$natural:-1});
 };
 
 module.exports.getTrialsByResearcherId = function (researcherid, callback) {

@@ -158,19 +158,36 @@ app.get('/api/get-candidate-subscriptions/:id', function (req, res) {
 
 app.get('/api/get-candidate-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
-        var trials = result.subscribed;
-        trialData.getTrialsByList(trials.trialid, function (err, result) {
+        var trials = result.subscribed.reduce(function(keys, element){
+            for (var key in element) {
+                keys.push(element[key]);
+            }
+            return keys;
+        },[]);
+
+        trialData.getTrialsByList(trials, function (err, result) {
             res.json(result);
         })
     });
 });
 app.get('/api/get-candidate-excluded-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
-        trialData.getTrialsByExcluded(result.subscribed.trialid, function (err, result) {
-            if (err) throw err;
-            res.json(result);
-        });
-    })
+        var trials = result.subscribed.reduce(function(keys, element){
+            for (var key in element) {
+                keys.push(element[key]);
+            }
+            return keys;
+        },[]);
+        if (trials.length == 0) {
+            trialData.getTrials(function (err, trials) {
+                res.json(trials);
+            });
+        } else {trialData.getTrialsByExcluded(trials, function (err, trials) {
+                if (err) throw err;
+                res.json(trials);
+            });
+        }
+    });
 });
 
 //email verification
@@ -179,10 +196,6 @@ app.post('/send', function (req, res) {
     req.body["email"] = req.body.to;
     req.body["isverified"] = "false";
     researcherAccount.createResearcher(new researcherAccount(req.body), function (err, reresult) {
-        console.log("*****");
-        console.log(reresult.id);
-        console.log("*****");
-
         async.waterfall([
             function (callback) {
                 redisClient.exists(req.body.to, function (err, reply) {
@@ -287,11 +300,11 @@ app.post('/api/emailverify/:id', function (req, res) {
 app.post('/api/set-trial-state/id/:id/state/:state', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trial) {
         if (err) throw err;
-        if(req.params.state == "created") {
+        if (req.params.state == "created") {
             trial.state = "created";
-        } else if(req.params.state == "active") {
+        } else if (req.params.state == "active") {
             trial.state = "active";
-        } else if(req.params.state == "cancelled") {
+        } else if (req.params.state == "cancelled") {
             trial.state = "cancelled";
         }
         trial.save();
@@ -489,116 +502,81 @@ app.get('/api/get-conditions/:userid', function (req, res) {
 
 //trials
 app.post('/api/create-trial', function (req, res) {
-    //sort into trial and qs
-    //log trial
-    //retrieve trial by search with latest id
-    //log q documents with this id as trialid
-    //to be implemented lol
-    //console.log(req.body);
+    //create trial
+    //retrieve trial
+    //create eligibility form
+    //create qs
+    console.log(req.body);
+    var tags = req.body.trial_tags;
 
     var trialParams = {
-        title: req.body.title,
-        briefdescription: req.body.briefdescription,
-        detaileddescription: req.body.detaileddescription,
-        trialtype: req.body.trialtype,
+        title: req.body.trial_title,
+        briefdescription: req.body.trial_briefdescription,
+        detaileddescription: req.body.trial_detaileddescription,
+        trialtype: req.body.trial_trialtype,
         institute: req.user.institute,
-        condition: req.body.condition,
-        duration: req.body.duration,
-        frequency: req.body.frequency,
-        waiverform: req.body.waiverform,
+        tags: tags,
+        duration: req.body.trial_duration,
+        frequency: req.body.trial_frequency,
+        waiverform: req.body.trial_waiverform,
         datecreated: Date.now(),
-        datestarted: undefined,
-        dateended: undefined,
-        candidatequota: req.body.candidatequota,
+        datestarted: 0,
+        dateended: 0,
+        candidatequota: req.body.trial_candidatequota,
         state: "created",
-        researcherid: req.user.id
+        researcherid: req.user.id,
+        currentduration: 0
     };
+    trialData.createTrial(new trialData(trialParams));
 
-    var eligibilityParams = {
-        passmark: req.body.passmark,
-        datecreated: Date.now(),
-        researcherid: req.user.id
-
-    };
-
-
-    trialData.createTrial(new trialData(trialParams), function () {
-        trialData.getLatestTrialByResearcher(req.user.id, function (err, result) {
-            var trialId = result[0]["_id"];
-            eligibilityParams['trialid'] = trialId;
-            eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
+    var eligibilityParams = {};
+    var questionParams = {};
+    /*
+     trialData.createTrial(new trialData(trialParams, function(err) {
+     if(err) throw err;
+     trialData.getLatestTrialByResearcher(req.user.id, function (err, trial) {
+     var trialid = trial[0]["_id"];
 
 
-                for (var removeAttribute in trialParams) {
-                    delete req.body[removeAttribute];
-                }
+     eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
+     for (var removeAttribute in trialParams) {
+     delete req.body[removeAttribute];
+     }
 
-                var i = 1;
-                var z = 1;
-                var questionParams = {};
+     var i = 1;
+     var questionParams = {};
 
-                for (var att in req.body) {
-                    if (att == 'questiontitle' + i) {
-                        questionParams['title'] = req.body[att];
-                    }
-                    if (att == 'questiontype' + i) {
-                        questionParams['questiontype'] = req.body[att];
-                    }
-                    if (att == 'answers' + i) {
-                        var tempSplit = req.body[att];
-                        tempSplit = tempSplit.replace("\r", "").split("\n");
-                        var questionAnswers = {};
-                        for (var j = 0; j < tempSplit.length; j++) {
-                            questionAnswers['answer' + j] = tempSplit[j];
-                        }
+     for (var att in req.body) {
+     if (att == 'questiontitle' + i) {
+     questionParams['title'] = req.body[att];
+     }
+     if (att == 'questiontype' + i) {
+     questionParams['questiontype'] = req.body[att];
+     }
+     if (att == 'answers' + i) {
+     var tempSplit = req.body[att];
+     tempSplit = tempSplit.replace("\r", "").split("\n");
+     var questionAnswers = {};
+     for (var j = 0; j < tempSplit.length; j++) {
+     questionAnswers['answer' + j] = tempSplit[j];
+     }
 
-                        questionParams['trialid'] = trialId;
-                        questionParams['answers'] = questionAnswers;
-                        questionData.createQuestion(new questionData(questionParams));
+     questionParams['trialid'] = trialId;
+     questionParams['answers'] = questionAnswers;
+     questionData.createQuestion(new questionData(questionParams));
 
-                        console.log(questionParams);
-                        i++;
-                        questionParams = {};
-                    }
-                }
-                /***
-                 *
-                 * @type {{}}
-                 * for future ? need to ask ed about implementation
-                 */
-                /*var eligibilityParams= {};
-                 for (var att in req.body) {
-                 if (att == 'questiontitle' + z) {
-                 questionParams['title'] = req.body[att];
-                 }
-                 if (att == 'questiontype' + z) {
-                 questionParams['questiontype'] = req.body[att];
-                 }
-                 if (att == 'answers' + z) {
-                 var tempSplit = req.body[att];
-                 tempSplit = tempSplit.replace("\r", "").split("\n");
-                 var questionAnswers = {};
-                 for (var j = 0; j < tempSplit.length; j++) {
-                 questionAnswers['answer' + j] = tempSplit[j];
-                 }
+     console.log(questionParams);
+     i++;
+     questionParams = {};
+     }
+     }
 
-                 eligibilityParams['trialid'] = trialId;
-                 eligibilityParams['answers'] = questionAnswers;
-                 eligibilityParams['passmark'] = "eligibility wokrs";
-                 eligibilityData.createEligibility(new eligibilityData(eligibilityParams));
-
-
-                 console.log(questionParams);
-                 z++;
-                 eligibilityParams = {};
-                 }
-                 }*/
-
-            });
-        });
-    });
+     });
+     })
+     }));*/
     res.redirect('/users/dashboard');
 });
+
 app.get('/api/get-trials', function (req, res) {
     trialData.getTrials(function (err, result) {
         if (err) throw err;
@@ -617,14 +595,17 @@ app.get('/api/get-trials/trialid/:trialid', function (req, res) {
         res.json(result);
     });
 });
-app.delete('/api/delete-trial/:trialid', function (req, res) {
-    //TODO
+app.post('/api/delete-trial/:trialid', function (req, res) {
+    trialData.deleteTrial(req.params.trialid, function (err) {
+        if (err) throw err;
+        res.redirect('/users/dashboard');
+    });
 });
 app.post('/api/modify-trial-state/trialid/:trialid/state/:state', function (req, res) {
-     trialData.getTrialById(req.params.trialid, function (err) {
-         if(err) throw err;
-         res.redirect('/');
-     });
+    trialData.getTrialById(req.params.trialid, function (err) {
+        if (err) throw err;
+        res.redirect('/');
+    });
 });
 
 app.post('/verify_can/:id', function (req, res) {
@@ -849,9 +830,6 @@ app.get('/api/get-researcher-data/:_id', function (req, res) {
         if (err) throw err;
         res.json(result.exclusions);
     });
-});
-app.delete('/api/delete-researcher-data/:_id', function (req, res) {
-
 });
 
 //debug inclusions

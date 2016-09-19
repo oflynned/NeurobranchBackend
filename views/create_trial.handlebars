@@ -17,14 +17,14 @@
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="control-label" for="Title">Trial Title</label>
-                    <input id="title" name="title" type="text" placeholder="Trial Title"
+                    <input id="title" name="trial_title" type="text" placeholder="Trial Title"
                            class="form-control input-md" required="">
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="control-label" for="txtbriefdesc">Brief Description</label>
-                    <input id="briefdescription" name="briefdescription" type="text"
+                    <input id="briefdescription" name="trial_briefdescription" type="text"
                            placeholder="Short synopsis about the trial that candidates will first see"
                            class="form-control input-md" required="">
                 </div>
@@ -33,48 +33,58 @@
                 <div class="form-group">
                     <label class="control-label" for="txtlongdesc">Long Description</label>
                     <textarea class="form-control" id="detaileddescription" style="resize: vertical;"
-                              name="detaileddescription"></textarea>
+                              name="trial_detaileddescription"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class=" control-label" for="qtype">Question Frequency</label>
-                    <select name="frequency" id="frequency" class="form-control">
+                    <select name="trial_frequency" id="frequency" class="form-control">
                         <option>Daily</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label" for="qtags"> Quota</label>
-                    <input id="candidatequota" name="candidatequota" type="number"
+                    <input id="candidatequota" name="trial_candidatequota" type="number"
                            placeholder="Minimum quota for hosting a clinical trial"
                            min="0" class="form-control input-md" required="" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                     <label class="control-label" for="passmark">Eligibility Form Pass Mark</label>
-                    <input id="passmark" name="passmark" type="number"
+                    <input id="passmark" name="eligibility[passmark" type="number"
                            placeholder="Minimum pass mark for a candidate to be eligible to join a trial" min="0"
                            step="1" class="form-control input-md" required="" autocomplete="off">
                 </div>
 
                 <div class="form-group">
+                    <label class=" control-label" for="qtype">Trial Type</label>
+                    <select name="trial_trialtype" id="trialtype" class="form-control" >
+                        <option name="behavioural">Behavioural</option>
+                        <option name="biomedical">Biomedical Device</option>
+                        <option name="food">Food</option>
+                        <option name="pharma">Pharmaceutical</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label class="control-label" for="qtags">Trial Tags</label>
                     <div class="bootstrap-tasginput">
-                        <input id="trialtags" name="trialtags" type="text" data-role="tagsinput"/>
+                        <input id="trialtags" name="trial_tags" type="text" data-role="tagsinput"/>
                     </div>
                 </div>
 
                 <!-- Textarea -->
                 <div class="form-group">
                     <label class=" control-label" for="qdesc2">Waiver Form</label>
-                    <textarea class="form-control" id="waiverform" name="waiverform"
+                    <textarea class="form-control" id="waiverform" name="trial_waiverform"
                               style="resize: vertical;"></textarea>
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
                     <label class=" control-label" for="qduration">Duration</label>
-                    <input id="duration" name="duration" type="text" placeholder="Trial duration in days"
+                    <input id="duration" name="trial_duration" type="text" placeholder="Trial duration in days"
                            class="form-control input-md" required="">
                 </div>
 
@@ -82,7 +92,7 @@
                 <div class="form-group">
                     <label class=" control-label" for="eligibiltyform">Eligiblity</label>
                     <label class="checkbox-inline" for="eligibiltyform-0">
-                        <input type="checkbox" name="eligibiltyform" id="eligibiltyform" value="1">
+                        <input type="checkbox" name="trial_eligibiltyform" id="eligibiltyform" value="1">
                         Yes </label>
                 </div>
 
