@@ -179,12 +179,8 @@ app.post('/send', function (req, res) {
     req.body["email"] = req.body.to;
     req.body["isverified"] = "false";
     researcherAccount.createResearcher(new researcherAccount(req.body), function (err, reresult) {
-        console.log("*****");
-        console.log(reresult.id);
-        console.log("*****");
-
-        async.waterfall([
-            function (callback) {
+        /*async.waterfall([
+            /*function (callback) {
                 redisClient.exists(req.body.to, function (err, reply) {
                     if (err) {
                         return callback(true, "Error in redis");
@@ -194,10 +190,9 @@ app.post('/send', function (req, res) {
                     }
                     callback(null);
                 });
-            },
-            function (callback) {
+            },*/
+            /*function (callback) {
                 "use strict";
-                /*let rand=Math.floor((Math.random() * 100) + 54);*/
                 let rand = reresult.id;
                 let encodedMail = new Buffer(req.body.to).toString('base64');
                 let link = "http://" + req.get('host') + "/verify?mail=" + encodedMail + "&id=" + rand;
@@ -208,8 +203,8 @@ app.post('/send', function (req, res) {
                     html: "Hello " + req.body.forename + ",<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
                 };
                 callback(null, mailOptions, rand);
-            },
-            function (mailData, secretKey, callback) {
+            },*/
+           /* function (mailData, secretKey, callback) {
                 smtpTransport.sendMail(mailData, function (error, response) {
                     if (error) {
                         console.log(error);
@@ -220,11 +215,11 @@ app.post('/send', function (req, res) {
                     redisClient.expire(req.body.to, 600); // expiry for 10 minutes.
                     callback(null, "Email sent Successfully");
                 });
-            }
-        ], function (err, data) {
+            }*/
+        /*], function (err, data) {
             console.log(err, data);
             res.json({error: err !== null, data: data});
-        });
+        });*/
 
     });
 });
