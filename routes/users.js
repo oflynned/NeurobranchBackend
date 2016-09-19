@@ -114,7 +114,9 @@ router.get('/trials/:trialid', function (req, res) {
                         req_candidates: req_candidates,
                         ver_candidates: ver_candidates,
                         questions: questions,
-                        is_create: trial.datecreated
+                        is_created: trial.state == "created" ? 'true' : null,
+                        is_active: trial.state == "active" ? 'true' : null,
+                        is_cancelled: trial.state == "cancelled" ? 'true' : null
                     });
                 });
             });

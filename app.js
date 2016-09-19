@@ -283,34 +283,21 @@ app.post('/api/emailverify/:id', function (req, res) {
         res.redirect('/users/verified');
     });
 });
-/* buttons*/
-app.post('/api/activatetrial/:id', function (req, res) {
-    trialData.getTrialById(req.params.id, function (err, activate) {
-        if (err) throw err;
-        activate.state = "active";
-        activate.save();
-    });
-    res.redirect('/users/trials/' + req.params.id);
-});
 
-app.post('/api/publishtrial/:id', function (req, res) {
-    trialData.getTrialById(req.params.id, function (err, publishate) {
+app.post('/api/set-trial-state/id/:id/state/:state', function (req, res) {
+    trialData.getTrialById(req.params.id, function (err, trial) {
         if (err) throw err;
-        publishate.state = "published";
-        publishate.save();
+        if(req.params.state == "created") {
+            trial.state = "created";
+        } else if(req.params.state == "active") {
+            trial.state = "active";
+        } else if(req.params.state == "cancelled") {
+            trial.state = "cancelled";
+        }
+        trial.save();
     });
     res.redirect('/users/trials/' + req.params.id);
 });
-
-app.post('/api/canceltrial/:id', function (req, res) {
-    trialData.getTrialById(req.params.id, function (err, cancelate) {
-        if (err) throw err;
-        cancelate.state = "canceled";
-        cancelate.save();
-    });
-    res.redirect('/users/trials/' + req.params.id);
-});
-/* end of buttons*/
 
 app.post('/forgot', function (req, res, next) {
     async.waterfall([
