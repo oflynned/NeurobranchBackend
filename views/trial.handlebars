@@ -34,33 +34,67 @@
                     <br>
                     <div>{{trial.briefdescription}}</div>
 
-                    <!--button class="btn btn-primary" method="post" action="/api/activatetrial/{{trial._id}}" id="/api/activatetrial/{{trial._id}}">Publish Trial</button>
-                    <button class="btn btn-success" method="post" action="/api/activatetrial/{{trial._id}}" id="/api/publishtrial/{{trial._id}}">Trial Active</button>
-                    <button-- class="btn btn-danger" method="post" action="/api/activatetrial/{{trial._id}}" id="/api/canceltrial/{{trial._id}}">Cancel Trial</button-->
+                    {{#if is_created}}
+                        <form id="form_verify_{{userid}}"
+                              action="/api/activatetrial/{{trial._id}}"
+                              method="post">
+                            <button id="ver_{{userid}}" class="btn btn-success">
+                                Activate Trial
+                            </button>
+                        </form>
+                        <form id="form_verify_{{userid}}"
+                              action="/api/canceltrial/{{trial._id}}"
+                              method="post" disabled="">
+                            <button id="ver_{{userid}}" class="btn btn-danger">
+                                Cancel Trial
+                            </button>
+                        </form>
+                    {{else if is_active}}
+                        <form id="form_verify_{{userid}}"
+                              action="/api/set-trial-state/id/{{trial._id}}/state/active"
+                              method="post">
+                            <button id="ver_{{userid}}" class="btn btn-success" disabled>
+                                Trial Active
+                            </button>
+                        </form>
+                        <form id="form_verify_{{userid}}"
+                              action="/api/set-trial-state/id/{{trial._id}}/state/created"
+                              method="post">
+                            <button id="ver_{{userid}}" class="btn btn-danger">
+                                Cancel Trial
+                            </button>
+                        </form>
+                    {{else if is_cancelled}}
+                        <form id="form_verify_{{userid}}"
+                              action="/api/set-trial-state/id/{{trial._id}}/state/created"
+                              method="post">
+                            <button id="ver_{{userid}}" class="btn btn-danger" disabled>
+                                Cancel Trial
+                            </button>
+                        </form>
+                    {{/if}}
+
                     <form id="form_verify_{{userid}}"
-                          action="/api/publishtrial/{{trial._id}}"
+                          action="/api/set-trial-state/id/{{trial._id}}/state/created"
                           method="post">
                         <button id="ver_{{userid}}" class="btn btn-primary">
-                            Publish Trial
+                            Force Created Trial
                         </button>
                     </form>
                     <form id="form_verify_{{userid}}"
-                          action="/api/activatetrial/{{trial._id}}"
+                          action="/api/set-trial-state/id/{{trial._id}}/state/active"
                           method="post">
                         <button id="ver_{{userid}}" class="btn btn-success">
-                            Activate Trial
+                            Force Activate Trial
                         </button>
                     </form>
                     <form id="form_verify_{{userid}}"
-                          action="/api/canceltrial/{{trial._id}}"
+                          action="/api/set-trial-state/id/{{trial._id}}/state/cancelled"
                           method="post">
                         <button id="ver_{{userid}}" class="btn btn-danger">
-                            Cancel Trial
+                            Force Cancelled Trial
                         </button>
                     </form>
-
-
-
                 </div>
             </div>
 

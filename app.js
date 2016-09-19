@@ -164,6 +164,14 @@ app.get('/api/get-candidate-trials/:id', function (req, res) {
         })
     });
 });
+app.get('/api/get-candidate-excluded-trials/:id', function (req, res) {
+    candidateAccount.getCandidateById(req.params.id, function (err, result) {
+        trialData.getTrialsByExcluded(result.subscribed.trialid, function (err, result) {
+            if (err) throw err;
+            res.json(result);
+        });
+    })
+});
 
 //email verification
 app.post('/send', function (req, res) {
@@ -215,7 +223,7 @@ app.post('/send', function (req, res) {
             }
         ], function (err, data) {
             console.log(err, data);
-            res.json({error: err === null ? false : true, data: data});
+            res.json({error: err !== null, data: data});
         });
 
     });
@@ -262,10 +270,9 @@ app.get('/verify', function (req, res) {
             });
         });
     } else {
-        res.end("<h1>Request is from unknown source");
+        res.end("<h1>Request is from unknown source</h1>");
     }
 });
-
 
 app.post('/api/emailverify/:id', function (req, res) {
     researcherData.verifyResearcher(req.params.id, function (err) {
@@ -276,34 +283,21 @@ app.post('/api/emailverify/:id', function (req, res) {
         res.redirect('/users/verified');
     });
 });
-/* buttons*/
-app.post('/api/activatetrial/:id', function (req, res) {
-    trialData.getTrialById(req.params.id, function (err, activate) {
-        if (err) throw err;
-        activate.state = "active";
-        activate.save();
-    });
-    res.redirect('/users/trials/' + req.params.id);
-});
 
-app.post('/api/publishtrial/:id', function (req, res) {
-    trialData.getTrialById(req.params.id, function (err, publishate) {
+app.post('/api/set-trial-state/id/:id/state/:state', function (req, res) {
+    trialData.getTrialById(req.params.id, function (err, trial) {
         if (err) throw err;
-        publishate.state = "published";
-        publishate.save();
+        if(req.params.state == "created") {
+            trial.state = "created";
+        } else if(req.params.state == "active") {
+            trial.state = "active";
+        } else if(req.params.state == "cancelled") {
+            trial.state = "cancelled";
+        }
+        trial.save();
     });
     res.redirect('/users/trials/' + req.params.id);
 });
-
-app.post('/api/canceltrial/:id', function (req, res) {
-    trialData.getTrialById(req.params.id, function (err, cancelate) {
-        if (err) throw err;
-        cancelate.state = "canceled";
-        cancelate.save();
-    });
-    res.redirect('/users/trials/' + req.params.id);
-});
-/* end of buttons*/
 
 app.post('/forgot', function (req, res, next) {
     async.waterfall([
@@ -318,11 +312,11 @@ app.post('/forgot', function (req, res, next) {
                 if (!user) {
                     console.log('No account with that email address exists.');
                     req.flash('error', 'No account with that email address exists.');
-                    return res.redirect('/forgot');
+                    res.redirect('/forgot');
                 }
 
                 user.resetPasswordToken = token;
-                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+                user.resetPasswordExpires = Date.now() + 3600000;
 
                 user.save(function (err) {
                     done(err, token, user);
@@ -611,8 +605,14 @@ app.get('/api/get-trials', function (req, res) {
         res.json(result);
     });
 });
-app.get('/api/get-trials/:researcherid', function (req, res) {
+app.get('/api/get-trials/researcherid/:researcherid', function (req, res) {
     trialData.getTrialsByResearcherId(req.params.researcherid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+app.get('/api/get-trials/trialid/:trialid', function (req, res) {
+    trialData.getTrialById(req.params.trialid, function (err, result) {
         if (err) throw err;
         res.json(result);
     });
@@ -620,13 +620,18 @@ app.get('/api/get-trials/:researcherid', function (req, res) {
 app.delete('/api/delete-trial/:trialid', function (req, res) {
     //TODO
 });
+app.post('/api/modify-trial-state/trialid/:trialid/state/:state', function (req, res) {
+     trialData.getTrialById(req.params.trialid, function (err) {
+         if(err) throw err;
+         res.redirect('/');
+     });
+});
 
 app.post('/verify_can/:id', function (req, res) {
 
 
     res.redirect('/users/trials/' + id);
 });
-
 app.post('/reject_can/:id', function (req, res, next) {
     var id = req.body.userid;
 
@@ -637,7 +642,6 @@ app.post('/reject_can/:id', function (req, res, next) {
     res.redirect('/users/trials/' + id);
 
 });
-
 
 //debug trials
 app.get('/debug/create-trial/:researcherid', function (req, res) {

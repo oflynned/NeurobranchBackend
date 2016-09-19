@@ -27,7 +27,7 @@ var trialSchema = mongoose.Schema({
     state: String,
     researcherid: String,
     passmark: String,
-    window: String
+    currentduration: String
 });
 
 var trialData = module.exports = mongoose.model('Trials', trialSchema);
@@ -52,12 +52,16 @@ module.exports.getTrialsByList = function(list, callback) {
     trialData.find({id: {$in: [list]}}, callback);
 };
 
+module.exports.getTrialsByExcluded = function (list, callback) {
+    trialData.find({id: {$nin: [list]}, state: 'created'}, callback);
+};
+
 module.exports.getTrialsByResearcherId = function (researcherid, callback) {
     trialData.find({researcherid: researcherid}, callback).sort({$natural:-1});
 };
 
 module.exports.getLatestTrialByResearcher = function (researcherid, callback) {
-    trialData.find({researcherid: researcherid}, callback).sort({$natural:-1}).limit(1).select("_id");
+    trialData.findOne({researcherid: researcherid}, callback).sort({$natural:-1}).select("_id");
 };
 
 
