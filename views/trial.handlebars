@@ -34,9 +34,32 @@
                     <br>
                     <div>{{trial.briefdescription}}</div>
 
-                    <button class="btn btn-primary">Publish Trial</button>
-                    <button class="btn btn-success" disabled>Trial Active</button>
-                    <button class="btn btn-danger">Cancel Trial</button>
+                    <!--button class="btn btn-primary" method="post" action="/api/activatetrial/{{trial._id}}" id="/api/activatetrial/{{trial._id}}">Publish Trial</button>
+                    <button class="btn btn-success" method="post" action="/api/activatetrial/{{trial._id}}" id="/api/publishtrial/{{trial._id}}">Trial Active</button>
+                    <button-- class="btn btn-danger" method="post" action="/api/activatetrial/{{trial._id}}" id="/api/canceltrial/{{trial._id}}">Cancel Trial</button-->
+                    <form id="form_verify_{{userid}}"
+                          action="/api/publishtrial/{{trial._id}}"
+                          method="post">
+                        <button id="ver_{{userid}}" class="btn btn-primary">
+                            Publish Trial
+                        </button>
+                    </form>
+                    <form id="form_verify_{{userid}}"
+                          action="/api/activatetrial/{{trial._id}}"
+                          method="post">
+                        <button id="ver_{{userid}}" class="btn btn-success">
+                            Activate Trial
+                        </button>
+                    </form>
+                    <form id="form_verify_{{userid}}"
+                          action="/api/canceltrial/{{trial._id}}"
+                          method="post">
+                        <button id="ver_{{userid}}" class="btn btn-danger">
+                            Cancel Trial
+                        </button>
+                    </form>
+
+
 
                 </div>
             </div>
