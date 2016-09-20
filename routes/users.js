@@ -4,6 +4,9 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+var path = require('path');
+var fs = require('fs');
+var mime = require('mime');
 var candidateSchema = require('../models/Accounts/candidateAccountSchema.js');
 var questionSchema = require('../models/Trials/questionSchema');
 var requestedCandidate = require('../models/Validation/requestedCandidateSchema');
@@ -85,35 +88,6 @@ router.get('/login', function (req, res) {
     });
 });
 
-
-// TODO make into a function tha tis called in router.post login
-/*
- router.post('/login', passport.authenticate('local', {
- successRedirect: '/',
- failureRedirect: '/users/login'
- }), function(req,res){
- if(req.body.username == "alexs1")
- {
- res.redirect('/users/moredetails');
-
- }
- else if(req.body.username != "alexs1"){
- researcherAccount.getResearcherByUsername(req.body.username, function (err,uzername) {
- if(uzername.username == req.body.username)
- {
- res.redirect('/users/index');
- }
- else
- {
- res.redirect('/users/login');
- }
- });
- }
- });
- */
-/*followed directions from passport js .org website
- on how to handle admin identification
- */
 router.post('/login', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (user) {
@@ -140,7 +114,7 @@ router.post('/login', function (req, res, next) {
                  * as they are hardcoded in
                  * */
                 if (req.user.email == "suleaa@tcd.ie") {
-                    return res.redirect('/users/moredetails');
+                    return res.redirect('/users/moredetails/' + req.user.id);
                 }
                 else if (req.user.email != "suleaa@tcd.ie") {
                     return res.redirect('/users/dashboard');
@@ -167,7 +141,23 @@ router.get('/cookie-details', function (req, res) {
     res.json(req.user);
 });
 
-router.get('/moredetails', function (req, res) {
+router.get('/download/:id', function (req, res) {
+    trialData.getTrialById(req.params.id, function (err, trialidz) {
+        if (err) throw err;
+        console.log(trialidz.title);
+
+        fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title, function (err) {
+            if (err) throw err;
+
+
+            res.render('download', {
+                active_login: "true"
+            });
+        });
+    });
+});
+
+router.get('/moredetails/:id', function (req, res) {
     researcherAccount.findAllResearcher(function (err, alres) {
         trialData.findAllTrials(function (err, altrial) {
             res.render('moredetails', {
@@ -195,6 +185,7 @@ router.get('/trials/:trialid', function (req, res) {
                     trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
                     trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
                     trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase());
+                    var fileName = trial.title + "_neurobranch_" + trial.id + ".pdf";
 
                     res.render('trial', {
                         trial: trial,

@@ -1,55 +1,59 @@
 <div id="page-content-wrapper dashboard">
     <div class="container-fluid content-main">
-        <div class="row">
-            <h1>Admin Page</h1>
-        </div>
-
-        <div class="row">
-            <h1>Researcher profiles created - {{alres.length}}</h1>
-            <div style="height:200px;width:1200px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
-            <ol>
-            {{#each alres}}
-
-                <li>
-                    <a href="/users/moredetails/{{_id}}">{{_id}}</a> |
-                    <a></a><a href="/users/moredetails/{{forename}}">{{forename}}</a> |
-                    <a></a><a href="/users/moredetails/{{surname}}">{{surname}}</a> |
-                    <a></a><a href="/users/moredetails/{{email}}">{{email}}</a> |
-                    <a></a><a href="/users/moredetails/{{username}}">{{username}}</a> |
-                    <a></a><a href="/users/moredetails/{{institute}}">{{institute}}</a> |
-                    <a></a><a href="/users/moredetails/{{isverified}}">{{isverified}}</a> |
-                </li>
+        <div class="row text-center">
+            <div class="col-md-6 text-left">
 
 
-            {{/each}}
-        </ol>
+                    <h1>Admin Page</h1>
+
+
+                    <h1>Researcher profiles created - {{alres.length}}</h1>
+                    <p style="border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">Attributes  -> id  | forename | Surname | email | username | Institute | isverified</p>
+                    <div style="height:200px;width:1200px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+                        <ol>
+                            {{#each alres}}
+
+                                <li>
+                                    <a href="/users/moredetails/{{_id}}">{{_id}}</a> |
+                                    <a></a><a href="/users/moredetails/{{forename}}">{{forename}}</a> |
+                                    <a></a><a href="/users/moredetails/{{surname}}">{{surname}}</a> |
+                                    <a></a><a href="/users/moredetails/{{email}}">{{email}}</a> |
+                                    <a></a><a href="/users/moredetails/{{username}}">{{username}}</a> |
+                                    <a></a><a href="/users/moredetails/{{institute}}">{{institute}}</a> |
+                                    <a></a><a href="/users/moredetails/{{isverified}}">{{isverified}}</a> |
+                                </li>
+
+
+                            {{/each}}
+                        </ol>
                 </div>
-        </div>
 
 
-        <div class="row">
-            <h1>Trials created - {{altrial.length}}</h1>
-            <div style="height:200px;width:1200px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
-                <ol>
-                    {{#each altrial}}
 
-                        <li>
-                            <a href="/users/moredetails/{{_id}}">{{_id}}</a> |
-                            <a></a><a href="/users/moredetails/{{title}}">{{title}}</a> |
-                            <a></a><a href="/users/moredetails/{{trialtype}}">{{trialtype}}</a> |
-                            <a></a><a href="/users/moredetails/{{researcherid}}">{{researcherid}}</a> |
-                            <a></a><a href="/users/moredetails/{{datecreated}}">{{datecreated}}</a> |
-                            <a></a><a href="/users/moredetails/{{candidatequota}}">{{candidatequota}}</a> |
-                            <a></a><a href="/users/moredetails/{{state}}">{{state}}</a> |
-                        </li>
+                    <h1>Trials created - {{altrial.length}}</h1>
+                <p style="border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">Attributes  -> id  | title | trialtype | researcherid | datecreated | candidatequota | state</p>
+                    <div style="height:200px;width:1200px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+                        <ol>
+                            {{#each altrial}}
+
+                                <li>
+                                    <a href="/users/moredetails/{{_id}}">{{_id}}</a> |
+                                    <a></a><a href="/users/moredetails/{{title}}">{{title}}</a> |
+                                    <a></a><a href="/users/moredetails/{{trialtype}}">{{trialtype}}</a> |
+                                    <a></a><a href="/users/moredetails/{{researcherid}}">{{researcherid}}</a> |
+                                    <a></a><a href="/users/moredetails/{{datecreated}}">{{datecreated}}</a> |
+                                    <a></a><a href="/users/moredetails/{{candidatequota}}">{{candidatequota}}</a> |
+                                    <a></a><a href="/users/moredetails/{{state}}">{{state}}</a> |
+                                </li>
 
 
-                    {{/each}}
-                </ol>
+                            {{/each}}
+                        </ol>
+                    </div>
+
+
             </div>
         </div>
-
-
 
     </div>
 </div>
