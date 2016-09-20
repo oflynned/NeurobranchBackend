@@ -178,6 +178,34 @@ app.get('/api/get-candidate-trials/:id', function (req, res) {
         })
     });
 });
+app.get('/api/get-candidate-trials/:id/:state', function (req, res) {
+    candidateAccount.getCandidateById(req.params.id, function (err, result) {
+        var trials = result.subscribed.reduce(function (keys, element) {
+            for (var key in element) {
+                keys.push(element[key]);
+            }
+            return keys;
+        }, []);
+
+        trialData.getTrialsByListState(trials, req.params.state, function (err, result) {
+            res.json(result);
+        })
+    });
+});
+app.get('/api/get-candidate-my-trials/:id', function (req, res) {
+    candidateAccount.getCandidateById(req.params.id, function (err, result) {
+        var trials = result.subscribed.reduce(function (keys, element) {
+            for (var key in element) {
+                keys.push(element[key]);
+            }
+            return keys;
+        }, []);
+
+        trialData.getTrialsByListExcludingState(trials, "ended", function (err, result) {
+            res.json(result);
+        })
+    });
+});
 app.get('/api/get-candidate-excluded-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
         var trials = result.subscribed.reduce(function (keys, element) {

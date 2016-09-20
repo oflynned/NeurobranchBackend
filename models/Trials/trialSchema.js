@@ -70,6 +70,14 @@ module.exports.getTrialsByList = function(list, callback) {
     trialData.find({_id: {$in: list}}, callback).sort({$natural:-1});
 };
 
+module.exports.getTrialsByListState = function(list, state, callback) {
+    trialData.find({_id: {$in: list}, state: state}, callback).sort({$natural:-1});
+};
+
+module.exports.getTrialsByListExcludingState = function (list, state, callback) {
+    trialData.find({_id: {$in: list}, state: {$nin: state}}, callback).sort({$natural:-1});
+}
+
 module.exports.getTrialsByExcluded = function (list, callback) {
     trialData.find({_id: {$nin: list}, state: 'created'}, callback).sort({$natural:-1});
 };
