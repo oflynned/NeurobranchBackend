@@ -118,7 +118,7 @@ router.post('/login', function (req, res, next) {
                  * as they are hardcoded in
                  * */
                 if (req.user.email == "suleaa@tcd.ie") {
-                    return res.redirect('/users/moredetails/'+req.user.id);
+                    return res.redirect('/users/moredetails/' + req.user.id);
                 }
                 else if (req.user.email != "suleaa@tcd.ie") {
                     return res.redirect('/users/dashboard');
@@ -146,17 +146,18 @@ router.get('/cookie-details', function (req, res) {
 });
 
 router.get('/download/:id', function (req, res) {
-    trialData.getTrialById(req.params.id ,function (err, trialidz) {
+    trialData.getTrialById(req.params.id, function (err, trialidz) {
         if (err) throw err;
         console.log(trialidz.title);
 
-    fs.writeFile('files/'+trialidz.title+'_neurobranch_'+trialidz.id+'.txt', 'It works!', function (err) {
-        if (err) return console.log(err);
+        fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title, function (err) {
+            if (err) throw err;
+
 
             res.render('download', {
                 active_login: "true"
             });
-    });
+        });
     });
 });
 
@@ -189,7 +190,7 @@ router.get('/trials/:trialid', function (req, res) {
 
                     trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
                     trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
-                    var fileName = trial.title+"_neurobranch_"+trial.id+".pdf";
+                    var fileName = trial.title + "_neurobranch_" + trial.id + ".pdf";
                     /*res.download(fileName);*/
 
                     res.render('trial', {
