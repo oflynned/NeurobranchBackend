@@ -28,10 +28,8 @@
                     {{/if}}
                     <div>
                         <break/>
-                        <button href="data:text/plain,this is some example" download="example1.txt" target="_blank">download csv</button>
-                        <form method="get" action="./public/goals.handlebars">
-                            <button type="submit">Download!</button>
-                        </form>
+                        <a href="/users/download/{{trial.id}}">download csv</a>
+
                     </div>
                 </div>
                 <div class="col-md-6 text-left">

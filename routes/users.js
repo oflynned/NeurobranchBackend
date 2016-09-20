@@ -118,7 +118,7 @@ router.post('/login', function (req, res, next) {
                  * as they are hardcoded in
                  * */
                 if (req.user.email == "suleaa@tcd.ie") {
-                    return res.redirect('/users/moredetails');
+                    return res.redirect('/users/moredetails/'+req.user.id);
                 }
                 else if (req.user.email != "suleaa@tcd.ie") {
                     return res.redirect('/users/dashboard');
@@ -145,7 +145,22 @@ router.get('/cookie-details', function (req, res) {
     res.json(req.user);
 });
 
-router.get('/moredetails', function (req, res) {
+router.get('/download/:id', function (req, res) {
+    trialData.getTrialById(req.params.id ,function (err, trialidz) {
+        if (err) throw err;
+        console.log(trialidz.title);
+
+    fs.writeFile('files/'+trialidz.title+'_neurobranch_'+trialidz.id+'.txt', 'It works!', function (err) {
+        if (err) return console.log(err);
+
+            res.render('download', {
+                active_login: "true"
+            });
+    });
+    });
+});
+
+router.get('/moredetails/:id', function (req, res) {
     researcherAccount.findAllResearcher(function (err, alres) {
         trialData.findAllTrials(function (err, altrial) {
 
