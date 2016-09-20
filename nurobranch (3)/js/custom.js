@@ -86,12 +86,12 @@ $("#e-questionlist").append('<div class="e-dynamic"><hr/><div class="form-group"
 											e_global_val--;
 										}
 										});
-										
-										
-										
-										
-										
-										
-										
+
+
+
+
+
+
+
 
 });
