@@ -1,4 +1,4 @@
-<div id="page-content-wrapper dashboard">
+<div id="page-content-wrapper dashboard" xmlns:data="http://www.w3.org/1999/xhtml">
     <div class="container-fluid content-main">
         <div class="row">
             <div class="col-lg-12">
@@ -26,6 +26,13 @@
                     {{#if trial.dateended}}
                         <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
                     {{/if}}
+                    <div>
+                        <break/>
+                        <button href="data:text/plain,this is some example" download="example1.txt" target="_blank">download csv</button>
+                        <form method="get" action="./public/goals.handlebars">
+                            <button type="submit">Download!</button>
+                        </form>
+                    </div>
                 </div>
                 <div class="col-md-6 text-left">
                     <div><strong>State:</strong> {{trial.state}}</div>

@@ -43,10 +43,6 @@ router.get('/users/create-trial', ensureAuthenticated, function (req, res) {
     researcherData.getResearcherById(req.params.id, function (err, isver) {
         if (err) throw err;
 
-        console.log("1");
-        console.log(req.user);
-        console.log(req.user.isverified);
-
         res.render('create_trial',
             {
 

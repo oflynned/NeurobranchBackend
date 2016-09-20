@@ -4,6 +4,9 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+var path = require('path');
+var fs = require('fs');
+var mime = require('mime');
 var candidateSchema = require('../models/Accounts/candidateAccountSchema.js');
 var questionSchema = require('../models/Trials/questionSchema');
 var requestedCandidate = require('../models/Validation/requestedCandidateSchema');
@@ -88,35 +91,6 @@ router.get('/login', function (req, res) {
     });
 });
 
-
-// TODO make into a function tha tis called in router.post login
-/*
- router.post('/login', passport.authenticate('local', {
- successRedirect: '/',
- failureRedirect: '/users/login'
- }), function(req,res){
- if(req.body.username == "alexs1")
- {
- res.redirect('/users/moredetails');
-
- }
- else if(req.body.username != "alexs1"){
- researcherAccount.getResearcherByUsername(req.body.username, function (err,uzername) {
- if(uzername.username == req.body.username)
- {
- res.redirect('/users/index');
- }
- else
- {
- res.redirect('/users/login');
- }
- });
- }
- });
- */
-/*followed directions from passport js .org website
- on how to handle admin identification
- */
 router.post('/login', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (user) {
@@ -133,11 +107,7 @@ router.post('/login', function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                console.log(req.user);
-                console.log(req.info);
-                console.log(req.logIn);
-                console.log('+++++++++++++++++++');
-                console.log(req.user.email);
+
                 /**
                  * admin authentification strategy relies on the fact
                  * that only we can control certain emails,
@@ -204,6 +174,8 @@ router.get('/trials/:trialid', function (req, res) {
 
                     trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
                     trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
+                    var fileName = trial.title+"_neurobranch_"+trial.id+".pdf";
+                    /*res.download(fileName);*/
 
                     res.render('trial', {
                         trial: trial,
