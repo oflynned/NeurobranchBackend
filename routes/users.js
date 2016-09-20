@@ -15,9 +15,7 @@ var requestedCandidate = require('../models/Validation/requestedCandidateSchema'
 var verifiedCandidate = require('../models/Validation/verifiedCandidateSchema');
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
-
 var eligibilityData = require('../models/Trials/eligibilitySchema');
-
 
 var MAX_LENGTH = 200;
 
@@ -30,13 +28,12 @@ function generateRow(rowId, content) {
         content +
         '</div>'
 }
-function generateTile(trialName, description, image, trialid) {
+function generateTile(trialName, description, trialid) {
     return '<div class="col-md-3">' +
         '<div class="thumbnail">' +
-        '<img src="' + image + '">' +
         '<div class="caption">' +
         '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
-        '<p>' + description + '</p>' + //trimString(description, MAX_LENGTH) + '</p>' +
+        '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
         '</div>' +
         '</div>' +
         '</div>'
@@ -53,7 +50,7 @@ function generateFrontNews(limit, res) {
                 rowId++;
                 element = "";
             }
-            element += generateTile(data[i]['title'], data[i]['description'], null, data[i]['_id']);
+            element += generateTile(data[i]['title'], data[i]['description'], data[i]['_id']);
 
             if (i == data.length - 1)
                 container += generateRow(rowId, element);
@@ -109,7 +106,6 @@ router.post('/login', function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-
                 /**
                  * admin authentification strategy relies on the fact
                  * that only we can control certain emails,
@@ -176,8 +172,6 @@ router.get('/download/:id', function (req, res) {
 router.get('/moredetails/:id', function (req, res) {
     researcherAccount.findAllResearcher(function (err, alres) {
         trialData.findAllTrials(function (err, altrial) {
-
-
             res.render('moredetails', {
                 active_login: "true",
                 alres: alres,
@@ -202,20 +196,18 @@ router.get('/trials/:trialid', function (req, res) {
 
                     trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
                     trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
+                    trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase());
                     var fileName = trial.title + "_neurobranch_" + trial.id + ".pdf";
-                    /*res.download(fileName);*/
 
                     res.render('trial', {
                         trial: trial,
                         is_researcher: isResearcher,
-                        multimedia: "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image&w=500&h=250",
-                        active_dash: "true",
+                        active_dash: true,
                         req_candidates: req_candidates,
                         ver_candidates: ver_candidates,
                         questions: questions,
                         is_created: trial.state == "created" ? true : null,
                         is_active: trial.state == "active" ? true : null,
-                        is_cancelled: trial.state == "cancelled" ? true : null,
                         is_ended: trial.state == "ended" ? true : null,
                         can_be_activated: parseInt(ver_candidates.length) >= parseInt(trial.candidatequota) ? true : null
                     });

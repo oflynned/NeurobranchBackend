@@ -6,8 +6,7 @@
     display: block;
     background: #fff;
     border: 1px solid #ccc;
-    padding: 3px 3px;
-    padding-bottom: 0px;
+    padding: 3px 3px 0;
     overflow: hidden;
     cursor: text;
 }
@@ -33,9 +32,8 @@
     border: none;
     outline: none;
     height: auto;
-    margin: 2px;
     overflow: visible;
-    margin-bottom: 5px;
+    margin: 2px 2px 5px;
     text-align: left;
 }
 

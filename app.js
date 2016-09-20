@@ -546,16 +546,22 @@ app.post('/api/create-trial', function (req, res) {
     //retrieve trial
     //create eligibility form
     //create qs
-    console.log(req.body);
-    var tags = req.body.trial_tags;
 
+    //retrieve tags into array
+    var tags = (req.body.trial_tags).toString().split(",");
+    var tagObject = [];
+    for (var i = 0; i < tags.length; i++) {
+        tagObject[i] = {tag: tags[i]};
+    }
+
+    //parse rest of parameters to object
     var trialParams = {
         title: req.body.trial_title,
         briefdescription: req.body.trial_briefdescription,
         detaileddescription: req.body.trial_detaileddescription,
         trialtype: req.body.trial_trialtype,
         institute: req.user.institute,
-        tags: tags,
+        tags: tagObject,
         duration: req.body.trial_duration,
         frequency: req.body.trial_frequency,
         waiverform: req.body.trial_waiverform,
@@ -568,9 +574,75 @@ app.post('/api/create-trial', function (req, res) {
         currentduration: 0,
         lastwindow: 0
     };
-    trialData.createTrial(new trialData(trialParams));
 
-    var eligibilityParams = {};
+    //trialData.createTrial(new trialData(trialParams));
+
+    //remove trial keys from object to deal with less data
+    for (var att in trialParams) {
+        var attribute = "trial_" + att;
+        delete req.body[attribute];
+    }
+
+    console.log(req.body);
+
+    var eligibilityParams = [];
+    for (var att in req.body) {
+        var checkAtt = att.toString();
+        var attribute = "e-q";
+        var index = parseInt(checkAtt.replace(/\D/g, ''));
+        var arrayIndex = index - 1;
+        var keyPrefix = attribute + index + "_";
+        var questionAnswersAmount = req.body[keyPrefix + "no_of_answers"];
+
+        var answersArray = [];
+        var answers = req.body['e-ques' + index + '_ans[]'];
+        for (var i = 0; i < questionAnswersAmount; i++) {
+            answersArray[i] = {score: answers[i]}
+        }
+
+        eligibilityParams[arrayIndex] = {
+            title: req.body[keyPrefix + "title"],
+            questiontype: req.body[keyPrefix + "type"],
+            answers: answersArray
+        };
+
+        /*
+         if (keyPrefix + "title" == checkAtt) {
+         console.log("pushing " + checkAtt + ", " + req.body[att]);
+         eligibilityParams[index] = {title: req.body[att]};
+         } else if(keyPrefix + "type" == checkAtt) {
+         console.log("pushing " + checkAtt + ", " + req.body[att]);
+         eligibilityParams[index] = {type: req.body[att]};
+         }
+
+         if (attribute in checkAtt) {
+         eligibilityParams[index] = {[key]: req.body[att]}
+         }*/
+    }
+
+    console.log(eligibilityParams);
+
+    /*
+     if("e-" in att) {
+     var index = att.replace(/\D/g,'');
+     var prefix = "e-q" + index + "_";
+     var attribute = att.replace(prefix, "");
+
+     console.log(index);
+     console.log(prefix);
+     console.log(attribute);
+     console.log(req.body[att]);
+
+     if (attribute == answer) {
+
+     } else {
+     eligibilityParams[index] = {[attribute]: req.body[att]};
+     }
+     }*/
+
+
+    console.log(req.body);
+
     var questionParams = {};
     /*
      trialData.createTrial(new trialData(trialParams, function(err) {
