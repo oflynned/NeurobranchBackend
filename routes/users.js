@@ -6,7 +6,9 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var path = require('path');
 var fs = require('fs');
+var http = require('http');
 var mime = require('mime');
+var request = require('request');
 var candidateSchema = require('../models/Accounts/candidateAccountSchema.js');
 var questionSchema = require('../models/Trials/questionSchema');
 var requestedCandidate = require('../models/Validation/requestedCandidateSchema');
@@ -148,16 +150,26 @@ router.get('/cookie-details', function (req, res) {
 router.get('/download/:id', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trialidz) {
         if (err) throw err;
-        console.log(trialidz.title);
+        //fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title, function (err) {
+            //if (err) throw err;
 
-        fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title, function (err) {
-            if (err) throw err;
+                /* link to deprecated  download page*/
+                /*res.render('download', {
+                    active_login: "true"
+                });*/
+            res.download('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv',trialidz.title + '_neurobranch_' + trialidz.id + '.csv' );
 
+                /*non blocking async delete*/
+                /*deletes download file after 10 sec*/
+                /*setTimeout(function () {
+                    fs.unlink('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
+                        if (err) throw err;
 
-            res.render('download', {
-                active_login: "true"
-            });
-        });
+                        console.log('file deleted successfully');
+                    });
+                }, 60000);*/
+
+        //});
     });
 });
 
