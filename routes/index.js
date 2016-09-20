@@ -96,10 +96,9 @@ function trimString(input, length) {
 function generateRow(id, content) {
     return '<div class="row flex-row" id="' + id + '">' + content + '</div>';
 }
-function generateTile(trialName, description, image, trialid) {
+function generateTile(trialName, description, trialid) {
     return '<div class="col-sm-4 col-md-3 col-xl-2">' +
         '<div class="thumbnail">' +
-        '<img src="' + image + '">' +
         '<div class="caption">' +
         '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
         '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
@@ -120,11 +119,9 @@ function generateDashboard(researcherId, res) {
                 rowId++;
                 element = "";
             }
-            element += generateTile(data[i]['title'], data[i]['briefdescription'],
-                "https://placeholdit.imgix.net/~text?txtsize=33&txt=Placeholder Image " + (i + 1) + "&w=500&h=250", data[i]['_id']);
+            element += generateTile(data[i]['title'], data[i]['briefdescription'], data[i]['_id']);
 
-            if (i == data.length - 1)
-                container += generateRow(rowId, element);
+            if (i == data.length - 1) container += generateRow(rowId, element);
         }
         res.render('dashboard', {
             active_dash: "true",

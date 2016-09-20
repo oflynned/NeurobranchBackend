@@ -11,12 +11,12 @@
         <!-- container for holding trial data -->
         <div id="dashboard-content-holder">
             <div class="row text-center">
-                <!--
-                <div class="col-md-6">
-                    <img src="{{multimedia}}">
-                </div> -->
                 <div class="col-md-6 text-left">
-                    <div><strong>Tags:</strong> {{#each trial.condition}}{{/each}}</div>
+                    <div><strong>Tags:</strong>
+                        {{#each trial.tags}}
+                            "{{tag}}"
+                        {{/each}}
+                    </div>
                     <div><strong>Type:</strong> {{trial.trialtype}}</div>
                     <div><strong>Institute:</strong> {{trial.institute}}</div>
                     <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
@@ -29,8 +29,8 @@
                 </div>
                 <div class="col-md-6 text-left">
                     <div><strong>State:</strong> {{trial.state}}</div>
-                    <div><strong>Trial Duration:</strong> {{trial.duration}}</div>
-                    <div><strong>Candidate Quota:</strong> {{trial.candidatequota}}</div>
+                    <div><strong>Trial Duration:</strong> {{trial.duration}} days</div>
+                    <div><strong>Candidate Quota:</strong> Minimum {{trial.candidatequota}} candidates</div>
                     <div><strong>Question Frequency:</strong> {{trial.frequency}}</div>
                     <br>
                     <div>{{trial.briefdescription}}</div>
@@ -77,6 +77,7 @@
                         </form>
                     {{/if}}
 
+                    <!--
                     <form id="form_verify_{{userid}}"
                           action="/api/set-trial-state/id/{{trial._id}}/state/created"
                           method="post">
@@ -104,7 +105,7 @@
                         <button id="ver_{{userid}}" class="btn btn-info">
                             Force End Trial
                         </button>
-                    </form>
+                    </form>-->
                 </div>
             </div>
 
@@ -116,11 +117,10 @@
                 </div>
 
                 <div class="col-md-6">
+                    <div class="page-header">
+                        <h3>Questions</h3>
+                    </div>
                     {{#if is_researcher}}
-                        <div class="page-header">
-                            <h3>Questions</h3>
-                        </div>
-
                         <ol>
                             {{#each questions}}
                                 <li><strong>Title:</strong> {{title}}</li>

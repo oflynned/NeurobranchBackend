@@ -41,7 +41,7 @@
                     <label class="control-label" for="qtags"> Quota</label>
                     <input id="candidatequota" name="trial_candidatequota" type="number"
                            placeholder="Minimum quota for hosting a clinical trial"
-                           min="0" class="form-control input-md" required="" autocomplete="off">
+                           min="1" step="1" class="form-control input-md" required="" autocomplete="off">
                 </div>
 
                 <div class="form-group">
@@ -71,13 +71,13 @@
                 <!-- Text input-->
                 <div class="form-group">
                     <label class=" control-label" for="qduration">Duration</label>
-                    <input id="duration" name="trial_duration" type="text" placeholder="Trial duration in days"
+                    <input id="duration" name="trial_duration" type="number" step="1" placeholder="Trial duration in days"
                            class="form-control input-md" required="">
                 </div>
 
                 <!-- Multiple Checkboxes (inline) -->
                 <div class="form-group">
-                    <label class=" control-label" for="eligibiltyform">Eligiblity</label>
+                    <label class=" control-label" for="eligibiltyform">Eligibility</label>
                     <label class="checkbox-inline" for="eligibiltyform-0">
                         <input type="checkbox" name="trial_eligibiltyform" id="eligibiltyform" value="1">
                         Yes </label>
@@ -86,7 +86,7 @@
 
                 <div id="e-questionlist">
                     <div class="form-group">
-                        <label for="e-q1title" class="control-label">1. Eligibilty Question </label>
+                        <label for="e-q1title" class="control-label">1. Eligibility Question </label>
                         <input type="text" class="form-control col-md-4 qtitle" id="e-q1_title" name="e-q1_title"
                                placeholder="Enter Title" required>
                     </div>

@@ -14,7 +14,7 @@ var trialSchema = mongoose.Schema({
     detaileddescription: String,
     trialtype: String,
     institute: String,
-    tags: String,
+    tags: [],
     duration: String,
     frequency: String,
     waiverform: String,
