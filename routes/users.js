@@ -10,6 +10,10 @@ var requestedCandidate = require('../models/Validation/requestedCandidateSchema'
 var verifiedCandidate = require('../models/Validation/verifiedCandidateSchema');
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
+
+var eligibilityData = require('../models/Trials/eligibilitySchema');
+
+
 var MAX_LENGTH = 200;
 
 function trimString(input, length) {
@@ -198,6 +202,9 @@ router.get('/trials/:trialid', function (req, res) {
                 verifiedCandidate.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, ver_candidates) {
                     if (err) throw err;
 
+                    trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
+                    trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
+
                     res.render('trial', {
                         trial: trial,
                         is_researcher: isResearcher,
@@ -206,9 +213,11 @@ router.get('/trials/:trialid', function (req, res) {
                         req_candidates: req_candidates,
                         ver_candidates: ver_candidates,
                         questions: questions,
-                        is_created: trial.state == "created" ? 'true' : null,
-                        is_active: trial.state == "active" ? 'true' : null,
-                        is_cancelled: trial.state == "cancelled" ? 'true' : null
+                        is_created: trial.state == "created" ? true : null,
+                        is_active: trial.state == "active" ? true : null,
+                        is_cancelled: trial.state == "cancelled" ? true : null,
+                        is_ended: trial.state == "ended" ? true : null,
+                        can_be_activated: parseInt(ver_candidates.length) >= parseInt(trial.candidatequota) ? true : null
                     });
                 });
             });
@@ -226,16 +235,22 @@ router.get('/candidates/:candidateid', ensureAuthenticated, function (req, res) 
         });
     });
 });
+
 router.get('/candidates/:candidateid/:trialid', ensureAuthenticated, function (req, res) {
     candidateSchema.getCandidateById(req.params.candidateid, function (err, candidate) {
         if (err) throw err;
-        var isResearcher = req.isAuthenticated();
-        res.render('candidateprofile', {
-            candidate: candidate,
-            trialid: req.params.trialid,
-            is_researcher: isResearcher,
-            active_dash: "true",
-        });
+        var isResearcher = req.isAuthenticated() ? true : null;
+        eligibilityData.getEligibilityByTrialCandidate(req.params.trialid, req.params.candidateid,
+            function (err, eligibility) {
+                if (err) throw err;
+                res.render('candidateprofile', {
+                    candidate: candidate,
+                    trialid: req.params.trialid,
+                    is_researcher: isResearcher,
+                    active_dash: "true",
+                    eligibility: eligibility
+                });
+            });
     });
 });
 router.get('/create-trial', ensureAuthenticated, function (req, res) {

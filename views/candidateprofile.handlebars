@@ -13,22 +13,19 @@
         <div id="dashboard-content-holder">
             <div class="col-md-6 text-left">
                 <div><strong>Contact Email:</strong> {{candidate.email}}</div>
-                <div><strong>Current City:</strong> {{candidate.location}}</div>
-                <div><strong>Score:</strong> {{candidate.score}}</div>
-
                 <button class="btn btn-primary">
                     <a href="mailto:{{candidate.email}}" style="color: white">Contact</a>
                 </button>
-
-                {{#if trialid}}
-                    <button class="btn btn-success">
-                        <a href="#" style="color: white">Demarcate Verified</a>
-                    </button>
-                    <button class="btn btn-danger">
-                        <a href="#" style="color: white">Remove</a>
-                    </button>
-                {{/if}}
             </div>
+
         </div>
     </div>
+    {{#if eligibility}}
+        <div id="dashboard-content-holder">
+            <h3>Eligibility Results</h3>
+            {{#each eligibility}}
+
+            {{/each}}
+        </div>
+    {{/if}}
 </div>

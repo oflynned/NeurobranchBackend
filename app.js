@@ -15,7 +15,8 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");
 var redis = require('redis');
-var redisClient = redis.createClient(); // default setting.
+var redisClient = redis.createClient();
+var schedule = require('node-schedule');
 
 mongoose.connect('mongodb://localhost/neurobranch_db');
 var routes = require(Globals.INDEX_ROUTE);
@@ -155,22 +156,46 @@ app.get('/api/get-candidate-subscriptions/:id', function (req, res) {
         res.json(result.subscribed);
     })
 });
+app.get('/api/can-candidate-respond/trialid/:trialid/userid/:userid', function (req, res) {
+    //get latest window for trial
+    //get last window id from past candidate responses already
+    //check if null if no responses so far
+
+});
 
 app.get('/api/get-candidate-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
-        var trials = result.subscribed;
-        trialData.getTrialsByList(trials.trialid, function (err, result) {
+        var trials = result.subscribed.reduce(function (keys, element) {
+            for (var key in element) {
+                keys.push(element[key]);
+            }
+            return keys;
+        }, []);
+
+        trialData.getTrialsByList(trials, function (err, result) {
             res.json(result);
         })
     });
 });
 app.get('/api/get-candidate-excluded-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
-        trialData.getTrialsByExcluded(result.subscribed.trialid, function (err, result) {
-            if (err) throw err;
-            res.json(result);
-        });
-    })
+        var trials = result.subscribed.reduce(function (keys, element) {
+            for (var key in element) {
+                keys.push(element[key]);
+            }
+            return keys;
+        }, []);
+        if (trials.length == 0) {
+            trialData.getTrials(function (err, trials) {
+                res.json(trials);
+            });
+        } else {
+            trialData.getTrialsByExcluded(trials, function (err, trials) {
+                if (err) throw err;
+                res.json(trials);
+            });
+        }
+    });
 });
 
 //email verification
@@ -180,46 +205,47 @@ app.post('/send', function (req, res) {
     req.body["isverified"] = "false";
     researcherAccount.createResearcher(new researcherAccount(req.body), function (err, reresult) {
         /*async.waterfall([
-            /*function (callback) {
-                redisClient.exists(req.body.to, function (err, reply) {
-                    if (err) {
-                        return callback(true, "Error in redis");
-                    }
-                    if (reply === 1) {
-                        return callback(true, "Email already requested");
-                    }
-                    callback(null);
-                });
-            },*/
-            /*function (callback) {
-                "use strict";
-                let rand = reresult.id;
-                let encodedMail = new Buffer(req.body.to).toString('base64');
-                let link = "http://" + req.get('host') + "/verify?mail=" + encodedMail + "&id=" + rand;
-                let mailOptions = {
-                    from: 'teztneuro@gmail.com',
-                    to: req.body.to,
-                    subject: "Please confirm your Email account",
-                    html: "Hello " + req.body.forename + ",<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
-                };
-                callback(null, mailOptions, rand);
-            },*/
-           /* function (mailData, secretKey, callback) {
-                smtpTransport.sendMail(mailData, function (error, response) {
-                    if (error) {
-                        console.log(error);
-                        return callback(true, "Error in sending email");
-                    }
-                    console.log("Message sent: " + JSON.stringify(response));
-                    redisClient.set(req.body.to, secretKey);
-                    redisClient.expire(req.body.to, 600); // expiry for 10 minutes.
-                    callback(null, "Email sent Successfully");
-                });
-            }*/
+         /*function (callback) {
+         >>>>>>> 4b54d8042471d76f2aac6ec6d9bc3a0a7191fa3c
+         redisClient.exists(req.body.to, function (err, reply) {
+         if (err) {
+         return callback(true, "Error in redis");
+         }
+         if (reply === 1) {
+         return callback(true, "Email already requested");
+         }
+         callback(null);
+         });
+         },*/
+        /*function (callback) {
+         "use strict";
+         let rand = reresult.id;
+         let encodedMail = new Buffer(req.body.to).toString('base64');
+         let link = "http://" + req.get('host') + "/verify?mail=" + encodedMail + "&id=" + rand;
+         let mailOptions = {
+         from: 'teztneuro@gmail.com',
+         to: req.body.to,
+         subject: "Please confirm your Email account",
+         html: "Hello " + req.body.forename + ",<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
+         };
+         callback(null, mailOptions, rand);
+         },*/
+        /* function (mailData, secretKey, callback) {
+         smtpTransport.sendMail(mailData, function (error, response) {
+         if (error) {
+         console.log(error);
+         return callback(true, "Error in sending email");
+         }
+         console.log("Message sent: " + JSON.stringify(response));
+         redisClient.set(req.body.to, secretKey);
+         redisClient.expire(req.body.to, 600); // expiry for 10 minutes.
+         callback(null, "Email sent Successfully");
+         });
+         }*/
         /*], function (err, data) {
-            console.log(err, data);
-            res.json({error: err !== null, data: data});
-        });*/
+         console.log(err, data);
+         res.json({error: err !== null, data: data});
+         });*/
 
     });
 });
@@ -278,16 +304,19 @@ app.post('/api/emailverify/:id', function (req, res) {
         res.redirect('/users/verified');
     });
 });
-
 app.post('/api/set-trial-state/id/:id/state/:state', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trial) {
         if (err) throw err;
-        if(req.params.state == "created") {
+        if (req.params.state == "created") {
             trial.state = "created";
-        } else if(req.params.state == "active") {
+            trial.datecreated = Date.now();
+        } else if (req.params.state == "active") {
             trial.state = "active";
-        } else if(req.params.state == "cancelled") {
-            trial.state = "cancelled";
+            trial.datestarted = Date.now();
+            trial.currentduration = Date.now();
+        } else if (req.params.state == "ended") {
+            trial.state = "ended";
+            trial.dateended = Date.now();
         }
         trial.save();
     });
@@ -484,116 +513,82 @@ app.get('/api/get-conditions/:userid', function (req, res) {
 
 //trials
 app.post('/api/create-trial', function (req, res) {
-    //sort into trial and qs
-    //log trial
-    //retrieve trial by search with latest id
-    //log q documents with this id as trialid
-    //to be implemented lol
-    //console.log(req.body);
+    //create trial
+    //retrieve trial
+    //create eligibility form
+    //create qs
+    console.log(req.body);
+    var tags = req.body.trial_tags;
 
     var trialParams = {
-        title: req.body.title,
-        briefdescription: req.body.briefdescription,
-        detaileddescription: req.body.detaileddescription,
-        trialtype: req.body.trialtype,
+        title: req.body.trial_title,
+        briefdescription: req.body.trial_briefdescription,
+        detaileddescription: req.body.trial_detaileddescription,
+        trialtype: req.body.trial_trialtype,
         institute: req.user.institute,
-        condition: req.body.condition,
-        duration: req.body.duration,
-        frequency: req.body.frequency,
-        waiverform: req.body.waiverform,
+        tags: tags,
+        duration: req.body.trial_duration,
+        frequency: req.body.trial_frequency,
+        waiverform: req.body.trial_waiverform,
         datecreated: Date.now(),
-        datestarted: undefined,
-        dateended: undefined,
-        candidatequota: req.body.candidatequota,
+        datestarted: 0,
+        dateended: 0,
+        candidatequota: req.body.trial_candidatequota,
         state: "created",
-        researcherid: req.user.id
+        researcherid: req.user.id,
+        currentduration: 0,
+        lastwindow: 0
     };
+    trialData.createTrial(new trialData(trialParams));
 
-    var eligibilityParams = {
-        passmark: req.body.passmark,
-        datecreated: Date.now(),
-        researcherid: req.user.id
-
-    };
-
-
-    trialData.createTrial(new trialData(trialParams), function () {
-        trialData.getLatestTrialByResearcher(req.user.id, function (err, result) {
-            var trialId = result[0]["_id"];
-            eligibilityParams['trialid'] = trialId;
-            eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
+    var eligibilityParams = {};
+    var questionParams = {};
+    /*
+     trialData.createTrial(new trialData(trialParams, function(err) {
+     if(err) throw err;
+     trialData.getLatestTrialByResearcher(req.user.id, function (err, trial) {
+     var trialid = trial[0]["_id"];
 
 
-                for (var removeAttribute in trialParams) {
-                    delete req.body[removeAttribute];
-                }
+     eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
+     for (var removeAttribute in trialParams) {
+     delete req.body[removeAttribute];
+     }
 
-                var i = 1;
-                var z = 1;
-                var questionParams = {};
+     var i = 1;
+     var questionParams = {};
 
-                for (var att in req.body) {
-                    if (att == 'questiontitle' + i) {
-                        questionParams['title'] = req.body[att];
-                    }
-                    if (att == 'questiontype' + i) {
-                        questionParams['questiontype'] = req.body[att];
-                    }
-                    if (att == 'answers' + i) {
-                        var tempSplit = req.body[att];
-                        tempSplit = tempSplit.replace("\r", "").split("\n");
-                        var questionAnswers = {};
-                        for (var j = 0; j < tempSplit.length; j++) {
-                            questionAnswers['answer' + j] = tempSplit[j];
-                        }
+     for (var att in req.body) {
+     if (att == 'questiontitle' + i) {
+     questionParams['title'] = req.body[att];
+     }
+     if (att == 'questiontype' + i) {
+     questionParams['questiontype'] = req.body[att];
+     }
+     if (att == 'answers' + i) {
+     var tempSplit = req.body[att];
+     tempSplit = tempSplit.replace("\r", "").split("\n");
+     var questionAnswers = {};
+     for (var j = 0; j < tempSplit.length; j++) {
+     questionAnswers['answer' + j] = tempSplit[j];
+     }
 
-                        questionParams['trialid'] = trialId;
-                        questionParams['answers'] = questionAnswers;
-                        questionData.createQuestion(new questionData(questionParams));
+     questionParams['trialid'] = trialId;
+     questionParams['answers'] = questionAnswers;
+     questionData.createQuestion(new questionData(questionParams));
 
-                        console.log(questionParams);
-                        i++;
-                        questionParams = {};
-                    }
-                }
-                /***
-                 *
-                 * @type {{}}
-                 * for future ? need to ask ed about implementation
-                 */
-                /*var eligibilityParams= {};
-                 for (var att in req.body) {
-                 if (att == 'questiontitle' + z) {
-                 questionParams['title'] = req.body[att];
-                 }
-                 if (att == 'questiontype' + z) {
-                 questionParams['questiontype'] = req.body[att];
-                 }
-                 if (att == 'answers' + z) {
-                 var tempSplit = req.body[att];
-                 tempSplit = tempSplit.replace("\r", "").split("\n");
-                 var questionAnswers = {};
-                 for (var j = 0; j < tempSplit.length; j++) {
-                 questionAnswers['answer' + j] = tempSplit[j];
-                 }
+     console.log(questionParams);
+     i++;
+     questionParams = {};
+     }
+     }
 
-                 eligibilityParams['trialid'] = trialId;
-                 eligibilityParams['answers'] = questionAnswers;
-                 eligibilityParams['passmark'] = "eligibility wokrs";
-                 eligibilityData.createEligibility(new eligibilityData(eligibilityParams));
-
-
-                 console.log(questionParams);
-                 z++;
-                 eligibilityParams = {};
-                 }
-                 }*/
-
-            });
-        });
-    });
+     });
+     })
+     }));*/
     res.redirect('/users/dashboard');
 });
+
 app.get('/api/get-trials', function (req, res) {
     trialData.getTrials(function (err, result) {
         if (err) throw err;
@@ -612,19 +607,14 @@ app.get('/api/get-trials/trialid/:trialid', function (req, res) {
         res.json(result);
     });
 });
-app.delete('/api/delete-trial/:trialid', function (req, res) {
-    //TODO
-});
-app.post('/api/modify-trial-state/trialid/:trialid/state/:state', function (req, res) {
-     trialData.getTrialById(req.params.trialid, function (err) {
-         if(err) throw err;
-         res.redirect('/');
-     });
+app.post('/api/delete-trial/:trialid', function (req, res) {
+    trialData.deleteTrial(req.params.trialid, function (err) {
+        if (err) throw err;
+        res.redirect('/users/dashboard');
+    });
 });
 
 app.post('/verify_can/:id', function (req, res) {
-
-
     res.redirect('/users/trials/' + id);
 });
 app.post('/reject_can/:id', function (req, res, next) {
@@ -845,9 +835,6 @@ app.get('/api/get-researcher-data/:_id', function (req, res) {
         res.json(result.exclusions);
     });
 });
-app.delete('/api/delete-researcher-data/:_id', function (req, res) {
-
-});
 
 //debug inclusions
 app.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
@@ -981,6 +968,80 @@ app.use('/', routes);
 app.use('/users', users);
 
 app.set('port', (process.env.PORT || Globals.PORT));
+
+app.get('/api/update-trials-service', function (req, res) {
+    trialData.getTrialsByState('active', function (err, trials) {
+        if (err) throw err;
+        for (var trial in trials) {
+            var currentTrial = parseInt(trials[trial]['currentduration'] / (1000 * 60));
+            var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
+            console.log(currentDay - currentTrial + " mins difference");
+
+            //every 5 mins
+            if (currentDay - currentTrial > 5) {
+                trialData.getTrialById(trials[trial]['id'], function (err, result) {
+                    result.currentduration = Date.now();
+                    var window = parseInt(result.lastwindow);
+                    window += 1;
+                    result.lastwindow = window;
+                    console.log(result.lastwindow + " " + result.duration);
+
+                    //check if window is now at end of trial duration
+                    if (parseInt(result.lastwindow) > parseInt(result.duration)) {
+                        result.state = "ended";
+                        result.dateended = Date.now();
+                    }
+
+                    result.save();
+                })
+            }
+        }
+        res.redirect('/');
+    });
+});
+
+//scheduling
+var rule = new schedule.RecurrenceRule();
+rule.minute = new schedule.Range(0, 59, 1);
+
+schedule.scheduleJob(rule, function () {
+    console.log("invoking schedule");
+    trialData.getTrialsByState('active', function (err, trials) {
+        if (err) throw err;
+        if (trials.length == 0) {
+            console.log("No trials to be updated");
+        } else {
+            for (var trial in trials) {
+                var currentTrial = parseInt(trials[trial]['currentduration'] / (1000 * 60));
+                var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
+
+                //update window per day
+                if (currentDay - currentTrial > 5) {
+                    trialData.getTrialById(trials[trial]['id'], function (err, result) {
+                        result.currentduration = Date.now();
+                        var window = parseInt(result.lastwindow);
+                        window += 1;
+                        result.lastwindow = window;
+                        console.log("Updating record");
+
+                        //check if window is now at end of trial duration
+                        if (parseInt(result.lastwindow) > parseInt(result.duration)) {
+                            result.state = "ended";
+                            result.dateended = Date.now();
+                            console.log("Ending trial");
+                        }
+                        result.save();
+                    });
+                } else {
+                    console.log("No update");
+                }
+            }
+        }
+    })
+});
+
 app.listen(app.get('port'), function () {
     console.log('Server started on port ' + app.get('port'));
 });
+
+
