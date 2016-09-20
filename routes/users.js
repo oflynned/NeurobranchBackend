@@ -197,7 +197,7 @@ router.get('/trials/:trialid', function (req, res) {
                     trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
                     trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
                     trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase());
-                    var fileName = trial.title + "_neurobranch_" + trial.id + ".pdf";
+                    var fileName = trial.title + "_neurobranch_" + trial.id + ".pdf"; //why is this here?
 
                     res.render('trial', {
                         trial: trial,
