@@ -10,7 +10,9 @@ var requestedCandidate = require('../models/Validation/requestedCandidateSchema'
 var verifiedCandidate = require('../models/Validation/verifiedCandidateSchema');
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
+
 var eligibilityData = require('../models/Trials/eligibilitySchema');
+
 
 var MAX_LENGTH = 200;
 
@@ -62,11 +64,8 @@ function generateFrontNews(limit, res) {
 router.get('/mainpage', function (req, res) {
     generateFrontNews(4, res);
 });
-router.get('/login', function (req, res) {
-    res.render('login', {
-        active_login: "true"
-    });
-});
+
+
 router.get('/signup', function (req, res) {
     res.render('signup', {
         active_signup: "true"
@@ -82,10 +81,91 @@ router.get('/dashboard', ensureAuthenticated, function (req, res) {
         active_dash: "true"
     });
 });
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/users/login'
-}));
+
+router.get('/login', function (req, res) {
+    res.render('login', {
+        active_login: "true"
+    });
+});
+
+
+// TODO make into a function tha tis called in router.post login
+/*
+ router.post('/login', passport.authenticate('local', {
+ successRedirect: '/',
+ failureRedirect: '/users/login'
+ }), function(req,res){
+ if(req.body.username == "alexs1")
+ {
+ res.redirect('/users/moredetails');
+
+ }
+ else if(req.body.username != "alexs1"){
+ researcherAccount.getResearcherByUsername(req.body.username, function (err,uzername) {
+ if(uzername.username == req.body.username)
+ {
+ res.redirect('/users/index');
+ }
+ else
+ {
+ res.redirect('/users/login');
+ }
+ });
+ }
+ });
+ */
+/*followed directions from passport js .org website
+ on how to handle admin identification
+ */
+router.post('/login', function (req, res, next) {
+    passport.authenticate('local', function (err, user, info) {
+        if (user) {
+            if (err) {
+                return next(err);
+            }
+            console.log("555555555555");
+            if (!user) {
+                console.log("6666666666");
+                return res.redirect('/users/login');
+
+            }
+            req.logIn(user, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                console.log(req.user);
+                console.log(req.info);
+                console.log(req.logIn);
+                console.log('+++++++++++++++++++');
+                console.log(req.user.email);
+                /**
+                 * admin authentification strategy relies on the fact
+                 * that only we can control certain emails,
+                 * every new email has to be unique
+                 * thus if we make the first two researcher accounts
+                 * these will be the first 2 admin accounts
+                 * and no one else can make admin priviliges
+                 * as they are hardcoded in
+                 * */
+                if (req.user.email == "suleaa@tcd.ie") {
+                    return res.redirect('/users/moredetails');
+                }
+                else if (req.user.email != "suleaa@tcd.ie") {
+                    return res.redirect('/users/dashboard');
+                }
+            });
+        }
+    })(req, res, next);
+});
+
+
+/*router.post('/login', passport.authenticate('local', {
+ successRedirect: '/',
+ successFlash: 'valid credentials',
+ failureRedirect: '/users/login',
+ failureFlash: 'invalid username or password'
+ }));*/
+
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/users/login');
@@ -93,6 +173,21 @@ router.get('/logout', function (req, res) {
 
 router.get('/cookie-details', function (req, res) {
     res.json(req.user);
+});
+
+router.get('/moredetails', function (req, res) {
+    researcherAccount.findAllResearcher(function (err, alres) {
+        trialData.findAllTrials(function (err, altrial) {
+
+
+            res.render('moredetails', {
+                active_login: "true",
+                alres: alres,
+                altrial: altrial
+            });
+            console.log(altrial);
+        });
+    });
 });
 
 router.get('/trials/:trialid', function (req, res) {

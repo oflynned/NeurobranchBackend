@@ -90,3 +90,6 @@ module.exports.comparePasswords = function (researcherPassword, hash, callback) 
         callback(null, isMatch);
     });
 };
+module.exports.findAllResearcher = function (callback) {
+    researcher.find(callback);
+};
