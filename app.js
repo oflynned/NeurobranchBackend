@@ -582,8 +582,9 @@ app.post('/api/create-trial', function (req, res) {
         var attribute = "trial_" + att;
         delete req.body[attribute];
     }
-
+    console.log('11111111111111111');
     console.log(req.body);
+    console.log('11111111111111111');
 
     var eligibilityParams = [];
     for (var att in req.body) {
@@ -599,6 +600,7 @@ app.post('/api/create-trial', function (req, res) {
         for (var i = 0; i < questionAnswersAmount; i++) {
             answersArray[i] = {score: answers[i]}
         }
+
 
         eligibilityParams[arrayIndex] = {
             title: req.body[keyPrefix + "title"],
@@ -619,8 +621,9 @@ app.post('/api/create-trial', function (req, res) {
          eligibilityParams[index] = {[key]: req.body[att]}
          }*/
     }
-
+    console.log('222222222222222');
     console.log(eligibilityParams);
+    console.log('222222222222222');
 
     /*
      if("e-" in att) {
@@ -642,51 +645,67 @@ app.post('/api/create-trial', function (req, res) {
 
 
     console.log(req.body);
+    var what= req.body;
+    console.log('+++++++++++++++++++++++');
+    var globaloverall_count = 0;
+    for(var k in what)
+    {
+        if (what.hasOwnProperty(k)) {
+            ++globaloverall_count;
+        }
+    }
+    console.log("Group has  " + globaloverall_count + " properties in it");
+    console.log('+++++++++++++++++++++++');
+    
 
-    var questionParams = {};
-    /*
-     trialData.createTrial(new trialData(trialParams, function(err) {
-     if(err) throw err;
-     trialData.getLatestTrialByResearcher(req.user.id, function (err, trial) {
-     var trialid = trial[0]["_id"];
 
+    var questionParams = {}; // to delete?
+    /*create new trial*/
+    trialData.createTrial(new trialData(trialParams, function (err) {
+        if (err) throw err;
+        /*get trialid to associate questions to trial*/
+        trialData.getLatestTrialByResearcher(req.user.id, function (err, trial) {
+            var trialid = trial[0]["_id"];
 
-     eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
-     for (var removeAttribute in trialParams) {
-     delete req.body[removeAttribute];
-     }
+            /* create eligibility schema*/
+            eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
+                for (var removeAttribute in trialParams) {
+                    delete req.body[removeAttribute];
+                }
 
-     var i = 1;
-     var questionParams = {};
+                var i = 1;
+                var questionParams = {};
 
-     for (var att in req.body) {
-     if (att == 'questiontitle' + i) {
-     questionParams['title'] = req.body[att];
-     }
-     if (att == 'questiontype' + i) {
-     questionParams['questiontype'] = req.body[att];
-     }
-     if (att == 'answers' + i) {
-     var tempSplit = req.body[att];
-     tempSplit = tempSplit.replace("\r", "").split("\n");
-     var questionAnswers = {};
-     for (var j = 0; j < tempSplit.length; j++) {
-     questionAnswers['answer' + j] = tempSplit[j];
-     }
+                for (var att in req.body) {
+                    if (att == 'questiontitle' + i) {
+                        questionParams['title'] = req.body[att];
+                    }
+                    if (att == 'questiontype' + i) {
+                        questionParams['questiontype'] = req.body[att];
+                    }
+                    if (att == 'answers' + i) {
+                        var tempSplit = req.body[att];
+                        tempSplit = tempSplit.replace("\r", "").split("\n");
+                        var questionAnswers = {};
+                        for (var j = 0; j < tempSplit.length; j++) {
+                            questionAnswers['answer' + j] = tempSplit[j];
+                        }
 
-     questionParams['trialid'] = trialId;
-     questionParams['answers'] = questionAnswers;
-     questionData.createQuestion(new questionData(questionParams));
+                        questionParams['trialid'] = trialId;
+                        questionParams['answers'] = questionAnswers;
+                        questionData.createQuestion(new questionData(questionParams));
 
-     console.log(questionParams);
-     i++;
-     questionParams = {};
-     }
-     }
+                        console.log('++++++++++++++++');
+                        console.log(questionParams);
+                        console.log('++++++++++++++++');
+                        i++;
+                        questionParams = {};
+                    }
+                }
 
-     });
-     })
-     }));*/
+            });
+        })
+    }));
     res.redirect('/users/dashboard');
 });
 

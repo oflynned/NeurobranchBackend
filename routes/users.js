@@ -146,8 +146,8 @@ router.get('/cookie-details', function (req, res) {
 router.get('/download/:id', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trialidz) {
         if (err) throw err;
-        //fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title, function (err) {
-            //if (err) throw err;
+        fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title, function (err) {
+            if (err) throw err;
 
                 /* link to deprecated  download page*/
                 /*res.render('download', {
@@ -157,15 +157,15 @@ router.get('/download/:id', function (req, res) {
 
                 /*non blocking async delete*/
                 /*deletes download file after 10 sec*/
-                /*setTimeout(function () {
+                setTimeout(function () {
                     fs.unlink('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
                         if (err) throw err;
 
                         console.log('file deleted successfully');
                     });
-                }, 60000);*/
+                }, 10000);
 
-        //});
+        });
     });
 });
 
@@ -206,10 +206,10 @@ router.get('/trials/:trialid', function (req, res) {
                         req_candidates: req_candidates,
                         ver_candidates: ver_candidates,
                         questions: questions,
-                        is_created: trial.state == "created" ? true : null,
-                        is_active: trial.state == "active" ? true : null,
-                        is_ended: trial.state == "ended" ? true : null,
-                        can_be_activated: parseInt(ver_candidates.length) >= parseInt(trial.candidatequota) ? true : null
+                        is_created: trial.state == "created" ? "true" : null,
+                        is_active: trial.state == "active" ? "true" : null,
+                        is_ended: trial.state == "ended" ? "true" : null,
+                        can_be_activated: parseInt(ver_candidates.length) >= parseInt(trial.candidatequota) ? "true" : null
                     });
                 });
             });

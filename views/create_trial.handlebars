@@ -71,7 +71,8 @@
                 <!-- Text input-->
                 <div class="form-group">
                     <label class=" control-label" for="qduration">Duration</label>
-                    <input id="duration" name="trial_duration" type="number" step="1" placeholder="Trial duration in days"
+                    <input id="duration" name="trial_duration" type="number" step="1"
+                           placeholder="Trial duration in days"
                            class="form-control input-md" required="">
                 </div>
 
@@ -83,49 +84,50 @@
                         Yes </label>
                 </div>
 
-                 <div id="form_main2">
-                <div id="e-questionlist">
-                    <div class="form-group">
-                        <label for="e-q1title" class="control-label">1. Eligibility Question </label>
-                        <input type="text" class="form-control col-md-4 qtitle" id="e-q1_title" name="e-q1_title"
-                               placeholder="Enter Title" required>
+                <div id="form_main2">
+                    <div id="e-questionlist">
+                        <div class="form-group">
+                            <label for="e-q1title" class="control-label">1. Eligibility Question </label>
+                            <input type="text" class="form-control col-md-4 qtitle" id="e-q1_title" name="e-q1_title"
+                                   placeholder="Enter Title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="e-q1_type">Question Type</label>
+                            <select class="form-control e-qtype" name="e-q1_type">
+                                <option data-cat="">Select Answer Type</option>
+                                <option data-cat="choice">Checkbox</option>
+                                <option data-cat="choice">Radio</option>
+                                <option data-cat="">Text</option>
+                                <option data-cat="">Scale</option>
+                            </select>
+                        </div>
+                        <div class="form-group hide questions_answers">
+                            <label for="e-no_of_options">No of Answers</label>
+                            <select class="form-control e-no_of_options" name="e-q1_no_of_options">
+                                <option value="0">Select no of answers</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select></div>
+                        <div class="form-group hide e-answers">
+                            <label>Answers</label>
+                            <div class="col-lg-12 e-answers_content"></div>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="e-q1_type">Question Type</label>
-                        <select class="form-control e-qtype" name="e-q1_type">
-                            <option data-cat="">Select Answer Type</option>
-                            <option data-cat="choice">Checkbox</option>
-                            <option data-cat="choice">Radio</option>
-                            <option data-cat="">Text</option>
-                            <option data-cat="">Scale</option>
-                        </select>
+                        <a href="#" id="e-add-more" class="btn btn-info">Add More</a>
+                        <a href="#" id="e-btn-remove" class="btn btn-warning pull-right">Remove</a>
                     </div>
-                    <div class="form-group hide questions_answers">
-                        <label for="e-no_of_options">No of Answers</label>
-                        <select class="form-control e-no_of_options" name="e-q1_no_of_options">
-                            <option value="0">Select no of answers</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select></div>
-                    <div class="form-group hide e-answers">
-                        <label>Answers</label>
-                        <div class="col-lg-12 e-answers_content"></div>
-                    </div>
-                </div>
-</div>
-                <div class="form-group">
-                    <a href="#" id="e-add-more" class="btn btn-info">Add More</a>
-                    <a href="#" id="e-btn-remove" class="btn btn-warning pull-right">Remove</a>
                 </div>
 
                 <div id="questionlist">
                     <div class="form-group">
                         <label for="q1title" class=" control-label">1. Question Title</label>
-                        <input type="text" class="form-control col-md-4 qtitle" id="q1_title" name="q1_title"
+                        <input type="text" class="form-control col-md-4 qtitle" id="q1title" name="q1title"
                                placeholder="Enter Title" required>
                     </div>
                     <div class="form-group">
