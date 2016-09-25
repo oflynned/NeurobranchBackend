@@ -27,9 +27,7 @@
                         <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
                     {{/if}}
                     <div>
-                        <break/>
-                        <a href="/users/download/{{trial.id}}">download csv</a>
-
+                        <a href="/users/download/{{trial.id}}"><br>Download csv</a>
                     </div>
                 </div>
                 <div class="col-md-6 text-left">
@@ -40,46 +38,48 @@
                     <br>
                     <div>{{trial.briefdescription}}</div>
 
-                    {{#if is_created}}
-                        {{#if can_be_activated}}
+                    {{#if is_researcher}}
+                        {{#if is_created}}
+                            {{#if can_be_activated}}
+                                <form id="form_verify_{{userid}}"
+                                      action="/api/set-trial-state/id/{{trial._id}}/state/active"
+                                      method="post">
+                                    <button id="ver_{{userid}}" class="btn btn-success">
+                                        Activate Trial
+                                    </button>
+                                </form>
+                            {{else}}
+                                <form id="form_verify_{{userid}}"
+                                      action="/api/set-trial-state/id/{{trial._id}}/state/active"
+                                      method="post">
+                                    <button id="ver_{{userid}}" class="btn btn-success" disabled>
+                                        Activate Trial
+                                    </button>
+                                </form>
+                            {{/if}}
                             <form id="form_verify_{{userid}}"
-                                  action="/api/set-trial-state/id/{{trial._id}}/state/active"
-                                  method="post">
-                                <button id="ver_{{userid}}" class="btn btn-success">
-                                    Activate Trial
+                                  action="/api/delete-trial/{{trial._id}}"
+                                  method="post" disabled="">
+                                <button id="ver_{{userid}}" class="btn btn-danger">
+                                    Cancel Trial
                                 </button>
                             </form>
-                        {{else}}
+                        {{else if is_active}}
                             <form id="form_verify_{{userid}}"
                                   action="/api/set-trial-state/id/{{trial._id}}/state/active"
                                   method="post">
                                 <button id="ver_{{userid}}" class="btn btn-success" disabled>
-                                    Activate Trial
+                                    Trial Active
+                                </button>
+                            </form>
+                            <form id="form_verify_{{userid}}"
+                                  action="/api/delete-trial/{{trial._id}}"
+                                  method="post">
+                                <button id="ver_{{userid}}" class="btn btn-danger">
+                                    Cancel Trial
                                 </button>
                             </form>
                         {{/if}}
-                        <form id="form_verify_{{userid}}"
-                              action="/api/delete-trial/{{trial._id}}"
-                              method="post" disabled="">
-                            <button id="ver_{{userid}}" class="btn btn-danger">
-                                Cancel Trial
-                            </button>
-                        </form>
-                    {{else if is_active}}
-                        <form id="form_verify_{{userid}}"
-                              action="/api/set-trial-state/id/{{trial._id}}/state/active"
-                              method="post">
-                            <button id="ver_{{userid}}" class="btn btn-success" disabled>
-                                Trial Active
-                            </button>
-                        </form>
-                        <form id="form_verify_{{userid}}"
-                              action="/api/delete-trial/{{trial._id}}"
-                              method="post">
-                            <button id="ver_{{userid}}" class="btn btn-danger">
-                                Cancel Trial
-                            </button>
-                        </form>
                     {{/if}}
 
                     <!--
@@ -241,10 +241,6 @@
                             verification.
                         {{/if}}
                     {{/if}}
-                </div>
-            {{else}}
-                <div>
-                    Please sign in as this researcher in order to see more details
                 </div>
             {{/if}}
         </div>

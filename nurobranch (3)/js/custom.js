@@ -40,7 +40,7 @@ $(function () {
             $(this).parent("div").next(".answers").removeClass("hide");
             $(this).parent("div").next(".answers").children(".answers_content").html("");
             for (var i = 1; i <= no_of_ans; i++) {
-                $(this).parent("div").next(".answers").children(".answers_content").append('<div class="col-sm-6"><input class="form-control" name="q' + global_val + '_ans[]" placeholder="Answer ' + i + ' Text" required=""/></div><div class="col-sm-6"><input class="form-control" name="q' + global_val + '_scores[]" placeholder="Answer ' + i + ' Scores" required="" /></div><br/>');
+                $(this).parent("div").next(".answers").children(".answers_content").append('<div class="col-sm-6"><input class="form-control" name="q' + global_val + '_ans[]" placeholder="Answer ' + i + ' Text" required=""/></div><div class="col-sm-6"><input class="form-control" name="q' + global_val + '_scores[]" placeholder="Answer ' + i + ' Scores" required="" type="number" step="1"/></div><br/>');
             }
         } else {
             $(this).parent("div").next(".answers").addClass("hide");
@@ -49,7 +49,33 @@ $(function () {
     $("#add-more").click(function (e) {
         e.preventDefault();
         global_val++;
-        $("#questionlist").append('<div class="dynamic"><hr/><div class="form-group"><label for="q' + global_val + '_title">' + global_val + '. Question Title</label><input type="text" class="form-control" name="q' + global_val + '_title" placeholder="Enter Title" required></div><div class="form-group"><label for="q' + global_val + '_type">Question Type</label><select  class="form-control qtype" name="q' + global_val + '_type"><option data-cat="">Select Answer Type</option><option data-cat="choice">Checkbox</option><option data-cat="choice">Radio</option><option data-cat="">Text</option><option data-cat="">Scale</option></select></div><div class="form-group hide questions_answers"><label for="no_of_options">No Of Answers</label><select  class="form-control no_of_options" name="q' + global_val + '_no_of_options" ><option value="0">Select no of Answers</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div><div class="form-group hide answers"><label for="no_of_options">Answers</label><div class="col-lg-12 answers_content"></div></div></div>');
+        $("#questionlist").append('<div class="dynamic"><hr/>' +
+            '<div class="form-group">' +
+            '<label for="q' + global_val + '_title">' + global_val + '. Question Title</label>' +
+            '<input type="text" class="form-control" name="q' + global_val + '_title" placeholder="Enter Title" required>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<label for="q' + global_val + '_type">Question Type</label>' +
+            '<select  class="form-control qtype" name="q' + global_val + '_type">' +
+            '<option data-cat="">Select Answer Type</option>' +
+            '<option data-cat="choice">Checkbox</option>' +
+            '<option data-cat="choice">Radio</option>' +
+            '<option data-cat="">Text</option>' +
+            '<option data-cat="">Scale</option>' +
+            '</select></div>' +
+            '<div class="form-group hide questions_answers">' +
+            '<label for="no_of_options">No Of Answers</label>' +
+            '<select  class="form-control no_of_options" name="q' + global_val + '_no_of_options" >' +
+            '<option value="0">Select no of Answers</option>' +
+            '<option value="1">1</option>' +
+            '<option value="2">2</option>' +
+            '<option value="3">3</option>' +
+            '<option value="4">4</option>' +
+            '<option value="5">5</option>' +
+            '</select></div>' +
+            '<div class="form-group hide answers">' +
+            '<label for="no_of_options">Answers</label>' +
+            '<div class="col-lg-12 answers_content"></div></div></div>');
 
     });
     $("#btn-remove").click(function (event) {
@@ -87,7 +113,7 @@ $(function () {
                     '<div class="col-sm-6"><input class="form-control" name="e-q' + global_val + '_ans[]" ' +
                     'placeholder="Answer ' + i + ' Text" required=""/></div><div class="col-sm-6">' +
                     '<input class="form-control" name="e-q' + global_val + '_scores[]" placeholder="Answer ' + i +
-                    ' Scores" required="" /></div><br/>');
+                    ' Scores" required="" type="number" step="1"/></div><br/>');
             }
         } else {
             $(this).parent("div").next(".e-answers").addClass("hide");

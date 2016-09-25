@@ -66,8 +66,6 @@ function generateFrontNews(limit, res) {
 router.get('/mainpage', function (req, res) {
     generateFrontNews(4, res);
 });
-
-
 router.get('/signup', function (req, res) {
     res.render('signup', {
         active_signup: "true"
@@ -83,13 +81,11 @@ router.get('/dashboard', ensureAuthenticated, function (req, res) {
         active_dash: "true"
     });
 });
-
 router.get('/login', function (req, res) {
     res.render('login', {
         active_login: "true"
     });
 });
-
 router.post('/login', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (user) {
@@ -126,7 +122,6 @@ router.post('/login', function (req, res, next) {
     })(req, res, next);
 });
 
-
 /*router.post('/login', passport.authenticate('local', {
  successRedirect: '/',
  successFlash: 'valid credentials',
@@ -138,11 +133,9 @@ router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/users/login');
 });
-
 router.get('/cookie-details', function (req, res) {
     res.json(req.user);
 });
-
 router.get('/download/:id', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trialidz) {
         if (err) throw err;
@@ -168,7 +161,6 @@ router.get('/download/:id', function (req, res) {
         });
     });
 });
-
 router.get('/moredetails/:id', function (req, res) {
     researcherAccount.findAllResearcher(function (err, alres) {
         trialData.findAllTrials(function (err, altrial) {
@@ -206,9 +198,9 @@ router.get('/trials/:trialid', function (req, res) {
                         req_candidates: req_candidates,
                         ver_candidates: ver_candidates,
                         questions: questions,
-                        is_created: trial.state == "created" ? "true" : null,
-                        is_active: trial.state == "active" ? "true" : null,
-                        is_ended: trial.state == "ended" ? "true" : null,
+                        is_created: trial.state == "Created" ? "true" : null,
+                        is_active: trial.state == "Active" ? "true" : null,
+                        is_ended: trial.state == "Ended" ? "true" : null,
                         can_be_activated: parseInt(ver_candidates.length) >= parseInt(trial.candidatequota) ? "true" : null
                     });
                 });
@@ -216,6 +208,7 @@ router.get('/trials/:trialid', function (req, res) {
         });
     });
 });
+
 router.get('/candidates/:candidateid', ensureAuthenticated, function (req, res) {
     candidateSchema.getCandidateById(req.params.candidateid, function (err, candidate) {
         if (err) throw err;
@@ -227,7 +220,6 @@ router.get('/candidates/:candidateid', ensureAuthenticated, function (req, res) 
         });
     });
 });
-
 router.get('/candidates/:candidateid/:trialid', ensureAuthenticated, function (req, res) {
     candidateSchema.getCandidateById(req.params.candidateid, function (err, candidate) {
         if (err) throw err;

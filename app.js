@@ -582,11 +582,11 @@ app.post('/api/create-trial', function (req, res) {
         var attribute = "trial_" + att;
         delete req.body[attribute];
     }
-    console.log('11111111111111111');
+
     console.log(req.body);
-    console.log('11111111111111111');
 
     var eligibilityParams = [];
+    var currentStartIndex = 0;
     for (var att in req.body) {
         var checkAtt = att.toString();
         var attribute = "e-q";
@@ -597,10 +597,9 @@ app.post('/api/create-trial', function (req, res) {
 
         var answersArray = [];
         var answers = req.body['e-ques' + index + '_ans[]'];
-        for (var i = 0; i < questionAnswersAmount; i++) {
+        for (var i = currentStartIndex; i < currentStartIndex + questionAnswersAmount; i++) {
             answersArray[i] = {score: answers[i]}
         }
-
 
         eligibilityParams[arrayIndex] = {
             title: req.body[keyPrefix + "title"],
@@ -1125,7 +1124,7 @@ var rule = new schedule.RecurrenceRule();
 rule.minute = new schedule.Range(0, 59, 1);
 
 schedule.scheduleJob(rule, function () {
-    console.log("invoking schedule");
+    console.log("Invoking scheduler, next update at " + new Date(Date.now() + (1000*60)));
     trialData.getTrialsByState('active', function (err, trials) {
         if (err) throw err;
         if (trials.length == 0) {
@@ -1136,19 +1135,20 @@ schedule.scheduleJob(rule, function () {
                 var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
 
                 //update window per day
-                if (currentDay - currentTrial > 5) {
+                //5 mins
+                if (currentDay - currentTrial >= 1) {
                     trialData.getTrialById(trials[trial]['id'], function (err, result) {
                         result.currentduration = Date.now();
                         var window = parseInt(result.lastwindow);
                         window += 1;
                         result.lastwindow = window;
-                        console.log("Updating record");
+                        console.log("Updating record (" + result.title + ")");
 
                         //check if window is now at end of trial duration
                         if (parseInt(result.lastwindow) > parseInt(result.duration)) {
                             result.state = "ended";
                             result.dateended = Date.now();
-                            console.log("Ending trial");
+                            console.log("Ending trial (" + result.title + ")");
                         }
                         result.save();
                     });
