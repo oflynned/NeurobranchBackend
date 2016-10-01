@@ -167,8 +167,9 @@
                             {"id": 50, "week": "five"},
                             {"id": 60, "week": "six"}
                         ];*/
+                        console.log("*****START*****");
 
-                        //d3.json("graphdata.json", function (dataArray) {
+                        d3.json("{{trial.id}}/graphdata.json", function (dataArray) {
                             var maxpoint = 0;
                             for (var i = 0; i < dataArray.length; i++) {
                                 var tempoint = dataArray[i];
@@ -222,7 +223,7 @@
                                     .text(function (d) {
                                         return d.week;
                                     });
-                        //});
+                        });
                     </script>
 
 

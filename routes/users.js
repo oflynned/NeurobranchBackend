@@ -208,6 +208,23 @@ router.get('/trials/:trialid', function (req, res) {
     });
 });
 
+
+router.get('/trials/:trialid/graphdata.json', function (req, res) {
+    trialData.getTrialById(req.params.trialid, function (err, trial) {
+        if (err) throw err;
+        var obj;
+        fs.readFile('views/graphdata.json', 'utf8', function (err, data) {
+            if (err) throw err;
+            console.log(data);
+            obj = JSON.parse(data);
+            console.log(obj);
+
+            res.send(obj);
+        });
+    });
+
+});
+
 router.get('/candidates/:candidateid', ensureAuthenticated, function (req, res) {
     candidateSchema.getCandidateById(req.params.candidateid, function (err, candidate) {
         if (err) throw err;
