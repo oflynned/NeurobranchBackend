@@ -11,7 +11,8 @@ var responseSchema = mongoose.Schema({
     trialid: String,
     questionid: String,
     candidateid: String,
-    response: {}
+    window: String,
+    response: []
 });
 
 var response = module.exports = mongoose.model('Responses', responseSchema);
@@ -46,4 +47,8 @@ module.exports.getResponseByTrialId = function (trialid, callback) {
 
 module.exports.getResponseByQuestionIdCandidateId = function (candidateid, questionid, callback) {
     response.find({candidateid: candidateid, questionid: questionid}, callback);
+};
+
+module.exports.getResponseByTrialIdCandidateId = function (trialid, candidateid, callback) {
+    response.find({trialid: trialid, candidateid: candidateid}, callback);
 };
