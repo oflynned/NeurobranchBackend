@@ -150,7 +150,7 @@
                     <script src="https://d3js.org/d3.v4.min.js"></script>
                     <script src="https://d3js.org/d3-selection.v1.js"></script>
 
-                    <p>here everywhere</p>
+                    <p></p>
                     <script>
                         /*var dataArray = [
                             {"id": 50, "weeK": "one"},
@@ -160,9 +160,11 @@
                             {"id": 50, "week": "five"},
                             {"id": 60, "week": "six"}
                         ];*/
+                        console.log("*****START*****");
 
-                        //d3.json("graphdata.json", function (dataArray) {
+                        d3.json("{{trial.id}}/graphdata.json", function (dataArray) {
                             var maxpoint = 0;
+                            console.log(dataArray);
                             for (var i = 0; i < dataArray.length; i++) {
                                 var tempoint = dataArray[i];
 
@@ -215,7 +217,7 @@
                                     .text(function (d) {
                                         return d.week;
                                     });
-                        //});
+                        });
                     </script>
 
 
