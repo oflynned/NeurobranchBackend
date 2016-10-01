@@ -129,14 +129,7 @@
                         <ol>
                             {{#each questions}}
                                 <li><strong>Title:</strong> {{title}}</li>
-                                <strong>Type:</strong> {{questiontype}}
-                                <ol>
-                                    {{#each answers}}
-                                        <li>
-                                            {{this}}
-                                        </li>
-                                    {{/each}}
-                                </ol>
+                                <strong>Type:</strong> {{question_type}}
                             {{/each}}
                         </ol>
                     {{else}}

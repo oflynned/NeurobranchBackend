@@ -75,8 +75,6 @@ app.get('/', function (req, res) {
 
 var candidateAccountSchema = require('./models/Accounts/candidateAccountSchema');
 var conditionsSchema = require('./models/Accounts/conditionsSchema');
-var exclusionSchema = require('./models/Trials/exclusionSchema');
-var inclusionSchema = require('./models/Trials/inclusionSchema');
 var requestedCandidatesSchema = require('./models/Validation/requestedCandidateSchema');
 var questionSchema = require('./models/Trials/questionSchema');
 var eligibilitySchema = require('./models/Trials/eligibilitySchema');
@@ -97,8 +95,6 @@ var questionData = mongoose.model('Questions', questionSchema);
 var eligibilityData = mongoose.model('Eligibility', eligibilitySchema);
 
 //meta data about trials
-var exclusionsData = mongoose.model('Exclusions', exclusionSchema);
-var inclusionsData = mongoose.model('Inclusions', inclusionSchema);
 var researcherData = mongoose.model('Researchers', researcherSchema);
 var responseData = mongoose.model('Responses', responseSchema);
 
@@ -465,8 +461,6 @@ app.post('/reset/:token', function (req, res) {
 app.post('/api/create-researcher', function (req, res) {
     req.body["isverified"] = "false";
     researcherAccount.createResearcher(new researcherAccount(req.body));
-    console.log("----");
-    console.log(req.body);
     res.redirect("/users/login");
 });
 app.get('/api/verify-researcher/:id', function (req, res) {
@@ -502,6 +496,11 @@ app.get('/api/get-researchers/username/:username', function (req, res) {
 });
 
 //conditions
+app.get('/api/get-eligibility', function (req, res) {
+    eligibilityData.getEligibility(function (err, result) {
+        res.json(result);
+    })
+});
 app.get('/api/get-eligibility/trialid/:trialid', function (req, res) {
     eligibilityData.getEligibilityByTrial(req.params.trialid, function (err, result) {
         res.json(result);
@@ -512,7 +511,8 @@ app.get('/api/get-eligibility/trialid/:trialid', function (req, res) {
 app.post('/api/create-trial', function (req, res) {
     var parameters = req.body;
 
-    var tags = parameters['trial_tags'].split(',');
+    var tags = parameters['trial_tags'];
+    console.log(tags);
     var trialTags = [];
     for (var i = 0; i < tags.length; i++) {
         trialTags[i] = {tag: tags[i]}
@@ -536,7 +536,9 @@ app.post('/api/create-trial', function (req, res) {
         state: "created",
         researcherid: req.user['id'],
         currentduration: 0,
-        lastwindow: 0
+        lastwindow: 0,
+        has_eligibility: "false",
+        min_pass_mark: 0
     };
 
     //trial parsing done
@@ -606,30 +608,40 @@ app.post('/api/create-trial', function (req, res) {
 
                 console.log(e_maxIndex + " is the maximum eligibility question index");
 
-                for (var e_qIndex = 0; e_qIndex < e_maxIndex; e_qIndex++) {
-                    var e_question = {};
-                    var e_answers = [];
-                    var e_thisIndex = e_qIndex + 1;
-                    for (var att in eligibilityDetails) {
-                        if (att === "e-q" + e_thisIndex + "_title") {
-                            e_question["title"] = eligibilityDetails[att]
-                        } else if (att === "e-q" + e_thisIndex + "_type") {
-                            e_question["question_type"] = eligibilityDetails[att]
-                        } else if (att === "e-q" + e_thisIndex + "_ans[]") {
-                            for (var e_q = 0; e_q < att.length; e_q++) {
-                                var e_answer = eligibilityDetails[att][e_q];
-                                if (e_answer != undefined) e_answers[e_q] = {
-                                    "answer": e_answer,
-                                    "score": eligibilityDetails["e-q" + e_thisIndex + "_scores[]"][e_q]
-                                };
+                if (e_maxIndex > 0) {
+                    //modify the trial to set has_eligibility to true
+                    for (var e_qIndex = 0; e_qIndex < e_maxIndex; e_qIndex++) {
+                        var e_question = {};
+                        var e_answers = [];
+                        var e_thisIndex = e_qIndex + 1;
+                        for (var att in eligibilityDetails) {
+                            if (att === "e-q" + e_thisIndex + "_title") {
+                                e_question["title"] = eligibilityDetails[att]
+                            } else if (att === "e-q" + e_thisIndex + "_type") {
+                                e_question["question_type"] = eligibilityDetails[att]
+                            } else if (att === "e-q" + e_thisIndex + "_ans[]") {
+                                for (var e_q = 0; e_q < att.length; e_q++) {
+                                    var e_answer = eligibilityDetails[att][e_q];
+                                    if (e_answer != undefined) e_answers[e_q] = {
+                                        "answer": e_answer,
+                                        "score": eligibilityDetails["e-q" + e_thisIndex + "_scores[]"][e_q]
+                                    };
+                                }
                             }
                         }
+                        e_question['index'] = e_qIndex;
+                        e_question['trialid'] = trial_id;
+                        if (e_answers.length > 0) e_question['answers'] = e_answers;
+                        eligibilityData.createEligibility(new eligibilityData(e_question));
                     }
-                    e_question['index'] = e_qIndex;
-                    e_question['trialid'] = trial_id;
-                    e_question['min_pass_mark'] = eligibilityDetails['e-min_pass_mark'];
-                    if (e_answers.length > 0) e_question['answers'] = e_answers;
-                    eligibilityData.createEligibility(new eligibilityData(e_question));
+
+
+                    trialData.updatePassMark(trial_id, parseInt(eligibilityDetails['e-min_pass_mark']), function (err) {
+                        if(err) throw err;
+                        trialData.updateEligibility(trial_id, 'true', function (err) {
+                            if(err) throw err;
+                        });
+                    });
                 }
             }
         });
@@ -656,16 +668,19 @@ app.get('/api/get-trials/trialid/:trialid', function (req, res) {
     });
 });
 app.post('/api/delete-trial/:trialid', function (req, res) {
-    trialData.deleteTrial(req.params.trialid, function (err) {
-        if (err) throw err;
-        res.redirect('/users/dashboard');
+    trialData.deleteTrial(req.params.trialid, function () {
+        questionData.deleteQuestions(req.params.trialid, function () {
+            eligibilityData.deleteEligibilities(req.params.trialid, function () {
+                res.redirect('/users/dashboard');
+            });
+        });
     });
 });
 
 app.post('/verify_can/:id', function (req, res) {
     res.redirect('/users/trials/' + id);
 });
-app.post('/reject_can/:id', function (req, res, next) {
+app.post('/reject_can/:id', function (req, res) {
     var id = req.body.userid;
 
     requestedCandidatesData.removeRequestedCandidate(req.params.userid, function (err, rej) {
@@ -752,60 +767,6 @@ app.delete('/api/delete-epoch-questions/:trialid', function (req, res) {
 
 });
 
-//inclusions
-app.post('/api/create-inclusion/:trialid', function (req, res) {
-    var trialid = req.params.trialid;
-    var inclusions = req.body;
-    var inclusionDataParams = {
-        trialid: trialid,
-        inclusions
-    };
-    inclusionsData.createInclusions(new inclusionsData(inclusionDataParams));
-    res.redirect('/api/get-inclusions');
-});
-app.get('/api/get-inclusions', function (req, res) {
-    inclusionsData.getInclusions(function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
-});
-app.get('/api/get-inclusions/:trialid', function (req, res) {
-    inclusionsData.getInclusionsById(req.params.trialid, function (err, result) {
-        if (err) throw err;
-        res.json(result.inclusions);
-    });
-});
-app.delete('/api/delete-inclusion/:inclusionid', function (req, res) {
-
-});
-
-//exclusions
-app.post('/api/create-exclusion/:trialid', function (req, res) {
-    var trialid = req.params.trialid;
-    var exclusions = req.body;
-    var exclusionDataParams = {
-        trialid: trialid,
-        exclusions
-    };
-    exclusionsData.createInclusions(new exclusionsData(exclusionDataParams));
-    res.redirect('/api/get-exclusions');
-});
-app.get('/api/get-exclusions', function (req, res) {
-    exclusionsData.getInclusions(function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
-});
-app.get('/api/get-exclusions/:trialid', function (req, res) {
-    exclusionsData.getInclusionsById(req.params.trialid, function (err, result) {
-        if (err) throw err;
-        res.json(result.exclusions);
-    });
-});
-app.delete('/api/delete-exclusion/:exclusionid', function (req, res) {
-
-});
-
 //responses
 app.post('/api/create-response/', function (req, res) {
     console.log(req.body);
@@ -882,35 +843,6 @@ app.get('/api/get-researcher-data/:_id', function (req, res) {
         if (err) throw err;
         res.json(result.exclusions);
     });
-});
-
-//debug inclusions
-app.get('/debug/create-inclusion/:trialid/:count', function (req, res) {
-    var inclusions = {};
-    for (var i = 0; i < req.params.count; i++) {
-        inclusions["inclusion" + i] = Math.floor(Math.random() * 100).toString();
-    }
-
-    var inclusionData = {
-        trialid: req.params.trialid,
-        inclusions
-    };
-
-    inclusionsData.createInclusions(new inclusionsData(inclusionData));
-    res.redirect('/debug/get-inclusions');
-});
-app.get('/debug/edit-inclusions/:userid/:count', function (req, res) {
-    var inclusions = {};
-    for (var i = 0; i < req.params.count; i++) {
-        inclusions[i] = Math.floor(Math.random() * 100).toString();
-    }
-
-    inclusionsData.getInclusionsById(req.param.userid, function (err, doc) {
-        if (err) throw err;
-        doc.inclusions = inclusions;
-        doc.save();
-    });
-    res.redirect('/debug/get-inclusions');
 });
 
 app.get('/api/subscribe-user/trialid/:trialid/candidateid/:id', function (req, res) {
@@ -1049,6 +981,7 @@ app.get('/api/update-trials-service', function (req, res) {
 });
 
 //scheduling
+/*
 var rule = new schedule.RecurrenceRule();
 rule.minute = new schedule.Range(0, 59, 1);
 
@@ -1087,7 +1020,7 @@ schedule.scheduleJob(rule, function () {
             }
         }
     })
-});
+});*/
 
 app.listen(app.get('port'), function () {
     console.log('Server started on port ' + app.get('port'));

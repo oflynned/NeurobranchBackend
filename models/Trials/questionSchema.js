@@ -40,3 +40,7 @@ module.exports.getQuestionsByTrialId = function (trialid, callback) {
 module.exports.getQuestionByAllParams = function (questionid, trialid, callback) {
     question.find({trialid: trialid, _id: questionid}, callback);
 };
+
+module.exports.deleteQuestions = function (trialid, callback) {
+    question.remove({trialid: trialid}, callback);
+};
