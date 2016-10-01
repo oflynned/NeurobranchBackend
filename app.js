@@ -760,25 +760,11 @@ app.get('/api/get-questions/:trialid/:questionid', function (req, res) {
         res.json(result);
     });
 });
-app.delete('/api/delete-question/:questionid', function (req, res) {
-
-});
-app.delete('/api/delete-epoch-questions/:trialid', function (req, res) {
-
-});
 
 //responses
 app.post('/api/create-response/', function (req, res) {
     console.log(req.body);
-
-    var responseDataParams = {
-        trialid: req.body.trialid,
-        questionid: req.body.questionid,
-        candidateid: req.body.candidateid,
-        response: req.body.response
-    };
-
-    responseData.createResponse(new responseData(responseDataParams));
+    responseData.createResponse(new responseData(req.body));
     res.redirect('/api/get-responses');
 });
 app.get('/api/get-responses', function (req, res) {
@@ -811,8 +797,11 @@ app.get('/api/get-responses/:questionid/:candidateid', function (req, res) {
         res.json(result);
     });
 });
-app.delete('/api/delete-response/:_id', function (req, res) {
-
+app.get('/api/get-responses/trialid/:trialid/candidateid/:candidateid', function (req, res) {
+    responseData.getResponseByTrialIdCandidateId(req.params.trialid, req.params.candidateid, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+    });
 });
 
 //researchers ownership of trial meta data, ie who is hosting the trial
@@ -926,9 +915,6 @@ app.post('/api/remove-requested-candidate/trialid/:trialid/candidateid/:userid',
         if (err) throw err;
         res.redirect('/users/trials/' + req.params.trialid);
     })
-});
-app.get('/api/delete-requested-candidates/:_id', function (req, res) {
-
 });
 
 //debug
