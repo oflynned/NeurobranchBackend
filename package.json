@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.0.0-rc.5",
+    "bcrypt": "^0.8.7",
     "bcryptjs": "*",
     "body-parser": "^1.15.2",
     "chart.js": "^2.2.2",
@@ -35,6 +36,7 @@
     "mongoose-gen": "^2.1.1",
     "mongoose-query-random": "^1.0.1",
     "mongoose-simple-random": "^0.3.3",
+    "morgan": "^1.7.0",
     "multer": "^1.1.0",
     "node-schedule": "^1.1.1",
     "nodemailer": "~2.5.0",
