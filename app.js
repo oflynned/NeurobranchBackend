@@ -502,209 +502,138 @@ app.get('/api/get-researchers/username/:username', function (req, res) {
 });
 
 //conditions
-app.post('/debug/create-condition/:candidateid/:count', function (req) {
-    var conditions = {};
-    for (var i = 0; i < req.params.count; i++) {
-        var item = i;
-        conditions["condition" + item] = item;
-    }
-
-    var mockData = {
-        userid: req.params.candidateid,
-        conditions
-    };
-    conditionsData.createCondition(new conditionsData(mockData));
-});
-app.get('/debug/edit-condition/:id/:count', function (req, res) {
-    var conditions = {};
-    for (var i = 0; i < req.params.count; i++) {
-        conditions["condition" + i] = Math.floor(Math.random() * 100).toString();
-    }
-
-    conditionsData.getConditionById(req.params.id, function (err, doc) {
-        doc.conditions = conditions;
-        doc.save();
-    });
-    res.redirect('/debug/get-conditions');
-});
-app.get('/api/get-conditions', function (req, res) {
-    conditionsData.getConditions(function (err, result) {
-        if (err) throw err;
+app.get('/api/get-eligibility/trialid/:trialid', function (req, res) {
+    eligibilityData.getEligibilityByTrial(req.params.trialid, function (err, result) {
         res.json(result);
-    });
-});
-app.get('/api/get-conditions/:userid', function (req, res) {
-    conditionsData.getConditionById(req.params.userid, function (err, result) {
-        if (err) throw err;
-        res.json(result.conditions);
     })
 });
 
 //trials
 app.post('/api/create-trial', function (req, res) {
-    //create trial
-    //retrieve trial
-    //create eligibility form
-    //create qs
+    var parameters = req.body;
 
-    //retrieve tags into array
-    var tags = (req.body.trial_tags).toString().split(",");
-    var tagObject = [];
+    var tags = parameters['trial_tags'].split(',');
+    var trialTags = [];
     for (var i = 0; i < tags.length; i++) {
-        tagObject[i] = {tag: tags[i]};
+        trialTags[i] = {tag: tags[i]}
     }
 
-    //parse rest of parameters to object
+    //separate trial params
     var trialParams = {
-        title: req.body.trial_title,
-        briefdescription: req.body.trial_briefdescription,
-        detaileddescription: req.body.trial_detaileddescription,
-        trialtype: req.body.trial_trialtype,
-        institute: req.user.institute,
-        tags: tagObject,
-        duration: req.body.trial_duration,
-        frequency: req.body.trial_frequency,
-        waiverform: req.body.trial_waiverform,
+        title: parameters['trial_title'],
+        briefdescription: parameters['trial_briefdesc'],
+        detaileddescription: parameters['trial_longdesc'],
+        trialtype: parameters['trial_type'],
+        institute: req.user['institute'],
+        tags: trialTags,
+        duration: parameters['trial_duration'],
+        frequency: parameters['trial_frequency'],
+        waiverform: parameters['trial_waiverform'],
         datecreated: Date.now(),
         datestarted: 0,
         dateended: 0,
-        candidatequota: req.body.trial_candidatequota,
+        candidatequota: parameters['trial_quota'],
         state: "created",
-        researcherid: req.user.id,
+        researcherid: req.user['id'],
         currentduration: 0,
         lastwindow: 0
     };
 
-    //trialData.createTrial(new trialData(trialParams));
+    //trial parsing done
+    trialData.createTrial(new trialData(trialParams), function () {
+        trialData.getLatestTrialByResearcher(req.user.id, function (err, latestTrial) {
+            if(err) throw err;
+            var trial_id = latestTrial._id;
 
-    //remove trial keys from object to deal with less data
-    for (var att in trialParams) {
-        var attribute = "trial_" + att;
-        delete req.body[attribute];
-    }
+            //scrub everything but questions
+            var questionDetails = {};
+            for (var k in parameters) {
+                var result = k.includes("trial_") || k.includes("e-");
+                if (!result) questionDetails[k] = parameters[k];
+            }
 
-    console.log(req.body);
+            console.log(questionDetails);
 
-    var eligibilityParams = [];
-    var currentStartIndex = 0;
-    for (var att in req.body) {
-        var checkAtt = att.toString();
-        var attribute = "e-q";
-        var index = parseInt(checkAtt.replace(/\D/g, ''));
-        var arrayIndex = index - 1;
-        var keyPrefix = attribute + index + "_";
-        var questionAnswersAmount = req.body[keyPrefix + "no_of_answers"];
+            var indices = Object.keys(questionDetails);
+            console.log(indices);
+            var maxIndex = 0;
+            for (var index = 0; index < indices.length; index++) {
+                var currIndex = parseInt(indices[index].match(/\d+/));
+                if (currIndex > maxIndex) maxIndex = currIndex;
+            }
 
-        var answersArray = [];
-        var answers = req.body['e-ques' + index + '_ans[]'];
-        for (var i = currentStartIndex; i < currentStartIndex + questionAnswersAmount; i++) {
-            answersArray[i] = {score: answers[i]}
-        }
+            console.log(maxIndex + " is the maximum question index");
 
-        eligibilityParams[arrayIndex] = {
-            title: req.body[keyPrefix + "title"],
-            questiontype: req.body[keyPrefix + "type"],
-            answers: answersArray
-        };
-
-        /*
-         if (keyPrefix + "title" == checkAtt) {
-         console.log("pushing " + checkAtt + ", " + req.body[att]);
-         eligibilityParams[index] = {title: req.body[att]};
-         } else if(keyPrefix + "type" == checkAtt) {
-         console.log("pushing " + checkAtt + ", " + req.body[att]);
-         eligibilityParams[index] = {type: req.body[att]};
-         }
-
-         if (attribute in checkAtt) {
-         eligibilityParams[index] = {[key]: req.body[att]}
-         }*/
-    }
-    console.log('222222222222222');
-    console.log(eligibilityParams);
-    console.log('222222222222222');
-
-    /*
-     if("e-" in att) {
-     var index = att.replace(/\D/g,'');
-     var prefix = "e-q" + index + "_";
-     var attribute = att.replace(prefix, "");
-
-     console.log(index);
-     console.log(prefix);
-     console.log(attribute);
-     console.log(req.body[att]);
-
-     if (attribute == answer) {
-
-     } else {
-     eligibilityParams[index] = {[attribute]: req.body[att]};
-     }
-     }*/
-
-
-    console.log(req.body);
-    var what= req.body;
-    console.log('+++++++++++++++++++++++');
-    var globaloverall_count = 0;
-    for(var k in what)
-    {
-        if (what.hasOwnProperty(k)) {
-            ++globaloverall_count;
-        }
-    }
-    console.log("Group has  " + globaloverall_count + " properties in it");
-    console.log('+++++++++++++++++++++++');
-    
-
-
-    var questionParams = {}; // to delete?
-    /*create new trial*/
-    trialData.createTrial(new trialData(trialParams, function (err) {
-        if (err) throw err;
-        /*get trialid to associate questions to trial*/
-        trialData.getLatestTrialByResearcher(req.user.id, function (err, trial) {
-            var trialid = trial[0]["_id"];
-
-            /* create eligibility schema*/
-            eligibilityData.createEligibility(new eligibilityData(eligibilityParams), function () {
-                for (var removeAttribute in trialParams) {
-                    delete req.body[removeAttribute];
-                }
-
-                var i = 1;
-                var questionParams = {};
-
-                for (var att in req.body) {
-                    if (att == 'questiontitle' + i) {
-                        questionParams['title'] = req.body[att];
-                    }
-                    if (att == 'questiontype' + i) {
-                        questionParams['questiontype'] = req.body[att];
-                    }
-                    if (att == 'answers' + i) {
-                        var tempSplit = req.body[att];
-                        tempSplit = tempSplit.replace("\r", "").split("\n");
-                        var questionAnswers = {};
-                        for (var j = 0; j < tempSplit.length; j++) {
-                            questionAnswers['answer' + j] = tempSplit[j];
+            for (var qIndex = 0; qIndex < maxIndex; qIndex++) {
+                var question = {};
+                var answers = [];
+                var thisIndex = qIndex + 1;
+                for (var att in questionDetails) {
+                    if (att === "q" + thisIndex + "_title") {
+                        question["title"] = questionDetails[att]
+                    } else if (att === "q" + thisIndex + "_type") {
+                        question["question_type"] = questionDetails[att]
+                    } else if (att === "q" + thisIndex + "_ans[]") {
+                        for (var q = 0; q < att.length; q++) {
+                            var answer = questionDetails[att][q];
+                            if (answer != undefined) answers[q] = {"answer": answer};
                         }
-
-                        questionParams['trialid'] = trialId;
-                        questionParams['answers'] = questionAnswers;
-                        questionData.createQuestion(new questionData(questionParams));
-
-                        console.log('++++++++++++++++');
-                        console.log(questionParams);
-                        console.log('++++++++++++++++');
-                        i++;
-                        questionParams = {};
                     }
                 }
+                question['index'] = qIndex;
+                question['trialid'] = trial_id;
+                if (answers.length > 0) question['answers'] = answers;
 
-            });
-        })
-    }));
+                questionData.createQuestion(new questionData(question));
+
+                //question parsing done
+
+                var eligibilityDetails = {};
+                for (var e_k in parameters) {
+                    var e_result = e_k.includes("e-");
+                    if (e_result) eligibilityDetails[e_k] = parameters[e_k];
+                }
+
+                console.log(eligibilityDetails);
+
+                var e_indices = Object.keys(eligibilityDetails);
+                console.log(e_indices);
+                var e_maxIndex = 0;
+                for (var e_index = 0; e_index < e_indices.length; e_index++) {
+                    var e_currIndex = parseInt(e_indices[e_index].match(/\d+/));
+                    if (e_currIndex > e_maxIndex) e_maxIndex = e_currIndex;
+                }
+
+                console.log(e_maxIndex + " is the maximum eligibility question index");
+
+                for (var e_qIndex = 0; e_qIndex < e_maxIndex; e_qIndex++) {
+                    var e_question = {};
+                    var e_answers = [];
+                    var e_thisIndex = e_qIndex + 1;
+                    for (var att in eligibilityDetails) {
+                        if (att === "e-q" + e_thisIndex + "_title") {
+                            e_question["title"] = eligibilityDetails[att]
+                        } else if (att === "e-q" + e_thisIndex + "_type") {
+                            e_question["question_type"] = eligibilityDetails[att]
+                        } else if (att === "e-q" + e_thisIndex + "_ans[]") {
+                            for (var e_q = 0; e_q < att.length; e_q++) {
+                                var e_answer = eligibilityDetails[att][e_q];
+                                if (e_answer != undefined) e_answers[e_q] = {
+                                    "answer": e_answer,
+                                    "score": eligibilityDetails["e-q" + e_thisIndex + "_scores[]"][e_q]
+                                };
+                            }
+                        }
+                    }
+                    e_question['index'] = e_qIndex;
+                    e_question['trialid'] = trial_id;
+                    e_question['min_pass_mark'] = eligibilityDetails['e-min_pass_mark'];
+                    if (e_answers.length > 0) e_question['answers'] = e_answers;
+                    eligibilityData.createEligibility(new eligibilityData(e_question));
+                }
+            }
+        });
+    });
     res.redirect('/users/dashboard');
 });
 
@@ -1124,7 +1053,7 @@ var rule = new schedule.RecurrenceRule();
 rule.minute = new schedule.Range(0, 59, 1);
 
 schedule.scheduleJob(rule, function () {
-    console.log("Invoking scheduler, next update at " + new Date(Date.now() + (1000*60)));
+    console.log("Invoking scheduler, next update at " + new Date(Date.now() + (1000 * 60)));
     trialData.getTrialsByState('active', function (err, trials) {
         if (err) throw err;
         if (trials.length == 0) {
@@ -1135,7 +1064,7 @@ schedule.scheduleJob(rule, function () {
                 var currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
 
                 //update window per day
-                //5 mins
+                //1 min update
                 if (currentDay - currentTrial >= 1) {
                     trialData.getTrialById(trials[trial]['id'], function (err, result) {
                         result.currentduration = Date.now();
@@ -1145,7 +1074,7 @@ schedule.scheduleJob(rule, function () {
                         console.log("Updating record (" + result.title + ")");
 
                         //check if window is now at end of trial duration
-                        if (parseInt(result.lastwindow) > parseInt(result.duration)) {
+                        if (parseInt(result.lastwindow) >= parseInt(result.duration)) {
                             result.state = "ended";
                             result.dateended = Date.now();
                             console.log("Ending trial (" + result.title + ")");

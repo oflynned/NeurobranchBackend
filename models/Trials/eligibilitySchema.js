@@ -7,16 +7,12 @@
 
 var mongoose = require('mongoose');
 
-var answerSchema = mongoose.Schema({
-    title: String,
-});
-
 var eligibilitySchema = mongoose.Schema({
     trialid: String,
-    candidateid: String,
-    researcherid: String,
-    passmark: String,
-    mark: String,
+    question_type: String,
+    title: String,
+    index: String,
+    min_pass_mark: String,
     answers: []
 });
 
@@ -38,6 +34,6 @@ module.exports.getEligibilityById = function (id, callback) {
     eligibility.find({_id: id}, callback);
 };
 
-module.exports.getEligibilityByTrialCandidate = function (trialid, candidateid, callback) {
-    eligibility.find({trialid: trialid, candidateid: candidateid}, callback);
+module.exports.getEligibilityByTrial = function (trialid, callback) {
+    eligibility.find({trialid: trialid}, callback);
 };

@@ -9,9 +9,10 @@ var mongoose = require('mongoose');
 
 var questionSchema = mongoose.Schema({
     trialid: String,
-    questiontype: String,
+    question_type: String,
     title: String,
-    answers: {}
+    index: String,
+    answers: []
 });
 
 var question = module.exports = mongoose.model('Questions', questionSchema);

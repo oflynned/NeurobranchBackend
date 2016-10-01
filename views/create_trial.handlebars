@@ -3,168 +3,179 @@
     {{#if is_ver }}
         <div class="container-fluid content-main">
             <!--"/api/create-trial"-->
-            <form role="form" method="post" action="/api/create-trial">
-                <!-- Form Name -->
-                <div class="page-header">
-                    <h3>New Trial Details</h3>
-                </div>
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="control-label" for="Title">Trial Title</label>
-                    <input id="title" name="trial_title" type="text" placeholder="Trial Title"
-                           class="form-control input-md" required="">
-                </div>
+            <form method="post" action="/api/create-trial" id="trial_form">
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="control-label" for="txtbriefdesc">Brief Description</label>
-                    <input id="briefdescription" name="trial_briefdescription" type="text"
-                           placeholder="Short synopsis about the trial that candidates will first see"
-                           class="form-control input-md" required="">
-                </div>
+                <div class="form-horizontal" id="form_main">
+                    <fieldset>
+                        <legend>Trial Details</legend>
 
-                <!-- Textarea -->
-                <div class="form-group">
-                    <label class="control-label" for="txtlongdesc">Long Description</label>
-                    <textarea class="form-control" id="detaileddescription" style="resize: vertical;"
-                              name="trial_detaileddescription"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class=" control-label" for="qtype">Question Frequency</label>
-                    <select name="trial_frequency" id="frequency" class="form-control">
-                        <option>Daily</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label" for="qtags"> Quota</label>
-                    <input id="candidatequota" name="trial_candidatequota" type="number"
-                           placeholder="Minimum quota for hosting a clinical trial"
-                           min="1" step="1" class="form-control input-md" required="" autocomplete="off">
-                </div>
-
-                <div class="form-group">
-                    <label class=" control-label" for="qtype">Trial Type</label>
-                    <select name="trial_trialtype" id="trialtype" class="form-control">
-                        <option name="behavioural">Behavioural</option>
-                        <option name="biomedical">Biomedical Device</option>
-                        <option name="food">Food</option>
-                        <option name="pharma">Pharmaceutical</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label" for="qtags">Trial Tags</label>
-                    <div class="bootstrap-tasginput">
-                        <input id="trialtags" name="trial_tags" type="text" data-role="tagsinput"/>
-                    </div>
-                </div>
-
-                <!-- Textarea -->
-                <div class="form-group">
-                    <label class=" control-label" for="qdesc2">Waiver Form</label>
-                    <textarea class="form-control" id="waiverform" name="trial_waiverform"
-                              style="resize: vertical;"></textarea>
-                </div>
-
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class=" control-label" for="qduration">Duration</label>
-                    <input id="duration" name="trial_duration" type="number" step="1"
-                           placeholder="Trial duration in days"
-                           class="form-control input-md" required="">
-                </div>
-
-                <!-- Multiple Checkboxes (inline) -->
-                <div class="form-group">
-                    <label class=" control-label" for="eligibiltyform">Eligibility</label>
-                    <label class="checkbox-inline" for="eligibiltyform-0">
-                        <input type="checkbox" name="trial_eligibiltyform" id="eligibiltyform" value="1">
-                        Yes </label>
-                </div>
-
-                <div id="form_main2">
-                    <div id="e-questionlist">
                         <div class="form-group">
-                            <label for="e-q1title" class="control-label">1. Eligibility Question </label>
-                            <input type="text" class="form-control col-md-4 qtitle" id="e-q1_title" name="e-q1_title"
-                                   placeholder="Enter Title">
+                            <label class="control-label" for="Title">Trial Title</label>
+                            <input id="trial_title" name="trial_title" type="text"
+                                   placeholder="Trial Title"
+                                   class="form-control input-md" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="e-q1_type">Question Type</label>
-                            <select class="form-control e-qtype" name="e-q1_type">
-                                <option data-cat="">Select Answer Type</option>
-                                <option data-cat="choice">Checkbox</option>
-                                <option data-cat="choice">Radio</option>
-                                <option data-cat="">Text</option>
-                                <option data-cat="">Scale</option>
+                            <label class="control-label" for="trial_briefdesc">Brief Description</label>
+                            <input id="trial_briefdesc" name="trial_briefdesc" type="text"
+                                   placeholder="Enter Brief Description Here" class="form-control input-md" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="trial_longdesc">Long Description</label>
+                            <textarea class="form-control" id="trial_longdesc" name="trial_longdesc"
+                                      style="resize: vertical"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="trial_waiverform">Waiver Form</label>
+                            <textarea class="form-control" id="trial_waiverform" name="trial_waiverform"
+                                      style="resize: vertical"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class=" control-label" for="trial_type">Trial Type</label>
+                            <select name="trial_type" class="form-control">
+                                <option>Behavioural</option>
+                                <option>Biomedical Device</option>
+                                <option>Food</option>
+                                <option>Pharmaceutical</option>
                             </select>
                         </div>
-                        <div class="form-group hide questions_answers">
-                            <label for="e-no_of_options">No of Answers</label>
-                            <select class="form-control e-no_of_options" name="e-q1_no_of_options">
-                                <option value="0">Select no of answers</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select></div>
-                        <div class="form-group hide e-answers">
-                            <label>Answers</label>
-                            <div class="col-lg-12 e-answers_content"></div>
+                        <div class="form-group">
+                            <label class=" control-label" for="trial_frequency">Question Frequency</label>
+                            <select name="trial_frequency" class="form-control">
+                                <option>Daily</option>
+                            </select>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label class="control-label" for="qtags"> Quota</label>
+                            <input id="qqouta" name="trial_quota" type="number" placeholder="Trial Quota"
+                                   min="1" step="1" class="form-control input-md" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="trial_tags"> Tags</label>
+                            <select class="tags form-control" name="trial_tags" multiple="multiple">
+                                <option>Cancer</option>
+                                <option>Autism</option>
+                                <option>HIV</option>
+                                <option>MRSA</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <a href="#" id="e-add-more" class="btn btn-info">Add More</a>
-                        <a href="#" id="e-btn-remove" class="btn btn-warning pull-right">Remove</a>
-                    </div>
+                        <div class="form-group">
+                            <label class=" control-label" for="trial_duration">Duration</label>
+                            <input id="qduration" name="trial_duration" type="number" min="1" step="1"
+                                   placeholder="Trial Duration" class="form-control input-md" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class=" control-label" for="eligibiltyform">Eligiblity Form Required? </label>
+                            <label class="checkbox-inline" for="eligibiltyform-0">
+                                <input type="checkbox" name="eligibiltyform" id="eligibiltyform" value="1">
+                                Yes </label>
+                        </div>
+                    </fieldset>
                 </div>
 
-                <div id="questionlist">
-                    <div class="form-group">
-                        <label for="q1title" class=" control-label">1. Question Title</label>
-                        <input type="text" class="form-control col-md-4 qtitle" id="q1title" name="q1title"
-                               placeholder="Enter Title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="q1_type">Question Type</label>
-                        <select class="form-control qtype" name="q1_type">
-                            <option data-cat="">Select Answer Type</option>
-                            <option data-cat="choice">Checkbox</option>
-                            <option data-cat="choice">Radio</option>
-                            <option data-cat="">Text</option>
-                            <option data-cat="">Scale</option>
-                        </select>
-                    </div>
-                    <div class="form-group hide questions_answers">
-                        <label for="no_of_options">No Of Answers</label>
-                        <select class="form-control no_of_options" name="q1_no_of_options">
-                            <option value="0">Select no of Answers</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select></div>
-                    <div class="form-group hide answers">
-                        <label>Answers</label>
-                        <div class="col-lg-12 answers_content"></div>
-                    </div>
+                <div class="form-horizontal" id="form_main2">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="min_pass_mark"> Minimum Pass Mark</label>
+                            <input id="e-min_pass_mark" name="e-min_pass_mark" type="number" placeholder="Minimum Pass Mark"
+                                   min="0" step="1" class="form-control input-md" required autocomplete="off">
+                        </div>
+
+                        <div id="e-questionlist">
+                            <div class="form-group">
+                                <label for="e-q1_title" class="control-label">1. Eligibility Question </label>
+                                <input type="text" class="form-control col-md-4 qtitle" name="e-q1_title"
+                                       placeholder="Enter Title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="e-q1_type">Question Type</label>
+                                <select class="form-control e-qtype" name="e-q1_type">
+                                    <option data-cat="" >Select Answer Type</option>
+                                    <option data-cat="choice">Checkbox</option>
+                                    <option data-cat="choice">Radio</option>
+                                </select>
+                            </div>
+                            <div class="form-group hide questions_answers">
+                                <label for="e-no_of_options">No Of Answers</label>
+                                <select class="form-control e-no_of_options" name="e-q1_no_of_options">
+                                    <option value="0" >Select no of Answers</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select></div>
+                            <div class="form-group hide e-answers">
+                                <label>Answers</label>
+                                <div class="col-lg-12 e-answers_content"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <a href="#" id="e-add-more" class="btn btn-info">Add More</a><a href="#" id="e-btn-remove"
+                                                                                            class="btn btn-warning pull-right">Remove</a>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-horizontal" id="form_main2">
+
+                    <fieldset>
+
+                        <div id="questionlist">
+                            <div class="form-group">
+                                <label for="q1_title" class=" control-label">1. Question Title</label>
+                                <input type="text" class="form-control col-md-4 qtitle" name="q1_title"
+                                       placeholder="Enter Title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="q1_type">Question Type</label>
+                                <select class="form-control qtype" name="q1_type">
+                                    <option data-cat="" >Select Answer Type</option>
+                                    <option data-cat="">Text</option>
+                                    <option data-cat="">Scale</option>
+                                    <option data-cat="choice">Checkbox</option>
+                                    <option data-cat="choice">Radio</option>
+                                </select>
+                            </div>
+                            <div class="form-group hide questions_answers">
+                                <label for="no_of_options">No Of Answers</label>
+                                <select class="form-control no_of_options" name="q1_no_of_options">
+                                    <option value="0" >Select no of Answers</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select></div>
+                            <div class="form-group hide answers">
+                                <label>Answers</label>
+                                <div class="col-lg-12 answers_content"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <a href="#" id="add-more" class="btn btn-info">Add More</a><a href="#" id="btn-remove"
+                                                                                          class="btn btn-warning pull-right">Remove</a>
+                        </div>
+                    </fieldset>
                 </div>
                 <div class="form-group">
-                    <a href="#" id="add-more" class="btn btn-info">Add More</a>
-                    <a href="#" id="btn-remove" class="btn btn-warning pull-right">Remove</a>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 col-md-offset-5 center-text center-form">
-                        <button class="btn-create-trial btn-lg btn-primary btn-block" type="submit">
-                            Create Trial
-                        </button>
-                    </div>
+                    <button id="btnsubmit" class="btn btn-primary" form="trial_form">Save</button>
                 </div>
             </form>
         </div>
