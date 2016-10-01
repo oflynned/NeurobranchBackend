@@ -27,7 +27,9 @@ var trialSchema = mongoose.Schema({
     researcherid: String,
     passmark: String,
     currentduration: String,
-    lastwindow: String
+    lastwindow: String,
+    has_eligibility: String,
+    min_pass_mark: String
 });
 
 var trialData = module.exports = mongoose.model('Trials', trialSchema);
@@ -51,6 +53,16 @@ module.exports.createTrial = function (trialData, callback) {
 //update the id associated with the current day to also be stored in responses for reference
 module.exports.updateLastWindow = function (id, windowid, callback) {
     trialData.findOneAndUpdate({_id: id, state: 'active'}, {lastwindow: windowid}, null, callback);
+};
+
+//modify the has_eligibility state
+module.exports.updateEligibility = function (id, value, callback) {
+    trialData.findOneAndUpdate({_id: id}, {has_eligibility: value}, null, callback);
+};
+
+//modify the has_eligibility state
+module.exports.updatePassMark = function (id, value, callback) {
+    trialData.findOneAndUpdate({_id: id}, {min_pass_mark: value}, null, callback);
 };
 
 //update the last day of the window at 00:00 by checking a change in the day

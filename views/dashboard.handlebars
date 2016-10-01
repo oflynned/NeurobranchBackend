@@ -12,7 +12,11 @@
 
         <!-- container for holding trial data -->
         <div id="dashboard-content-holder">
-            {{{ content }}}
+            {{#if content}}
+                {{{ content }}}
+            {{else}}
+                <div>No trials have been created yet! Start by creating one <a href="create-trial">here</a>.</div>
+            {{/if}}
         </div>
     </div>
 </div>

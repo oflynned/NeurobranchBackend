@@ -12,7 +12,6 @@ var eligibilitySchema = mongoose.Schema({
     question_type: String,
     title: String,
     index: String,
-    min_pass_mark: String,
     answers: []
 });
 
@@ -36,4 +35,8 @@ module.exports.getEligibilityById = function (id, callback) {
 
 module.exports.getEligibilityByTrial = function (trialid, callback) {
     eligibility.find({trialid: trialid}, callback);
+};
+
+module.exports.deleteEligibilities = function (trialid, callback) {
+    eligibility.remove({trialid: trialid}, callback);
 };
