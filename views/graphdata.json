@@ -1,8 +1,27 @@
 [
-	{"id":10,"week":"one"},
-	{"id":20,"week":"two"},
-	{"id":30,"week":"three"},
-	{"id":40,"week":"four"},
-	{"id":50,"week":"five"},
-	{"id":60,"week":"six"}
+  {
+    "id": 10,
+    "week": "one"
+  },
+  {
+    "id": 20,
+    "week": "two"
+  },
+  {
+    "id": 30,
+    "week": "three"
+  },
+  {
+    "id": 40,
+    "week": "four"
+  },
+  {
+    "id": 50,
+    "week": "five"
+  },
+  {
+    "id": 60,
+    "week": "six"
+  }
 ]
+

@@ -8,6 +8,8 @@ var path = require('path');
 var fs = require('fs');
 var http = require('http');
 var mime = require('mime');
+var json2csv = require('json2csv');
+
 var request = require('request');
 var candidateSchema = require('../models/Accounts/candidateAccountSchema.js');
 var questionSchema = require('../models/Trials/questionSchema');
@@ -16,6 +18,7 @@ var verifiedCandidate = require('../models/Validation/verifiedCandidateSchema');
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
 var eligibilityData = require('../models/Trials/eligibilitySchema');
+var responseData = require('../models/Trials/responseSchema');
 
 var MAX_LENGTH = 200;
 
@@ -128,7 +131,7 @@ router.post('/login', function (req, res, next) {
                 }
             });
         }
-        else{
+        else {
             return res.redirect('/users/login');
         }
     })(req, res, next);
@@ -151,24 +154,99 @@ router.get('/cookie-details', function (req, res) {
 router.get('/download/:id', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trialidz) {
         if (err) throw err;
-        fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title, function (err) {
+
+        var fields = ['_id','trialid','candidateid','window','index','question_type','response','answer'];
+        var myAnswers =
+            [
+                {
+                    "_id": "57f131fb383d2be0405705de",
+                    "trialid": "57f12b775cf137f73dfa55c2",
+                    "candidateid": "57efc35a28d3e80333c5cc93",
+                    "window": "2147483647",
+                    "index": "0",
+                    "question_type": "text",
+                    "__v": 0,
+                    "response": [
+                        {
+                            "answer": "qqqq"
+                        }
+                    ]
+                },
+                {
+                    "_id": "57f131fb383d2be0405705df",
+                    "trialid": "57f12b775cf137f73dfa55c2",
+                    "candidateid": "57efc35a28d3e80333c5cc93",
+                    "window": "2147483647",
+                    "index": "1",
+                    "question_type": "scale",
+                    "__v": 0,
+                    "response": [
+                        {
+                            "answer": 80
+                        }
+                    ]
+                },
+                {
+                    "_id": "57f131fb383d2be0405705e0",
+                    "trialid": "57f12b775cf137f73dfa55c2",
+                    "candidateid": "57efc35a28d3e80333c5cc93",
+                    "window": "2147483647",
+                    "index": "2",
+                    "question_type": "radio",
+                    "__v": 0,
+                    "response": [
+                        {
+                            "answer": "1"
+                        },
+                        {
+                            "answer": ""
+                        },
+                        {
+                            "answer": ""
+                        }
+                    ]
+                },
+                {
+                    "_id": "57f131fb383d2be0405705e1",
+                    "trialid": "57f12b775cf137f73dfa55c2",
+                    "candidateid": "57efc35a28d3e80333c5cc93",
+                    "window": "2147483647",
+                    "index": "3",
+                    "question_type": "checkbox",
+                    "__v": 0,
+                    "response": [
+                        {
+                            "answer": ""
+                        },
+                        {
+                            "answer": "2"
+                        },
+                        {
+                            "answer": "3"
+                        },
+                        {
+                            "answer": ""
+                        }
+                    ]
+                }
+            ];
+        var csv = json2csv({ data: myAnswers, fields: fields });
+
+
+        fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', csv, function (err) {
             if (err) throw err;
 
-                /* link to deprecated  download page*/
-                /*res.render('download', {
-                    active_login: "true"
-                });*/
-            res.download('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv',trialidz.title + '_neurobranch_' + trialidz.id + '.csv' );
+            res.download('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title + '_neurobranch_' + trialidz.id + '.csv');
+            console.log('file created succesfully');
+            /*non blocking async delete*/
+            /*deletes download file after 10 sec*/
+            setTimeout(function () {
+                fs.unlink('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
+                    if (err) throw err;
 
-                /*non blocking async delete*/
-                /*deletes download file after 10 sec*/
-                setTimeout(function () {
-                    fs.unlink('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
-                        if (err) throw err;
-
-                        console.log('file deleted successfully');
-                    });
-                }, 10000);
+                    console.log('file deleted successfully');
+                });
+            }, 10000);
 
         });
     });
@@ -195,24 +273,27 @@ router.get('/trials/:trialid', function (req, res) {
             if (err) throw err;
             requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, req_candidates) {
                 if (err) throw err;
-                verifiedCandidate.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, ver_candidates) {
+                responseData.getResponseByTrialId(req.params.trialid, function (err, respose_ans) {
                     if (err) throw err;
+                    verifiedCandidate.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, ver_candidates) {
+                        if (err) throw err;
 
-                    trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
-                    trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
-                    trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase());
+                        trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
+                        trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
+                        trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase());
 
-                    res.render('trial', {
-                        trial: trial,
-                        is_researcher: isResearcher,
-                        active_dash: true,
-                        req_candidates: req_candidates,
-                        ver_candidates: ver_candidates,
-                        questions: questions,
-                        is_created: trial.state == "Created" ? "true" : null,
-                        is_active: trial.state == "Active" ? "true" : null,
-                        is_ended: trial.state == "Ended" ? "true" : null,
-                        can_be_activated: parseInt(ver_candidates.length) >= parseInt(trial.candidatequota) ? "true" : null
+                        res.render('trial', {
+                            trial: trial,
+                            is_researcher: isResearcher,
+                            active_dash: true,
+                            req_candidates: req_candidates,
+                            ver_candidates: ver_candidates,
+                            questions: questions,
+                            is_created: trial.state == "Created" ? "true" : null,
+                            is_active: trial.state == "Active" ? "true" : null,
+                            is_ended: trial.state == "Ended" ? "true" : null,
+                            can_be_activated: parseInt(ver_candidates.length) >= parseInt(trial.candidatequota) ? "true" : null
+                        });
                     });
                 });
             });
@@ -226,17 +307,17 @@ router.get('/trials/:trialid/graphdata.json', function (req, res) {
         if (err) throw err;
         var obj;
         console.log(trial.id);
-        verifiedCandidate.getVerifiedCandidatesByTrialId(trial.id , function (err, vercandidate) {
+        verifiedCandidate.getVerifiedCandidatesByTrialId(trial.id, function (err, vercandidate) {
             if (err) throw err;
 
-        fs.readFile('views/graphdata.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            //res.send(trial);
+            fs.readFile('views/graphdata.json', 'utf8', function (err, data) {
+                if (err) throw err;
+                obj = JSON.parse(data);
+                //res.send(trial);
 
-            //res.send(obj);
-            res.send(vercandidate);
-        });
+                //res.send(obj);
+                res.send(vercandidate);
+            });
         });
     });
 

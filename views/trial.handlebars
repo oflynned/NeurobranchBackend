@@ -26,9 +26,15 @@
                     {{#if trial.dateended}}
                         <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
                     {{/if}}
+                    <!-- > DOWNLOAD CODE HERE </-->
+
+                    <!-- > original download</-->
                     <div>
                         <a href="/users/download/{{trial.id}}"><br>Download csv</a>
                     </div>
+
+
+                    <!-- > END OF DOWNLOAD CODE </-->
                 </div>
                 <div class="col-md-6 text-left">
                     <div><strong>State:</strong> {{trial.state}}</div>
@@ -152,14 +158,7 @@
 
                     <p></p>
                     <script>
-                        /*var dataArray = [
-                            {"id": 50, "weeK": "one"},
-                            {"id": 20, "week": "two"},
-                            {"id": 70, "week": "three"},
-                            {"id": 40, "week": "four"},
-                            {"id": 50, "week": "five"},
-                            {"id": 60, "week": "six"}
-                        ];*/
+
                         console.log("*****START*****");
 
                         d3.json("{{trial.id}}/graphdata.json", function (dataArray) {
