@@ -58,3 +58,7 @@ module.exports.getResponseByQuestionIdCandidateId = function (candidateid, quest
 module.exports.getResponseByTrialIdCandidateId = function (trialid, candidateid, callback) {
     response.find({trialid: trialid, candidateid: candidateid}, callback);
 };
+
+module.exports.deleteResponse = function (id, callback) {
+    response.findOneAndRemove({_id: id}, callback);
+};

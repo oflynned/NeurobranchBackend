@@ -811,6 +811,13 @@ app.get('/api/get-latest-window/trialid/:trialid/candidateid/:candidateid', func
     });
 });
 
+app.get('/api/delete-response/id/:id', function (req, res) {
+   responseData.deleteResponse(req.params.id, function (err) {
+       if(err) throw err;
+       res.redirect('/api/get-responses');
+   });
+});
+
 //researchers ownership of trial meta data, ie who is hosting the trial
 app.post('/api/create-researcher-data/:trialid', function (req, res) {
     var trialid = req.params.trialid;
