@@ -9,6 +9,7 @@ var fs = require('fs');
 var http = require('http');
 var mime = require('mime');
 var json2csv = require('json2csv');
+var jsonexport = require('jsonexport');
 
 var request = require('request');
 var candidateSchema = require('../models/Accounts/candidateAccountSchema.js');
@@ -155,7 +156,6 @@ router.get('/download/:id', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trialidz) {
         if (err) throw err;
 
-        var fields = ['_id','trialid','candidateid','window','index','question_type','response','answer'];
         var myAnswers =
             [
                 {
@@ -230,23 +230,36 @@ router.get('/download/:id', function (req, res) {
                     ]
                 }
             ];
-        var csv = json2csv({ data: myAnswers, fields: fields });
+        /* var fields = ['_id','trialid','candidateid','window','index','question_type','response','answer'];*/
+        /*var csv = json2csv({ data: myAnswers,fields: fields, unwindPath:'response' });*/
+        console.log("*************");
+        console.log(myAnswers);
+        console.log("*************");
 
+        console.log("-------------");
 
-        fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', csv, function (err) {
+        console.log("-------------");
+        jsonexport(myAnswers, function (err, csv) {
             if (err) throw err;
+            console.log(csv);
 
-            res.download('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title + '_neurobranch_' + trialidz.id + '.csv');
-            console.log('file created succesfully');
-            /*non blocking async delete*/
-            /*deletes download file after 10 sec*/
-            setTimeout(function () {
-                fs.unlink('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
-                    if (err) throw err;
 
-                    console.log('file deleted successfully');
-                });
-            }, 10000);
+            fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', csv, function (err) {
+                if (err) throw err;
+
+                res.download('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title + '_neurobranch_' + trialidz.id + '.csv');
+                console.log('file created succesfully');
+                /*non blocking async delete*/
+                /*deletes download file after 10 sec*/
+                setTimeout(function () {
+                    fs.unlink('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
+                        if (err) throw err;
+
+                        console.log('file deleted successfully');
+                    });
+                }, 10000);
+
+            });
 
         });
     });
@@ -280,7 +293,9 @@ router.get('/trials/:trialid', function (req, res) {
 
                         trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
                         trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
-                        trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase());
+                        trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase()
+                        )
+                        ;
 
                         res.render('trial', {
                             trial: trial,
