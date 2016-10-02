@@ -87,7 +87,6 @@ var verifiedCandidatesSchema = require('./models/Validation/verifiedCandidateSch
 //schemas
 var candidateAccount = mongoose.model('CandidateAccounts', candidateAccountSchema);
 var researcherAccount = mongoose.model('ResearcherAccounts', researcherAccountsSchema);
-var conditionsData = mongoose.model('Conditions', conditionsSchema);
 
 //base interactions
 var trialData = mongoose.model('Trials', trialSchema);
@@ -153,13 +152,6 @@ app.get('/api/get-candidate-subscriptions/:id', function (req, res) {
         res.json(result.subscribed);
     })
 });
-app.get('/api/can-candidate-respond/trialid/:trialid/userid/:userid', function (req, res) {
-    //get latest window for trial
-    //get last window id from past candidate responses already
-    //check if null if no responses so far
-
-});
-
 app.get('/api/get-candidate-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
         var trials = result.subscribed.reduce(function (keys, element) {
@@ -204,22 +196,32 @@ app.get('/api/get-candidate-my-trials/:id', function (req, res) {
 });
 app.get('/api/get-candidate-excluded-trials/:id', function (req, res) {
     candidateAccount.getCandidateById(req.params.id, function (err, result) {
-        var trials = result.subscribed.reduce(function (keys, element) {
+        //create trial list of already subscribed/verified to
+        var trials = result.relationship_with.reduce(function (keys, element) {
             for (var key in element) {
                 keys.push(element[key]);
             }
             return keys;
         }, []);
+
         if (trials.length == 0) {
             trialData.getTrials(function (err, trials) {
                 res.json(trials);
             });
         } else {
+            //add candidate trials already requested to join but not verified
             trialData.getTrialsByExcluded(trials, function (err, trials) {
                 if (err) throw err;
                 res.json(trials);
             });
         }
+    });
+});
+
+app.get('/api/create-trial-relationship/candidateid/:candidateid/trialid/:trialid', function (req, res) {
+    candidateAccount.addTrialRelationship(req.params.candidateid, req.params.trialid, function (err) {
+        if (err) throw err;
+        res.redirect('/api/get-candidates');
     });
 });
 
@@ -544,7 +546,7 @@ app.post('/api/create-trial', function (req, res) {
     //trial parsing done
     trialData.createTrial(new trialData(trialParams), function () {
         trialData.getLatestTrialByResearcher(req.user.id, function (err, latestTrial) {
-            if(err) throw err;
+            if (err) throw err;
             var trial_id = latestTrial._id;
 
             //scrub everything but questions
@@ -637,9 +639,9 @@ app.post('/api/create-trial', function (req, res) {
 
 
                     trialData.updatePassMark(trial_id, parseInt(eligibilityDetails['e-min_pass_mark']), function (err) {
-                        if(err) throw err;
+                        if (err) throw err;
                         trialData.updateEligibility(trial_id, 'true', function (err) {
-                            if(err) throw err;
+                            if (err) throw err;
                         });
                     });
                 }
@@ -801,6 +803,20 @@ app.get('/api/get-responses/trialid/:trialid/candidateid/:candidateid', function
     responseData.getResponseByTrialIdCandidateId(req.params.trialid, req.params.candidateid, function (err, result) {
         if (err) throw err;
         res.json(result);
+    });
+});
+app.get('/api/get-latest-window/trialid/:trialid/candidateid/:candidateid', function (req, res) {
+    responseData.getResponseMostRecentWindow(req.params.trialid, req.params.candidateid, function (err, result) {
+        if (err) throw err;
+        result = result == undefined ? [{window: -1}] : [{window: parseInt(result["window"])}];
+        res.json(result);
+    });
+});
+
+app.get('/api/delete-response/id/:id', function (req, res) {
+    responseData.deleteResponse(req.params.id, function (err) {
+        if (err) throw err;
+        res.redirect('/api/get-responses');
     });
 });
 
@@ -967,7 +983,7 @@ app.get('/api/update-trials-service', function (req, res) {
 });
 
 //scheduling
-/*
+
 var rule = new schedule.RecurrenceRule();
 rule.minute = new schedule.Range(0, 59, 1);
 
@@ -1006,7 +1022,7 @@ schedule.scheduleJob(rule, function () {
             }
         }
     })
-});*/
+});
 
 app.listen(app.get('port'), function () {
     console.log('Server started on port ' + app.get('port'));

@@ -12,8 +12,8 @@ var responseSchema = mongoose.Schema({
     questionid: String,
     candidateid: String,
     window: String,
+    question_type: String,
     index: String,
-    question_type:String,
     response: []
 });
 
@@ -43,6 +43,10 @@ module.exports.getResponseByCandidateId = function (candidateid, callback) {
     response.find({candidateid: candidateid}, callback);
 };
 
+module.exports.getResponseMostRecentWindow = function (trialid, candidateid, callback) {
+    response.findOne({trialid: trialid, candidateid: candidateid}, callback).sort({$natural:-1}).select("window");
+};
+
 module.exports.getResponseByTrialId = function (trialid, callback) {
     response.find({trialid: trialid}, callback);
 };
@@ -53,4 +57,8 @@ module.exports.getResponseByQuestionIdCandidateId = function (candidateid, quest
 
 module.exports.getResponseByTrialIdCandidateId = function (trialid, candidateid, callback) {
     response.find({trialid: trialid, candidateid: candidateid}, callback);
+};
+
+module.exports.deleteResponse = function (id, callback) {
+    response.findOneAndRemove({_id: id}, callback);
 };
