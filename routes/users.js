@@ -64,7 +64,17 @@ function generateFrontNews(limit, res) {
 
 //top bar
 router.get('/mainpage', function (req, res) {
-    generateFrontNews(4, res);
+    console.log("error here");
+    /***NEEDS TO BE FIXED BEFORE PUBLISHING
+     * ERROR IS IN SUBSTR FOR GENERATE NEWS,
+     * NEED TO ASK ED
+     *
+     * PATCHED WITH RES.RENDER FOR NOW
+     */
+    res.render('mainpage', {
+        active_main: "true"
+    });
+    //generateFrontNews(4, res);
 });
 router.get('/signup', function (req, res) {
     res.render('signup', {
