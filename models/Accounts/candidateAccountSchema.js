@@ -27,7 +27,9 @@ var candidateAccountSchema = mongoose.Schema({
         safe: true
     },
     //contains trial ids for query on server
-    subscribed: []
+    subscribed: [],
+    //used for demarcating trials to not show under trials available, with all trials ever interacted with added to here for user
+    relationship_with: []
 });
 
 var candidate = module.exports = mongoose.model('CandidateAccounts', candidateAccountSchema);
@@ -70,4 +72,13 @@ module.exports.comparePasswords = function (candidatePassword, hash, callback) {
         if (err) throw err;
         callback(null, isMatch);
     });
+};
+
+module.exports.addTrialRelationship = function (candidateid, trialid, callback) {
+    candidate.findOneAndUpdate(
+        {_id: candidateid},
+        {$push: {"relationship_with": {trialid: trialid}}},
+        {safe: true, upsert: true, new: true},
+        callback
+    );
 };
