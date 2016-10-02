@@ -38,7 +38,7 @@ $(function () {
 			for (i = 1; i <= no_of_ans; i++) {
 				$(this).parent("div").next(".answers").children(".answers_content").append(
 					'<div class="col-sm-6"><input class="form-control" name="q' + global_val + '_ans[]" placeholder="Answer ' + i + ' Text" type="text" required/></div>' +
-					'<div class="col-sm-6"><input class="form-control" name="q' + global_val + '_scores[]" placeholder="Answer ' + i + ' Scores" type="number" required /></div><br/>');
+					'<!--div class="col-sm-6"><input class="form-control" name="q' + global_val + '_scores[]" placeholder="Answer ' + i + ' Scores" type="number" required /></div><br/-->');
 			}
 		} else {
 			$(this).parent("div").next(".answers").addClass("hide");
