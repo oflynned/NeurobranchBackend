@@ -803,6 +803,13 @@ app.get('/api/get-responses/trialid/:trialid/candidateid/:candidateid', function
         res.json(result);
     });
 });
+app.get('/api/get-latest-window/trialid/:trialid/candidateid/:candidateid', function (req, res) {
+    responseData.getResponseMostRecentWindow(req.params.trialid, req.params.candidateid, function (err, result) {
+        if (err) throw err;
+        result = result == undefined ? [{window: -1}] : result["window"];
+        res.json(result);
+    });
+});
 
 //researchers ownership of trial meta data, ie who is hosting the trial
 app.post('/api/create-researcher-data/:trialid', function (req, res) {
