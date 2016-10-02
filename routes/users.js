@@ -64,7 +64,17 @@ function generateFrontNews(limit, res) {
 
 //top bar
 router.get('/mainpage', function (req, res) {
-    generateFrontNews(4, res);
+    console.log("error here");
+    /***NEEDS TO BE FIXED BEFORE PUBLISHING
+     * ERROR IS IN SUBSTR FOR GENERATE NEWS,
+     * NEED TO ASK ED
+     *
+     * PATCHED WITH RES.RENDER FOR NOW
+     */
+    res.render('mainpage', {
+        active_main: "true"
+    });
+    //generateFrontNews(4, res);
 });
 router.get('/signup', function (req, res) {
     res.render('signup', {
@@ -92,7 +102,6 @@ router.post('/login', function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            console.log("555555555555");
             if (!user) {
                 console.log("6666666666");
                 return res.redirect('/users/login');
@@ -118,6 +127,9 @@ router.post('/login', function (req, res, next) {
                     return res.redirect('/users/dashboard');
                 }
             });
+        }
+        else{
+            return res.redirect('/users/login');
         }
     })(req, res, next);
 });
