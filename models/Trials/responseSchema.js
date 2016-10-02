@@ -12,6 +12,8 @@ var responseSchema = mongoose.Schema({
     questionid: String,
     candidateid: String,
     window: String,
+    question_type: String,
+    index: String,
     response: []
 });
 

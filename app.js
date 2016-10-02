@@ -806,7 +806,7 @@ app.get('/api/get-responses/trialid/:trialid/candidateid/:candidateid', function
 app.get('/api/get-latest-window/trialid/:trialid/candidateid/:candidateid', function (req, res) {
     responseData.getResponseMostRecentWindow(req.params.trialid, req.params.candidateid, function (err, result) {
         if (err) throw err;
-        result = result == undefined ? [{window: -1}] : result["window"];
+        result = result == undefined ? [{window: -1}] : [{window: parseInt(result["window"])}];
         res.json(result);
     });
 });
