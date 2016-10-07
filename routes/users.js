@@ -156,92 +156,143 @@ router.get('/download/:id', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trialidz) {
         if (err) throw err;
 
-        var myAnswers =
-            [
-                {
-                    "_id": "57f131fb383d2be0405705de",
-                    "trialid": "57f12b775cf137f73dfa55c2",
-                    "candidateid": "57efc35a28d3e80333c5cc93",
-                    "window": "2147483647",
-                    "index": "0",
-                    "question_type": "text",
-                    "__v": 0,
-                    "response": [
-                        {
-                            "answer": "qqqq"
-                        }
-                    ]
-                },
-                {
-                    "_id": "57f131fb383d2be0405705df",
-                    "trialid": "57f12b775cf137f73dfa55c2",
-                    "candidateid": "57efc35a28d3e80333c5cc93",
-                    "window": "2147483647",
-                    "index": "1",
-                    "question_type": "scale",
-                    "__v": 0,
-                    "response": [
-                        {
-                            "answer": 80
-                        }
-                    ]
-                },
-                {
-                    "_id": "57f131fb383d2be0405705e0",
-                    "trialid": "57f12b775cf137f73dfa55c2",
-                    "candidateid": "57efc35a28d3e80333c5cc93",
-                    "window": "2147483647",
-                    "index": "2",
-                    "question_type": "radio",
-                    "__v": 0,
-                    "response": [
-                        {
-                            "answer": "1"
-                        },
-                        {
-                            "answer": ""
-                        },
-                        {
-                            "answer": ""
-                        }
-                    ]
-                },
-                {
-                    "_id": "57f131fb383d2be0405705e1",
-                    "trialid": "57f12b775cf137f73dfa55c2",
-                    "candidateid": "57efc35a28d3e80333c5cc93",
-                    "window": "2147483647",
-                    "index": "3",
-                    "question_type": "checkbox",
-                    "__v": 0,
-                    "response": [
-                        {
-                            "answer": ""
-                        },
-                        {
-                            "answer": "2"
-                        },
-                        {
-                            "answer": "3"
-                        },
-                        {
-                            "answer": ""
-                        }
-                    ]
-                }
-            ];
-        /* var fields = ['_id','trialid','candidateid','window','index','question_type','response','answer'];*/
-        /*var csv = json2csv({ data: myAnswers,fields: fields, unwindPath:'response' });*/
-        console.log("*************");
+        var myAnswers =[
+            {
+                "_id": "57f131fb383d2be0405705de",
+                "trialid": "57f12b775cf137f73dfa55c2",
+                "candidateid": "57efc35a28d3e80333c5cc93",
+                "window": "2147483647",
+                "index": "0",
+                "question_type": "text",
+                "__v": 0,
+                "response": [
+                    {
+                        "answer": "qqqq"
+                    }
+                ]
+            },
+            {
+                "_id": "57f131fb383d2be0405705df",
+                "trialid": "57f12b775cf137f73dfa55c2",
+                "candidateid": "57efc35a28d3e80333c5cc93",
+                "window": "2147483647",
+                "index": "1",
+                "question_type": "scale",
+                "__v": 0,
+                "response": [
+                    {
+                        "answer": 80
+                    }
+                ]
+            },
+            {
+                "_id": "57f131fb383d2be0405705e0",
+                "trialid": "57f12b775cf137f73dfa55c2",
+                "candidateid": "57efc35a28d3e80333c5cc93",
+                "window": "2147483647",
+                "index": "2",
+                "question_type": "radio",
+                "__v": 0,
+                "response": [
+                    {
+                        "answer": "1"
+                    },
+                    {
+                        "answer": ""
+                    },
+                    {
+                        "answer": ""
+                    }
+                ]
+            },
+            {
+                "_id": "57f131fb383d2be0405705e1",
+                "trialid": "57f12b775cf137f73dfa55c2",
+                "candidateid": "57efc35a28d3e80333c5cc93",
+                "window": "2147483647",
+                "index": "3",
+                "question_type": "checkbox",
+                "__v": 0,
+                "response": [
+                    {
+                        "answer": ""
+                    },
+                    {
+                        "answer": "2"
+                    },
+                    {
+                        "answer": "3"
+                    },
+                    {
+                        "answer": "5"
+                    }
+                ]
+            },
+            {
+                "_id": "57f131fb383d2be0405705e1",
+                "trialid": "57f12b775cf137f73dfa55c2",
+                "candidateid": "57efc35a28d3e80333c5cc93",
+                "window": "2147483847",
+                "index": "4",
+                "question_type": "checkbox",
+                "__v": 0,
+                "response": [
+                    {
+                        "answer": "apple "
+                    },
+                    {
+                        "answer": "orange"
+                    },
+                    {
+                        "answer": "grape"
+                    },
+                    {
+                        "answer": "pear"
+                    }
+                ]
+            }
+        ];
+
+        var options = {
+            handleString:function (string, name) {
+            //console.log(handleString);
+
+                console.log("-------------");
+                console.log(string);
+                console.log("-------------");
+                console.log("OOOOOOOOOOOOOO");
+                console.log(name);
+                console.log("OOOOOOOOOOOOOO");
+
+        }};
+        console.log("XXXXXXXXXXXXXXX");
         console.log(myAnswers);
+        console.log("XXXXXXXXXXXXXXX");
+
+        console.log("+++++++++++");
+        console.log((myAnswers).length);
+        console.log("+++++++++++");
+
+        console.log("*************");
+        var b = (myAnswers).length;
+
+        for(var q =0;q<b;b++) {
+            console.log("b",b);
+            console.log("q",q);
+            var j = (myAnswers[q]["response"]).length;
+            console.log("j",j);
+            for (var p = 0; p < j; p++) {
+                console.log("p",p);
+                console.log(JSON.stringify((myAnswers[q]["response"][p]["answer"])));
+            };
+        };
         console.log("*************");
 
-        console.log("-------------");
 
-        console.log("-------------");
-        jsonexport(myAnswers, function (err, csv) {
+
+        jsonexport(myAnswers,function (err, csv) {
             if (err) throw err;
-            console.log(csv);
+
 
 
             fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', csv, function (err) {
