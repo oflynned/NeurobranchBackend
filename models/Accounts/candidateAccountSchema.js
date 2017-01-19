@@ -1,10 +1,11 @@
 /**
  * Created by ed on 01/08/16.
  */
-var mongoose = require('mongoose');
-var bcrypt = require('bcryptjs');
+"use strict";
+let mongoose = require('mongoose');
+let bcrypt = require('bcryptjs');
 
-var candidateAccountSchema = mongoose.Schema({
+let candidateAccountSchema = mongoose.Schema({
     password: {
         type: String,
         safe: true
@@ -32,7 +33,7 @@ var candidateAccountSchema = mongoose.Schema({
     relationship_with: []
 });
 
-var candidate = module.exports = mongoose.model('CandidateAccounts', candidateAccountSchema);
+let candidate = module.exports = mongoose.model('CandidateAccounts', candidateAccountSchema);
 
 module.exports.getCandidatesWithLimit = function (limit, callback) {
     candidate.find(callback).skip(candidate - limit).sort({$natural: -1}).limit(limit);

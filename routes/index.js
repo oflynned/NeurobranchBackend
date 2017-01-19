@@ -16,19 +16,6 @@ var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCan
 
 var MAX_LENGTH = 300;
 
-//dashboard
-/*router.post('/reject_can/:id',function(req, res, next){
- console.log("success");
- var id = req.body.userid;
-
- requestedCandidatesData.removeRequestedCandidate(req.params.userid , function (err, rej) {
- if (err) throw err;
-
- });
- res.redirect('/users/trials/'+id);
-
- });*/
-
 router.get('/users/dashboard', ensureAuthenticated, function (req, res) {
     generateDashboard(req.user.id, res);
 });

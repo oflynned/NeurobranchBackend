@@ -1,17 +1,18 @@
 /**
  * Created by ed on 01/08/16.
  */
+"use strict";
 /**
  * This schema exists to support the x amount of candidates applying to a trial
  */
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-var requestedCandidateSchema = mongoose.Schema({
+let requestedCandidateSchema = mongoose.Schema({
     trialid: String,
     userid: String
 });
 
-var requestedCandidates = module.exports = mongoose.model('RequestedCandidates', requestedCandidateSchema);
+let requestedCandidates = module.exports = mongoose.model('RequestedCandidates', requestedCandidateSchema);
 
 module.exports.getRequestedCandidates = function (callback) {
     requestedCandidates.find(callback).sort({$natural:-1});
