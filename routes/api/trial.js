@@ -30,6 +30,7 @@ app.post('/api/set-trial-state/id/:id/state/:state', function (req, res) {
 app.post('/api/create-trial', function (req, res) {
     let parameters = req.body;
 
+    //TODO ISSUE OF TAGS SPLIT BY LETTER HERE
     let tags = parameters['trial_tags'];
     console.log(tags);
     let trialTags = [];
