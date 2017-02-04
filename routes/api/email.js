@@ -25,7 +25,6 @@ let smtpTransport = Nodemailer.createTransport({
     }
 });
 
-
 app.post('/api/emailverify/:id', function (req, res) {
     Schemas.researcherData.verifyResearcher(req.params.id, function (err) {
         if (err) throw err;
@@ -37,6 +36,7 @@ app.post('/api/emailverify/:id', function (req, res) {
  * Holy shit no, time is against us so I am not dealing with this insane mess now
  */
 app.post('/send', function (req, res) {
+    console.log(req.body);
     req.body["email"] = req.body.to;
     req.body["isverified"] = !Constants.shouldVerifyUsers;
 
@@ -88,6 +88,7 @@ app.post('/send', function (req, res) {
                 res.json({error: err !== null, data: data});
             });
         }
+        res.redirect("/users/login");
     });
 });
 

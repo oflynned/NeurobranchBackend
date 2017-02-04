@@ -7,18 +7,6 @@
 	});
 })(jQuery);
 $(function () {
-	$("#form_main2").hide();
-	var global_val = 1;
-	var e_global_val = 1;
-	$('#eligibiltyform').click(function () {
-		if ($(this).prop("checked") == true) {
-			$("#form_main2").slideDown();
-		}
-		else {
-			$("#form_main2").slideUp();
-			$("#form_main2")[0].reset();
-		}
-	});
 	$("body").on("change", ".qtype", function () {
 		var cat = $(this).find(':selected').attr('data-cat');
 		if (cat == "choice") {
