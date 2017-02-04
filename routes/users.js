@@ -21,64 +21,11 @@ var trialData = require('../models/Trials/trialSchema');
 var eligibilityData = require('../models/Trials/eligibilitySchema');
 var responseData = require('../models/Trials/responseSchema');
 
-var MAX_LENGTH = 200;
-
-function trimString(input, length) {
-    var trimmedString = input.substr(0, length);
-    return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "...";
-}
-function generateRow(rowId, content) {
-    return '<div class="row flex-row" id="' + rowId + '">' +
-        content +
-        '</div>'
-}
-function generateTile(trialName, description, trialid) {
-    return '<div class="col-md-3">' +
-        '<div class="thumbnail">' +
-        '<div class="caption">' +
-        '<h4><a href="trials/' + trialid + '">' + trialName + '</a></h4>' +
-        '<p>' + trimString(description, MAX_LENGTH) + '</p>' +
-        '</div>' +
-        '</div>' +
-        '</div>'
-}
-function generateFrontNews(limit, res) {
-    trialData.getTrials(function (err, data) {
-        var element = "";
-        var rowId = 0;
-        var container = "";
-        var i = 0;
-        for (i; i < data.length; i++) {
-            if (i % 4 == 0 && i > 0) {
-                container += generateRow(rowId, element);
-                rowId++;
-                element = "";
-            }
-            element += generateTile(data[i]['title'], data[i]['description'], data[i]['_id']);
-
-            if (i == data.length - 1)
-                container += generateRow(rowId, element);
-        }
-        res.render('mainpage', {
-            active_main: "true",
-            news_content: container
-        });
-    }, limit);
-}
-
 //top bar
 router.get('/mainpage', function (req, res) {
-    console.log("error here");
-    /***NEEDS TO BE FIXED BEFORE PUBLISHING
-     * ERROR IS IN SUBSTR FOR GENERATE NEWS,
-     * NEED TO ASK ED
-     *
-     * PATCHED WITH RES.RENDER FOR NOW
-     */
     res.render('mainpage', {
         active_main: "true"
     });
-    //generateFrontNews(4, res);
 });
 router.get('/signup', function (req, res) {
     res.render('signup', {
@@ -107,29 +54,14 @@ router.post('/login', function (req, res, next) {
                 return next(err);
             }
             if (!user) {
-                console.log("6666666666");
                 return res.redirect('/users/login');
-
             }
+
             req.logIn(user, function (err) {
                 if (err) {
                     return next(err);
                 }
-                /**
-                 * admin authentification strategy relies on the fact
-                 * that only we can control certain emails,
-                 * every new email has to be unique
-                 * thus if we make the first two researcher accounts
-                 * these will be the first 2 admin accounts
-                 * and no one else can make admin priviliges
-                 * as they are hardcoded in
-                 * */
-                if (req.user.email == "suleaa@tcd.ie") {
-                    return res.redirect('/users/moredetails/' + req.user.id);
-                }
-                else if (req.user.email != "suleaa@tcd.ie") {
-                    return res.redirect('/users/dashboard');
-                }
+                return res.redirect('/users/dashboard');
             });
         }
         else {
@@ -138,183 +70,21 @@ router.post('/login', function (req, res, next) {
     })(req, res, next);
 });
 
-/*router.post('/login', passport.authenticate('local', {
- successRedirect: '/',
- successFlash: 'valid credentials',
- failureRedirect: '/users/login',
- failureFlash: 'invalid username or password'
- }));*/
-
 router.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/users/login');
 });
+
 router.get('/cookie-details', function (req, res) {
     res.json(req.user);
 });
+
 router.get('/download/:id', function (req, res) {
     trialData.getTrialById(req.params.id, function (err, trialidz) {
-        if (err) throw err;
-
-        var myAnswers =[
-            {
-                "_id": "57f131fb383d2be0405705de",
-                "trialid": "57f12b775cf137f73dfa55c2",
-                "candidateid": "57efc35a28d3e80333c5cc93",
-                "window": "2147483647",
-                "index": "0",
-                "question_type": "text",
-                "__v": 0,
-                "response": [
-                    {
-                        "answer": "qqqq"
-                    }
-                ]
-            },
-            {
-                "_id": "57f131fb383d2be0405705df",
-                "trialid": "57f12b775cf137f73dfa55c2",
-                "candidateid": "57efc35a28d3e80333c5cc93",
-                "window": "2147483647",
-                "index": "1",
-                "question_type": "scale",
-                "__v": 0,
-                "response": [
-                    {
-                        "answer": 80
-                    }
-                ]
-            },
-            {
-                "_id": "57f131fb383d2be0405705e0",
-                "trialid": "57f12b775cf137f73dfa55c2",
-                "candidateid": "57efc35a28d3e80333c5cc93",
-                "window": "2147483647",
-                "index": "2",
-                "question_type": "radio",
-                "__v": 0,
-                "response": [
-                    {
-                        "answer": "1"
-                    },
-                    {
-                        "answer": ""
-                    },
-                    {
-                        "answer": ""
-                    }
-                ]
-            },
-            {
-                "_id": "57f131fb383d2be0405705e1",
-                "trialid": "57f12b775cf137f73dfa55c2",
-                "candidateid": "57efc35a28d3e80333c5cc93",
-                "window": "2147483647",
-                "index": "3",
-                "question_type": "checkbox",
-                "__v": 0,
-                "response": [
-                    {
-                        "answer": ""
-                    },
-                    {
-                        "answer": "2"
-                    },
-                    {
-                        "answer": "3"
-                    },
-                    {
-                        "answer": "5"
-                    }
-                ]
-            },
-            {
-                "_id": "57f131fb383d2be0405705e1",
-                "trialid": "57f12b775cf137f73dfa55c2",
-                "candidateid": "57efc35a28d3e80333c5cc93",
-                "window": "2147483847",
-                "index": "4",
-                "question_type": "checkbox",
-                "__v": 0,
-                "response": [
-                    {
-                        "answer": "apple "
-                    },
-                    {
-                        "answer": "orange"
-                    },
-                    {
-                        "answer": "grape"
-                    },
-                    {
-                        "answer": "pear"
-                    }
-                ]
-            }
-        ];
-
-        var options = {
-            handleString:function (string, name) {
-            //console.log(handleString);
-
-                console.log("-------------");
-                console.log(string);
-                console.log("-------------");
-                console.log("OOOOOOOOOOOOOO");
-                console.log(name);
-                console.log("OOOOOOOOOOOOOO");
-
-        }};
-        console.log("XXXXXXXXXXXXXXX");
-        console.log(myAnswers);
-        console.log("XXXXXXXXXXXXXXX");
-
-        console.log("+++++++++++");
-        console.log((myAnswers).length);
-        console.log("+++++++++++");
-
-        console.log("*************");
-        var b = (myAnswers).length;
-
-        for(var q =0;q<b;b++) {
-            console.log("b",b);
-            console.log("q",q);
-            var j = (myAnswers[q]["response"]).length;
-            console.log("j",j);
-            for (var p = 0; p < j; p++) {
-                console.log("p",p);
-                console.log(JSON.stringify((myAnswers[q]["response"][p]["answer"])));
-            };
-        };
-        console.log("*************");
-
-
-
-        jsonexport(myAnswers,function (err, csv) {
-            if (err) throw err;
-
-
-
-            fs.writeFile('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', csv, function (err) {
-                if (err) throw err;
-
-                res.download('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title + '_neurobranch_' + trialidz.id + '.csv');
-                console.log('file created succesfully');
-                /*non blocking async delete*/
-                /*deletes download file after 10 sec*/
-                setTimeout(function () {
-                    fs.unlink('files/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
-                        if (err) throw err;
-
-                        console.log('file deleted successfully');
-                    });
-                }, 10000);
-
-            });
-
-        });
+        // TODO removed a huge bloat here of exporting to CSV, look at older commit if needed and re-implement properly
     });
 });
+
 router.get('/moredetails/:id', function (req, res) {
     researcherAccount.findAllResearcher(function (err, alres) {
         trialData.findAllTrials(function (err, altrial) {
@@ -323,7 +93,6 @@ router.get('/moredetails/:id', function (req, res) {
                 alres: alres,
                 altrial: altrial
             });
-            console.log(altrial);
         });
     });
 });
@@ -344,9 +113,7 @@ router.get('/trials/:trialid', function (req, res) {
 
                         trial.datestarted = trial.datestarted != 0 ? new Date(parseInt(trial.datestarted)) : null;
                         trial.dateended = trial.dateended != 0 ? new Date(parseInt(trial.dateended)) : null;
-                        trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase()
-                        )
-                        ;
+                        trial.state = trial.state.replace(/\b\w/g, l => l.toUpperCase());
 
                         res.render('trial', {
                             trial: trial,

@@ -17,8 +17,7 @@ router.get('/users/dashboard', ensureAuthenticated, function (req, res) {
     generateDashboard(req.user.id, res);
 });
 router.get('/users/notifications', ensureAuthenticated, function (req, res) {
-    res.render('notifications',
-        {
+    res.render('notifications', {
             user: req.user,
             active_dash: "true"
         });
@@ -27,25 +26,16 @@ router.get('/users/create-trial', ensureAuthenticated, function (req, res) {
     researcherData.getResearcherById(req.params.id, function (err, isver) {
         if (err) throw err;
 
-        res.render('create_trial',
-            {
-
+        res.render('create_trial', {
                 user: req.user,
                 active_dash: "true",
                 is_ver:req.user.isverified
             });
     });
 });
-router.get('/users/verify-candidates', ensureAuthenticated, function (req, res) {
-
-});
-router.get('/users/view-candidates', ensureAuthenticated, function (req, res) {
-
-});
 
 router.get('/users/settings', ensureAuthenticated, function (req, res) {
-    res.render('settings',
-        {
+    res.render('settings', {
             user: req.user,
             active_dash: "true"
         });
@@ -58,11 +48,7 @@ router.get('/users/help', function (req, res) {
 });
 
 function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        res.redirect('/');
-    }
+    return req.isAuthenticated() ? next() : res.redirect('/');
 }
 
 function trimString(input, length) {

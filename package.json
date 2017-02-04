@@ -21,6 +21,7 @@
     "csprng": "*",
     "ejs": "*",
     "express": "*",
+    "express-favicon": "^2.0.0",
     "express-handlebars": "*",
     "express-logger": "*",
     "express-messages": "*",
@@ -49,6 +50,7 @@
     "passport-local": "*",
     "redis": "^2.6.2",
     "request": "^2.75.0",
+    "serve-favicon": "^2.3.2",
     "simple-json2csv": "0.0.5",
     "step": "latest",
     "xoauth2": "^1.2.0"

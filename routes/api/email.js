@@ -6,17 +6,88 @@
 let crypto = require('crypto');
 let Email = require("../services/email");
 let ResetPassword = require("../services/resetPassword");
-let Redis = require('redis');
-let RedisClient = Redis.createClient();
+
+let Constants = require("../Globals");
 
 let Schemas = require("../persistence/schemas");
 let express = require("express");
 let app = express();
+let async = require("async");
+
+let Redis = require('redis');
+let RedisClient = Redis.createClient();
+let Nodemailer = require("nodemailer");
+let smtpTransport = Nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+        user: Constants.email,
+        pass: Constants.password
+    }
+});
+
 
 app.post('/api/emailverify/:id', function (req, res) {
     Schemas.researcherData.verifyResearcher(req.params.id, function (err) {
         if (err) throw err;
         res.redirect('/users/verified');
+    });
+});
+
+/**
+ * Holy shit no, time is against us so I am not dealing with this insane mess now
+ */
+app.post('/send', function (req, res) {
+    req.body["email"] = req.body.to;
+    req.body["isverified"] = !Constants.shouldVerifyUsers;
+
+    Schemas.researcherAccount.createResearcher(new Schemas.researcherAccount(req.body), function (err, reresult) {
+        if (Constants.shouldSendEmail) {
+            async.waterfall([function (callback) {
+                RedisClient.exists(req.body.to, function (err, reply) {
+                    if (err) {
+                        return callback(true, "Error in redis");
+                    }
+                    if (reply === 1) {
+                        return callback(true, "Email already requested");
+                    }
+                    callback(null);
+                });
+            }, function (callback) {
+                let rand = reresult.id;
+                let encodedMail = new Buffer(req.body.to).toString('base64');
+                let link = "http://" + req.get('host') + "/verify?mail=" + encodedMail + "&id=" + rand;
+                let mailOptions = {
+                    to: req.body.to,
+                    from: Constants.email,
+                    subject: "Confirm Your Neurobranch Account",
+                    html: "Hey, " + req.body.forename + "!" +
+                    "<br><br>" +
+                    "Thanks for joining Neurobranch, welcome to the world of more accurate and meaningful clinical trials!" +
+                    "<br>" +
+                    "Please click <a href=" + link + ">here</a> to verify your email and change the world." +
+                    "<br><br>" +
+                    "(or copy and paste the following raw URL into your browser)" +
+                    "<br><a href=" + link + ">" + link + "</a>" +
+                    "<br><br>" +
+                    "~ The Neurobranch Team"
+                };
+                callback(null, mailOptions, rand);
+            }, function (mailData, secretKey, callback) {
+                smtpTransport.sendMail(mailData, function (error, response) {
+                    if (error) {
+                        console.log(error);
+                        return callback(true, "Error in sending email");
+                    }
+                    console.log("Message sent: " + JSON.stringify(response));
+                    RedisClient.set(req.body.to, secretKey);
+                    RedisClient.expire(req.body.to, 600); // expiry for 10 minutes.
+                    callback(null, "Email sent Successfully");
+                });
+            }], function (err, data) {
+                console.log(err, data);
+                res.json({error: err !== null, data: data});
+            });
+        }
     });
 });
 
