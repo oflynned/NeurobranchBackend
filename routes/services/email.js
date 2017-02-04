@@ -43,7 +43,7 @@ function verifyEmail(req, result) {
 }
 
 function forgottenPassword(user, req, res) {
-    let link = "http://" + (req.get("host") == "localhost" ? "localhost:3000" : "www.neurobranch.com") + "/reset/" + user.resetPasswordToken;
+    let link = "http://" + req.get("host") + "/reset/" + user.resetPasswordToken;
     
     let mailOptions = {
         to: user.email,

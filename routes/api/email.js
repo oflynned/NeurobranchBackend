@@ -40,6 +40,8 @@ app.post("/send", function (req, res) {
     req.body["isverified"] = !Constants.shouldVerifyUsers;
 
     Schemas.researcherAccount.createResearcher(new Schemas.researcherAccount(req.body), function (err, reresult) {
+        if(err) throw err;
+
         if (Constants.shouldSendEmail) {
             async.waterfall([function (callback) {
                 RedisClient.exists(req.body.email, function (err, reply) {
@@ -83,10 +85,7 @@ app.post("/send", function (req, res) {
                     RedisClient.expire(req.body.email, 600); // expiry for 10 minutes.
                     callback(null, "Email sent Successfully");
                 });
-            }], function (err, data) {
-                console.log(err, data);
-                res.json({error: err !== null, data: data});
-            });
+            }]);
         }
         res.redirect("/users/login");
     });
@@ -94,10 +93,14 @@ app.post("/send", function (req, res) {
 
 app.get("/verify", function (req, res) {
     Schemas.researcherAccount.getResearcherById(req.query.id, function (err, reverify) {
-        reverify.isverified = "true";
+        if(err) throw err;
+        console.log(req.query.id);
+        console.log(reverify);
+
+        reverify.isverified = true;
         reverify.save();
 
-        let decodedMail = new Buffer(req.query.mail, "base64").toString("ascii");
+        let decodedMail = new Buffer(req.query["mail"], "base64").toString("ascii");
 
         RedisClient.get(decodedMail, function (err, redisData) {
             if (redisData === req.query.id) {
@@ -146,8 +149,8 @@ app.get("/reset/:token", function (req, res) {
     });
 });
 
-app.post("/reset/:token", function (req, res) {
-    ResetPassword.confirmResetPassword(req, res, Schemas.researcherAccount);
+app.post("/reset/:token", function (req, res, done) {
+    ResetPassword.confirmResetPassword(req, res, done, Schemas.researcherAccount);
 });
 
 

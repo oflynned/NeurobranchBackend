@@ -7,6 +7,8 @@
 	});
 })(jQuery);
 $(function () {
+    var global_val = 1;
+    var e_global_val = 1;
 	$("body").on("change", ".qtype", function () {
 		var cat = $(this).find(':selected').attr('data-cat');
 		if (cat == "choice") {

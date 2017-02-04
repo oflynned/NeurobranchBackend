@@ -5,7 +5,7 @@
 let bcrypt = require('bcrypt');
 let Email = require("./email");
 
-function confirmResetPassword(req, res, researcherAccount) {
+function confirmResetPassword(req, res, done, researcherAccount) {
     researcherAccount.findOne({
         resetPasswordToken: req.params.token,
         resetPasswordExpires: {$gt: Date.now()}
@@ -27,9 +27,8 @@ function confirmResetPassword(req, res, researcherAccount) {
                 user.save(function (err) {
                     if (err) throw err;
                     req.logIn(user, function (err) {
-                        Email.confirmResetPassword(user);
+                        Email.confirmResetPassword(user, res);
                         done(err, user);
-                        res.redirect('/');
                     });
                 });
             });

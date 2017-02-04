@@ -7,6 +7,7 @@ exports.shouldVerifyUsers = true;
 exports.shouldSendEmail = true;
 exports.email = "teztneuro@gmail.com"; // "noreply@neurobranch.com";
 exports.password = "lCk3TN:68w4Yn8C";
+exports.TEN_MINUTES_MILLIS = 1000 * 60 * 60;
 
 //accessing addresses
 exports.PORT = 3000;
