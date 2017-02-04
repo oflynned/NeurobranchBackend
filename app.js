@@ -57,22 +57,35 @@ app.get('/', function (req, res) {
     res.render('mainpage');
 });
 
-//email endpoints
-let emailEndpoints = require("./routes/api/email");
-app.use(emailEndpoints);
+let candidateDelegationEndpoints = require("./routes/api/candidateDelegation");
+app.use(candidateDelegationEndpoints);
 
-//api endpoints for handling operations
 let candidateEndpoints = require("./routes/api/candidates");
 app.use(candidateEndpoints);
 
-let researcherEndpoints = require("./routes/api/researchers");
-app.use(researcherEndpoints);
+let debugEndpoints = require("./routes/api/debug");
+app.use(debugEndpoints);
 
 let eligibilityEndpoints = require("./routes/api/eligibility");
 app.use(eligibilityEndpoints);
 
+let emailEndpoints = require("./routes/api/email");
+app.use(emailEndpoints);
+
+let questionEndpoints = require("./routes/api/questions");
+app.use(questionEndpoints);
+
 let requestedCandidateEndpoints = require("./routes/api/requestedCandidates");
 app.use(requestedCandidateEndpoints);
+
+let researcherEndpoints = require("./routes/api/researchers");
+app.use(researcherEndpoints);
+
+let responseEndpoints = require("./routes/api/response");
+app.use(responseEndpoints);
+
+let trialEndpoints = require("./routes/api/trial");
+app.use(trialEndpoints);
 
 let verifiedCandidateEndpoints = require("./routes/api/verifiedCandidates");
 app.use(verifiedCandidateEndpoints);
