@@ -3,7 +3,7 @@
  */
 "use strict";
 
-let Schemas = require("../logic/debugVariables");
+let Schemas = require("../persistence/schemas");
 let express = require("express");
 let app = express();
 
