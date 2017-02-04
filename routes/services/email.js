@@ -2,7 +2,7 @@
  * Created by ed on 18/01/2017.
  */
 "use strict";
-let Redis = require('redis');
+let Redis = require("redis");
 let RedisClient = Redis.createClient();
 let Nodemailer = require("nodemailer");
 let Constants = require("../Globals");
@@ -17,14 +17,14 @@ let SMTP = Nodemailer.createTransport({
 
 function verifyEmail(req, result) {
     let rand = result.id;
-    let encodedMail = new Buffer(req.body.to).toString('base64');
-    let link = "http://" + req.get('host') + "/verify?mail=" + encodedMail + "&id=" + rand;
+    let encodedMail = new Buffer(req.body.to).toString("base64");
+    let link = "http://" + req.get("host") + "/verify?mail=" + encodedMail + "&id=" + rand;
 
     let mailOptions = {
         to: req.body.to,
         from: Constants.email,
         subject: "Confirm Your Neurobranch Account",
-        html: "Hey, " + req.body.forename + "!" +
+        html: "Hey " + req.body.forename + "!" +
         "<br><br>" +
         "Thanks for joining Neurobranch, welcome to the world of more accurate and meaningful clinical trials!" +
         "<br>" +
@@ -42,50 +42,56 @@ function verifyEmail(req, result) {
     });
 }
 
-function forgottenPassword(user, token, callback) {
+function forgottenPassword(user, req, res) {
+    let link = "http://" + (req.get("host") == "localhost" ? "localhost:3000" : "www.neurobranch.com") + "/reset/" + user.resetPasswordToken;
+    
     let mailOptions = {
         to: user.email,
         from: Constants.email,
-        subject: 'Neurobranch Password Reset',
-        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.' +
+        subject: "Neurobranch Password Reset",
+        html: "Hey again " + user.forename + "," +
         "<br><br>" +
-        'Please click on the following link, or paste this into your browser to complete the process:' +
+        "You are receiving this because you (or someone else) have requested the reset of the password for your account." +
+        "<br><br>" +
+        "Please click on the following link, or paste this into your browser to complete the process:" +
         "<br>" +
-        '<a href=http://www.neurobranch.com/reset/' + token + '>http://www.neurobranch.com/reset/' + token + "</a>" +
+        "<a href=" + link + ">" + link + "</a>" +
         "<br><br>" +
-        'If you did not request this, please ignore this email and your password will remain unchanged.' +
+        "If you did not request this, please ignore this email and your password will remain unchanged." +
         "<br><br>" +
         "~ The Neurobranch Team"
     };
 
-
-    smtpTransport.sendMail(mailOptions, callback);
+    SMTP.sendMail(mailOptions, function () {
+        res.redirect("/users/login");
+    });
 }
 
-function greetUser(user, token, callback) {
+function greetUser(user, res) {
     let mailOptions = {
         to: user.email,
         from: Constants.email,
-        subject: 'Welcome to Neurobranch!',
-        text: 'Hey, ' + user.forename + "," +
+        subject: "Welcome to Neurobranch!",
+        html: "Hey " + user.forename + "," +
         "<br><br>" +
-        'Thanks for confirming your account, and welcome to Neurobranch!' +
+        "Thanks for confirming your account, and welcome to Neurobranch!" +
         "<br>" +
-        '<a href=http://www.neurobranch.com/reset/' + token + '>http://www.neurobranch.com/reset/' + token + "</a>" +
-        "<br><br>" +
-        'If you did not request this, please ignore this email and your password will remain unchanged.' +
+        "We hope you enjoy your time here - take some time to have a look around our site to see the latest and " +
+        "greatest developments in clinical trials today. Help be part of the wider community, and be part of the solution :)" +
         "<br><br>" +
         "~ The Neurobranch Team"
     };
-    smtpTransport.sendMail(mailOptions, callback);
+
+    SMTP.sendMail(mailOptions, null);
+    res.redirect("/users/login");
 }
 
-function confirmResetPassword(user, callback) {
+function confirmResetPassword(user, res) {
     let mailOptions = {
         to: user.email,
         from: Constants.email,
-        subject: 'Neurobranch Password Changed',
-        text: "Hey again, " + user.forename + "!" +
+        subject: "Neurobranch Password Changed",
+        html: "Hey again, " + user.forename + "!" +
         "<br><br>" +
         "This is a confirmation that you have successfully changed the password to your account. " +
         "We hope you enjoy your time here - take some time to have a look around our site to see the latest and " +
@@ -94,7 +100,9 @@ function confirmResetPassword(user, callback) {
         "~ The Neurobranch Team"
     };
 
-    smtpTransport.sendMail(mailOptions, callback);
+    SMTP.sendMail(mailOptions, function () {
+        res.redirect("/users/login");
+    });
 }
 
 module.exports = {

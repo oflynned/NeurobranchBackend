@@ -3,8 +3,8 @@
  */
 
 // email
-exports.shouldVerifyUsers = false;
-exports.shouldSendEmail = false;
+exports.shouldVerifyUsers = true;
+exports.shouldSendEmail = true;
 exports.email = "teztneuro@gmail.com"; // "noreply@neurobranch.com";
 exports.password = "lCk3TN:68w4Yn8C";
 
