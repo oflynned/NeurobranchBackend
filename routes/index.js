@@ -4,15 +4,12 @@ var assert = require('assert');
 
 var Globals = require("./Globals.js");
 
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 mongoose.createConnection('localhost:27017/neurobranch_db');
 
-var trialSchema = require('../models/Trials/trialSchema');
-var trialData = mongoose.model('Trials', trialSchema);
-var requestedCandidatesSchema = require('../models/Validation/requestedCandidateSchema');
+var trialData = require('../models/Trials/trialSchema');
 var researcherData = require('../models/Accounts/researcherAccountSchema');
-var requestedCandidatesData = mongoose.model('RequestedCandidates', requestedCandidatesSchema);
 
 var MAX_LENGTH = 300;
 
