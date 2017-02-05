@@ -147,22 +147,11 @@
         </div>
 
         {{#if is_researcher}}
-
             {{#if trial.datecreated}}
-                Your trial currently has <strong>0</strong> verified candidates, and requires a
+                Your trial currently has <strong>{{ver_candidates.length}}</strong> verified candidates, and requires a
                 minimum of <strong>{{trial.candidatequota}}</strong> to be started.<br>
-                Please view the notifications section in the side bar in order to manage candidate
-                verification.
-            {{else}}
-                {{#if trial.datestarted}}
-                    No data is currently available for this trial
-                {{else}}
-                    No data is currently available for this trial as it hasn't been started yet.
-
-                {{/if}}
+                See below for verifying or rejecting candidates.
             {{/if}}
-
-        </div>
         {{/if}}
     </div>
     <!-- stats -->
