@@ -9,86 +9,86 @@
             </div>
         </div>
         <!-- container for holding trial data -->
-        <div id="dashboard-content-holder">
-            <div class="row text-center">
-                <div class="col-md-6 text-left">
-                    <div><strong>Tags:</strong>
-                        {{#each trial.tags}}
-                            "{{tag}}"
-                        {{/each}}
-                    </div>
-                    <div><strong>Type:</strong> {{trial.trialtype}}</div>
-                    <div><strong>Institute:</strong> {{trial.institute}}</div>
-                    <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
-                    {{#if trial.datestarted}}
-                        <div><strong>Date Started:</strong> {{trial.datestarted}}</div>
-                    {{/if}}
-                    {{#if trial.dateended}}
-                        <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
-                    {{/if}}
-                    <!-- > DOWNLOAD CODE HERE </-->
-
-                    <!-- > original download</-->
-                    <div>
-                        <a href="/users/download/{{trial.id}}"><br>Download csv</a>
-                    </div>
-
-
-                    <!-- > END OF DOWNLOAD CODE </-->
+    <div id="dashboard-content-holder">
+        <div class="row text-center">
+            <div class="col-md-6 text-left">
+                <div><strong>Tags:</strong>
+                    {{#each trial.tags}}
+                        "{{tag}}"
+                    {{/each}}
                 </div>
-                <div class="col-md-6 text-left">
-                    <div><strong>State:</strong> {{trial.state}}</div>
-                    <div><strong>Trial Duration:</strong> {{trial.duration}} days</div>
-                    <div><strong>Candidate Quota:</strong> Minimum {{trial.candidatequota}} candidates</div>
-                    <div><strong>Question Frequency:</strong> {{trial.frequency}}</div>
-                    <br>
-                    <div>{{trial.briefdescription}}</div>
+                <div><strong>Type:</strong> {{trial.trialtype}}</div>
+                <div><strong>Institute:</strong> {{trial.institute}}</div>
+                <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
+                {{#if trial.datestarted}}
+                    <div><strong>Date Started:</strong> {{trial.datestarted}}</div>
+                {{/if}}
+                {{#if trial.dateended}}
+                    <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
+                {{/if}}
+                <!-- > DOWNLOAD CODE HERE </-->
 
-                    {{#if is_researcher}}
-                        {{#if is_created}}
-                            {{#if can_be_activated}}
-                                <form id="form_verify_{{userid}}"
-                                      action="/api/set-trial-state/id/{{trial._id}}/state/active"
-                                      method="post">
-                                    <button id="ver_{{userid}}" class="btn btn-success">
-                                        Activate Trial
-                                    </button>
-                                </form>
-                            {{else}}
-                                <form id="form_verify_{{userid}}"
-                                      action="/api/set-trial-state/id/{{trial._id}}/state/active"
-                                      method="post">
-                                    <button id="ver_{{userid}}" class="btn btn-success" disabled>
-                                        Activate Trial
-                                    </button>
-                                </form>
-                            {{/if}}
+                <!-- > original download</-->
+                <div>
+                    <a href="/users/download/{{trial.id}}"><br>Download csv</a>
+                </div>
+
+
+                <!-- > END OF DOWNLOAD CODE </-->
+            </div>
+            <div class="col-md-6 text-left">
+                <div><strong>State:</strong> {{trial.state}}</div>
+                <div><strong>Trial Duration:</strong> {{trial.duration}} days</div>
+                <div><strong>Candidate Quota:</strong> Minimum {{trial.candidatequota}} candidates</div>
+                <div><strong>Question Frequency:</strong> {{trial.frequency}}</div>
+                <br>
+                <div>{{trial.briefdescription}}</div>
+
+                {{#if is_researcher}}
+                    {{#if is_created}}
+                        {{#if can_be_activated}}
                             <form id="form_verify_{{userid}}"
-                                  action="/api/delete-trial/{{trial._id}}"
-                                  method="post" disabled="">
-                                <button id="ver_{{userid}}" class="btn btn-danger">
-                                    Cancel Trial
+                                  action="/api/set-trial-state/id/{{trial._id}}/state/active"
+                                  method="post">
+                                <button id="ver_{{userid}}" class="btn btn-success">
+                                    Activate Trial
                                 </button>
                             </form>
-                        {{else if is_active}}
+                        {{else}}
                             <form id="form_verify_{{userid}}"
                                   action="/api/set-trial-state/id/{{trial._id}}/state/active"
                                   method="post">
                                 <button id="ver_{{userid}}" class="btn btn-success" disabled>
-                                    Trial Active
-                                </button>
-                            </form>
-                            <form id="form_verify_{{userid}}"
-                                  action="/api/delete-trial/{{trial._id}}"
-                                  method="post">
-                                <button id="ver_{{userid}}" class="btn btn-danger">
-                                    Cancel Trial
+                                    Activate Trial
                                 </button>
                             </form>
                         {{/if}}
+                        <form id="form_verify_{{userid}}"
+                              action="/api/delete-trial/{{trial._id}}"
+                              method="post" disabled="">
+                            <button id="ver_{{userid}}" class="btn btn-danger">
+                                Cancel Trial
+                            </button>
+                        </form>
+                    {{else if is_active}}
+                        <form id="form_verify_{{userid}}"
+                              action="/api/set-trial-state/id/{{trial._id}}/state/active"
+                              method="post">
+                            <button id="ver_{{userid}}" class="btn btn-success" disabled>
+                                Trial Active
+                            </button>
+                        </form>
+                        <form id="form_verify_{{userid}}"
+                              action="/api/delete-trial/{{trial._id}}"
+                              method="post">
+                            <button id="ver_{{userid}}" class="btn btn-danger">
+                                Cancel Trial
+                            </button>
+                        </form>
                     {{/if}}
+                {{/if}}
 
-                    <!--
+                <!--
                     <form id="form_verify_{{userid}}"
                           action="/api/set-trial-state/id/{{trial._id}}/state/created"
                           method="post">
@@ -117,190 +117,106 @@
                             Force End Trial
                         </button>
                     </form>-->
-                </div>
+            </div>
+        </div>
+
+        <div class="row text-left">
+            <div class="col-md-6">
+                <!-- about -->
+                <div class="page-header"><h3>About the trial</h3></div>
+                <div>{{trial.detaileddescription}}</div>
             </div>
 
-            <div class="row text-left">
-                <div class="col-md-6">
-                    <!-- about -->
-                    <div class="page-header"><h3>About the trial</h3></div>
-                    <div>{{trial.detaileddescription}}</div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="page-header">
-                        <h3>Questions</h3>
-                    </div>
-                    {{#if is_researcher}}
-                        <ol>
-                            {{#each questions}}
-                                <li><strong>Title:</strong> {{title}}</li>
-                                <strong>Type:</strong> {{question_type}}
-                            {{/each}}
-                        </ol>
-                    {{else}}
-                        <div>
-                            Please sign in as this researcher in order to see more details
-                        </div>
-                    {{/if}}
-                </div>
-            </div>
-
-            {{#if is_researcher}}
+            <div class="col-md-6">
                 <div class="page-header">
-                    <h3>Statistics</h3>
+                    <h3>Questions</h3>
                 </div>
+                {{#if is_researcher}}
+                    <ol>
+                        {{#each questions}}
+                            <li><strong>Title:</strong> {{title}}</li>
+                            <strong>Type:</strong> {{question_type}}
+                        {{/each}}
+                    </ol>
+                {{else}}
+                    <div>
+                        Please sign in as this researcher in order to see more details
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+
+        {{#if is_researcher}}
+            {{#if trial.datecreated}}
+                Your trial currently has <strong>{{ver_candidates.length}}</strong> verified candidates, and requires a
+                minimum of <strong>{{trial.candidatequota}}</strong> to be started.<br>
+                See below for verifying or rejecting candidates.
+            {{/if}}
+        {{/if}}
+    </div>
+    <!-- stats -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="page-header">
+                <h3>Candidate Requests</h3>
+            </div>
+            {{#if is_researcher}}
+                {{#if req_candidates}}
+                    <ul>
+                        {{#each req_candidates}}
+                            <div class="row">
+                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a>
+                                    <form id="form_verify_{{userid}}"
+                                          action="/api/create-verified-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
+                                          method="post">
+                                        <button id="ver_{{userid}}" class="btn btn-success">
+                                            Verify
+                                        </button>
+                                    </form>
+                                    <form id="form_delete_{{userid}}"
+                                          action="/api/remove-requested-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
+                                          method="post">
+                                        <button id="del_{{userid}}" class="btn btn-danger">
+                                            Remove
+                                        </button>
+                                    </form>
+                                </li>
+                            </div>
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    <div>
+                        No candidates have currently requested to join this trial
+                    </div>
+                {{/if}}
+            {{else}}
                 <div>
-
-                    <script src="https://d3js.org/d3.v4.js"></script>
-                    <script src="https://d3js.org/d3.v4.min.js"></script>
-                    <script src="https://d3js.org/d3-selection.v1.js"></script>
-
-                    <p></p>
-                    <script>
-
-                        console.log("*****START*****");
-
-                        d3.json("{{trial.id}}/graphdata.json", function (dataArray) {
-                            var maxpoint = 0;
-                            console.log(dataArray);
-                            for (var i = 0; i < dataArray.length; i++) {
-                                var tempoint = dataArray[i];
-
-                                if (tempoint >= maxpoint) {
-                                    maxpoint = tempoint;
-                                }
-
-                            }
-
-                            var width = 500;
-                            var height = 500;
-                            var widthScale = d3.scaleLinear().domain([0, 420]).range([0, width]);
-                            var color = d3.scaleLinear().domain([0, 420]).range(["red", "blue"]);
-                            var xAxis = d3.axisBottom(widthScale);
-                            var space = 65;
-
-
-                            var canvas = d3.select("p")
-                                    .append("svg")
-                                    .attr("width", width)
-                                    .attr("height", height)
-                                    .append("g")
-                                    .attr("transform", "translate(10,10)");
-
-                            var bars = canvas.selectAll("rect")
-                                    .data(dataArray)
-                                    .enter()
-                                    .append("rect")
-                                    .attr("width", function (d) {
-                                        return d.id;
-                                    })
-                                    .attr("height", 50)
-                                    .attr("fill", function (d) {
-                                        return color(d);
-                                    })
-                                    .attr("y", function (d, i) {
-                                        return i * space
-                                    });
-                            canvas.append("g")
-                                    .attr("transform", "translate(0,475)").call(xAxis);
-
-                            canvas.selectAll("text")
-                                    .data(dataArray)
-                                    .enter()
-                                    .append("text")
-                                    .attr("fill", "green")
-                                    .attr("y", function (d, i) {
-                                        return i * space
-                                    })
-                                    .text(function (d) {
-                                        return d.week;
-                                    });
-                        });
-                    </script>
-
-
-
-
-                    {{#if statistics}}
-                        Responses & graphs here
-                    {{else}}
-                        {{#if trial.datestarted}}
-                            No data is currently available for this trial
-                        {{else}}
-                            No data is currently available for this trial as it hasn't been started yet.
-                            Your trial currently has <strong>0</strong> verified candidates, and requires a
-                            minimum of <strong>{{trial.candidatequota}}</strong> to be started.<br>
-                            Please view the notifications section in the side bar in order to manage candidate
-                            verification.
-                        {{/if}}
-                    {{/if}}
+                    Please sign in as this researcher in order to see more details
                 </div>
             {{/if}}
         </div>
-        <!-- stats -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="page-header">
-                    <h3>Candidate Requests</h3>
-                </div>
-                {{#if is_researcher}}
-                    {{#if req_candidates}}
-                        <ul>
-                            {{#each req_candidates}}
-                                <div class="row">
-                                    <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a>
-                                        <form id="form_verify_{{userid}}"
-                                              action="/api/create-verified-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
-                                              method="post">
-                                            <button id="ver_{{userid}}" class="btn btn-success">
-                                                Verify
-                                            </button>
-                                        </form>
-                                        <form id="form_delete_{{userid}}"
-                                              action="/api/remove-requested-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
-                                              method="post">
-                                            <button id="del_{{userid}}" class="btn btn-danger">
-                                                Remove
-                                            </button>
-                                        </form>
-                                    </li>
-                                </div>
-                            {{/each}}
-                        </ul>
-                    {{else}}
-                        <div>
-                            No candidates have currently requested to join this trial
-                        </div>
-                    {{/if}}
+        <div class="col-md-6 text-left">
+            <div class="page-header">
+                <h3>Verified Candidates</h3>
+            </div>
+            {{#if is_researcher}}
+                {{#if ver_candidates}}
+                    <ul>
+                        {{#each ver_candidates}}
+                            <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a></li>
+                        {{/each}}
+                    </ul>
                 {{else}}
                     <div>
-                        Please sign in as this researcher in order to see more details
+                        No candidates have currently been verified as candidates for this trial
                     </div>
                 {{/if}}
-            </div>
-            <div class="col-md-6 text-left">
-                <div class="page-header">
-                    <h3>Verified Candidates</h3>
+            {{else}}
+                <div>
+                    Please sign in as this researcher in order to see more details
                 </div>
-                {{#if is_researcher}}
-                    {{#if ver_candidates}}
-                        <ul>
-                            {{#each ver_candidates}}
-                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a></li>
-                            {{/each}}
-                        </ul>
-                    {{else}}
-                        <div>
-                            No candidates have currently been verified as candidates for this trial
-                        </div>
-                    {{/if}}
-                {{else}}
-                    <div>
-                        Please sign in as this researcher in order to see more details
-                    </div>
-                {{/if}}
-            </div>
+            {{/if}}
         </div>
     </div>
+</div>
 </div>

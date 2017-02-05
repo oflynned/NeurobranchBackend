@@ -8,8 +8,6 @@ var path = require('path');
 var fs = require('fs');
 var http = require('http');
 var mime = require('mime');
-var json2csv = require('json2csv');
-var jsonexport = require('jsonexport');
 
 var request = require('request');
 var candidateSchema = require('../models/Accounts/candidateAccountSchema.js');
@@ -18,7 +16,6 @@ var requestedCandidate = require('../models/Validation/requestedCandidateSchema'
 var verifiedCandidate = require('../models/Validation/verifiedCandidateSchema');
 var researcherAccount = require('../models/Accounts/researcherAccountSchema');
 var trialData = require('../models/Trials/trialSchema');
-var eligibilityData = require('../models/Trials/eligibilitySchema');
 var responseData = require('../models/Trials/responseSchema');
 
 //top bar
@@ -75,16 +72,6 @@ router.get('/logout', function (req, res) {
     res.redirect('/users/login');
 });
 
-router.get('/cookie-details', function (req, res) {
-    res.json(req.user);
-});
-
-router.get('/download/:id', function (req, res) {
-    trialData.getTrialById(req.params.id, function (err, trialidz) {
-        // TODO removed a huge bloat here of exporting to CSV, look at older commit if needed and re-implement properly
-    });
-});
-
 router.get('/moredetails/:id', function (req, res) {
     researcherAccount.findAllResearcher(function (err, alres) {
         trialData.findAllTrials(function (err, altrial) {
@@ -106,7 +93,7 @@ router.get('/trials/:trialid', function (req, res) {
             if (err) throw err;
             requestedCandidate.getRequestedCandidatesByTrialId(req.params.trialid, function (err, req_candidates) {
                 if (err) throw err;
-                responseData.getResponseByTrialId(req.params.trialid, function (err, respose_ans) {
+                responseData.getResponseByTrialId(req.params.trialid, function (err) {
                     if (err) throw err;
                     verifiedCandidate.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, ver_candidates) {
                         if (err) throw err;
@@ -134,28 +121,6 @@ router.get('/trials/:trialid', function (req, res) {
     });
 });
 
-
-router.get('/trials/:trialid/graphdata.json', function (req, res) {
-    trialData.getTrialById(req.params.trialid, function (err, trial) {
-        if (err) throw err;
-        var obj;
-        console.log(trial.id);
-        verifiedCandidate.getVerifiedCandidatesByTrialId(trial.id, function (err, vercandidate) {
-            if (err) throw err;
-
-            fs.readFile('views/graphdata.json', 'utf8', function (err, data) {
-                if (err) throw err;
-                obj = JSON.parse(data);
-                //res.send(trial);
-
-                //res.send(obj);
-                res.send(vercandidate);
-            });
-        });
-    });
-
-});
-
 router.get('/candidates/:candidateid', ensureAuthenticated, function (req, res) {
     candidateSchema.getCandidateById(req.params.candidateid, function (err, candidate) {
         if (err) throw err;
@@ -171,17 +136,12 @@ router.get('/candidates/:candidateid/:trialid', ensureAuthenticated, function (r
     candidateSchema.getCandidateById(req.params.candidateid, function (err, candidate) {
         if (err) throw err;
         var isResearcher = req.isAuthenticated() ? true : null;
-        eligibilityData.getEligibilityByTrialCandidate(req.params.trialid, req.params.candidateid,
-            function (err, eligibility) {
-                if (err) throw err;
-                res.render('candidateprofile', {
-                    candidate: candidate,
-                    trialid: req.params.trialid,
-                    is_researcher: isResearcher,
-                    active_dash: "true",
-                    eligibility: eligibility
-                });
-            });
+        res.render('candidateprofile', {
+            candidate: candidate,
+            trialid: req.params.trialid,
+            is_researcher: isResearcher,
+            active_dash: "true"
+        });
     });
 });
 router.get('/create-trial', ensureAuthenticated, function (req, res) {
@@ -204,32 +164,6 @@ router.get('/help', ensureAuthenticated, function (req, res) {
     res.render('help', {
         active_dash: "true"
     });
-});
-
-//footer links
-router.get('/goals', function (req, res) {
-    res.render('goals');
-});
-router.get('/aboutneurobranch', function (req, res) {
-    res.render('aboutneurobranch');
-});
-router.get('/aboutglassbyte', function (req, res) {
-    res.render('aboutglassbyte');
-});
-router.get('/faq', function (req, res) {
-    res.render('faq');
-});
-router.get('/support', function (req, res) {
-    res.render('support');
-});
-router.get('/termsofuse', function (req, res) {
-    res.render('termsofuse');
-});
-router.get('/cookiepolicy', function (req, res) {
-    res.render('cookiepolicy');
-});
-router.get('/privacypolicy', function (req, res) {
-    res.render('privacypolicy');
 });
 
 passport.use(new LocalStrategy(
