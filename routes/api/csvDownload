@@ -1,0 +1,25 @@
+/**
+ * Created by alex on 03/02/2017.
+ */
+"use strict";
+
+let Schemas = require("../persistence/schemas");
+let express = require("express");
+let app = express();
+let router = express.Router();
+
+
+
+router.get('/users/download',function (req,res,next)
+{
+var filepath = "./testingScripts";
+var filename = "trial.csv";
+res.download(filepath, filename);
+
+});
+
+
+
+
+
+
