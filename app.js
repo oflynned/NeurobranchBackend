@@ -90,6 +90,11 @@ app.use(trialEndpoints);
 let verifiedCandidateEndpoints = require("./routes/api/verifiedCandidates");
 app.use(verifiedCandidateEndpoints);
 
+let csvDownloadEndpoints = require("./routes/api/csvDownload");
+app.use(csvDownloadEndpoints);
+
+
+
 app.use('/', routes);
 app.use('/users', users);
 app.set('port', (process.env.PORT || Globals.PORT));

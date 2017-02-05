@@ -6,17 +6,26 @@
 let Schemas = require("../persistence/schemas");
 let express = require("express");
 let app = express();
-let router = express.Router();
 
 
 
-router.get('/users/download',function (req,res,next)
+app.get('/users/download/:id',function (req,res,next)
 {
-var filepath = "./testingScripts";
-var filename = "trial.csv";
-res.download(filepath, filename);
+    console.log("++++++++RES",res);
+
+    //console.log("++++++++REQ",req);
+
+    Schemas.questionData.getQuestionsByTrialId(req.params.id, function (err, result) {
+        if (err) throw err;
+
+        console.log("----RESULT ",result);
+        res.json(result);
+    });
+
 
 });
+
+module.exports = app;
 
 
 
