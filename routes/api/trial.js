@@ -30,35 +30,23 @@ app.post('/api/set-trial-state/id/:id/state/:state', function (req, res) {
 app.post('/api/create-trial', function (req, res) {
     let parameters = req.body;
 
-    //TODO ISSUE OF TAGS SPLIT BY LETTER HERE
-    let tags = parameters['trial_tags'];
-    console.log(tags);
-    let trialTags = [];
-    for (let i = 0; i < tags.length; i++) {
-        trialTags[i] = {tag: tags[i]}
-    }
-
     //separate trial params
     let trialParams = {
         title: parameters['trial_title'],
         briefdescription: parameters['trial_briefdesc'],
         detaileddescription: parameters['trial_longdesc'],
-        trialtype: parameters['trial_type'],
         institute: req.user['institute'],
-        tags: trialTags,
         duration: parameters['trial_duration'],
         frequency: parameters['trial_frequency'],
         waiverform: parameters['trial_waiverform'],
         datecreated: Date.now(),
         datestarted: 0,
         dateended: 0,
-        candidatequota: parameters['trial_quota'],
         state: "created",
         researcherid: req.user['id'],
         currentduration: 0,
         lastwindow: 0,
-        has_eligibility: "false",
-        min_pass_mark: 0
+        has_eligibility: false
     };
 
     //trial parsing done
@@ -107,61 +95,6 @@ app.post('/api/create-trial', function (req, res) {
                 if (answers.length > 0) question['answers'] = answers;
 
                 Schemas.questionData.createQuestion(new Schemas.questionData(question));
-
-                //question parsing done
-
-                let eligibilityDetails = {};
-                for (let e_k in parameters) {
-                    let e_result = e_k.includes("e-");
-                    if (e_result) eligibilityDetails[e_k] = parameters[e_k];
-                }
-
-                console.log(eligibilityDetails);
-
-                let e_indices = Object.keys(eligibilityDetails);
-                console.log(e_indices);
-                let e_maxIndex = 0;
-                for (let e_index = 0; e_index < e_indices.length; e_index++) {
-                    let e_currIndex = parseInt(e_indices[e_index].match(/\d+/));
-                    if (e_currIndex > e_maxIndex) e_maxIndex = e_currIndex;
-                }
-
-                console.log(e_maxIndex + " is the maximum eligibility question index");
-
-                if (e_maxIndex > 0) {
-                    //modify the trial to set has_eligibility to true
-                    for (let e_qIndex = 0; e_qIndex < e_maxIndex; e_qIndex++) {
-                        let e_question = {};
-                        let e_answers = [];
-                        let e_thisIndex = e_qIndex + 1;
-                        for (let att in eligibilityDetails) {
-                            if (att === "e-q" + e_thisIndex + "_title") {
-                                e_question["title"] = eligibilityDetails[att]
-                            } else if (att === "e-q" + e_thisIndex + "_type") {
-                                e_question["question_type"] = eligibilityDetails[att]
-                            } else if (att === "e-q" + e_thisIndex + "_ans[]") {
-                                for (let e_q = 0; e_q < att.length; e_q++) {
-                                    let e_answer = eligibilityDetails[att][e_q];
-                                    if (e_answer != undefined) e_answers[e_q] = {
-                                        "answer": e_answer,
-                                        "score": eligibilityDetails["e-q" + e_thisIndex + "_scores[]"][e_q]
-                                    };
-                                }
-                            }
-                        }
-                        e_question['index'] = e_qIndex;
-                        e_question['trialid'] = trial_id;
-                        if (e_answers.length > 0) e_question['answers'] = e_answers;
-                        Schemas.eligibilityData.createEligibility(new Schemas.eligibilityData(e_question));
-                    }
-
-                    Schemas.trialData.updatePassMark(trial_id, parseInt(eligibilityDetails['e-min_pass_mark']), function (err) {
-                        if (err) throw err;
-                        Schemas.trialData.updateEligibility(trial_id, 'true', function (err) {
-                            if (err) throw err;
-                        });
-                    });
-                }
             }
         });
     });

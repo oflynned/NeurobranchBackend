@@ -5,8 +5,8 @@
 // email
 exports.shouldVerifyUsers = true;
 exports.shouldSendEmail = true;
-exports.email = "teztneuro@gmail.com"; // "noreply@neurobranch.com";
-exports.password = "lCk3TN:68w4Yn8C";
+exports.email = "neurobranchbeta@gmail.com";
+exports.password = "v-<P5&B^GcSxV7tg";
 exports.TEN_MINUTES_MILLIS = 1000 * 60 * 60;
 
 //accessing addresses

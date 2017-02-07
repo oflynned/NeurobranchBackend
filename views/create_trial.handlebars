@@ -25,47 +25,24 @@
                         <div class="form-group">
                             <label class="control-label" for="trial_longdesc">Long Description</label>
                             <textarea class="form-control" id="trial_longdesc" name="trial_longdesc"
-                                      style="resize: vertical"></textarea>
+                                      style="resize: vertical" required></textarea>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label" for="trial_waiverform">Waiver Form</label>
                             <textarea class="form-control" id="trial_waiverform" name="trial_waiverform"
-                                      style="resize: vertical"></textarea>
+                                      style="resize: vertical" required></textarea>
                         </div>
 
-                        <div class="form-group">
-                            <label class=" control-label" for="trial_type">Trial Type</label>
-                            <select name="trial_type" class="form-control">
-                                <option>Behavioural</option>
-                                <option>Biomedical Device</option>
-                                <option>Food</option>
-                                <option>Pharmaceutical</option>
-                            </select>
-                        </div>
                         <div class="form-group">
                             <label class=" control-label" for="trial_frequency">Question Frequency</label>
                             <select name="trial_frequency" class="form-control">
                                 <option>Daily</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label" for="qtags"> Quota</label>
-                            <input id="qqouta" name="trial_quota" type="number" placeholder="Trial Quota"
-                                   min="1" step="1" class="form-control input-md" required autocomplete="off">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="trial_tags"> Tags</label>
-                            <select class="tags form-control" name="trial_tags" multiple="multiple">
-                                <option>Cancer</option>
-                                <option>Autism</option>
-                                <option>HIV</option>
-                                <option>MRSA</option>
-                            </select>
-                        </div>
 
                         <div class="form-group">
-                            <label class=" control-label" for="trial_duration">Duration</label>
+                            <label class=" control-label" for="trial_duration">Trial Duration</label>
                             <input id="qduration" name="trial_duration" type="number" min="1" step="1"
                                    placeholder="Trial Duration" class="form-control input-md" required>
                         </div>
@@ -74,57 +51,6 @@
 
                 <div class="form-horizontal" id="form_main2">
                     <fieldset>
-                        <div class="form-group">
-                            <label class="control-label" for="min_pass_mark"> Minimum Pass Mark</label>
-                            <input id="e-min_pass_mark" name="e-min_pass_mark" type="number" placeholder="Minimum Pass Mark"
-                                   min="0" step="1" class="form-control input-md" required autocomplete="off">
-                        </div>
-
-                        <div id="e-questionlist">
-                            <div class="form-group">
-                                <label for="e-q1_title" class="control-label">1. Eligibility Question </label>
-                                <input type="text" class="form-control col-md-4 qtitle" name="e-q1_title"
-                                       placeholder="Enter Title" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="e-q1_type">Question Type</label>
-                                <select class="form-control e-qtype" name="e-q1_type">
-                                    <option data-cat="" >Select Answer Type</option>
-                                    <option data-cat="choice">Checkbox</option>
-                                    <option data-cat="choice">Radio</option>
-                                </select>
-                            </div>
-                            <div class="form-group hide questions_answers">
-                                <label for="e-no_of_options">No Of Answers</label>
-                                <select class="form-control e-no_of_options" name="e-q1_no_of_options">
-                                    <option value="0" >Select no of Answers</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                </select></div>
-                            <div class="form-group hide e-answers">
-                                <label>Answers</label>
-                                <div class="col-lg-12 e-answers_content"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <a href="#" id="e-add-more" class="btn btn-info">Add More</a><a href="#" id="e-btn-remove"
-                                                                                            class="btn btn-warning pull-right">Remove</a>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="form-horizontal" id="form_main2">
-
-                    <fieldset>
-
                         <div id="questionlist">
                             <div class="form-group">
                                 <label for="q1_title" class=" control-label">1. Question Title</label>
@@ -133,8 +59,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="q1_type">Question Type</label>
-                                <select class="form-control qtype" name="q1_type">
-                                    <option data-cat="" >Select Answer Type</option>
+                                <select class="form-control qtype" name="q1_type" required>
+                                    <option data-cat="" disabled selected>Select Answer Type</option>
                                     <option data-cat="">Text</option>
                                     <option data-cat="">Scale</option>
                                     <option data-cat="choice">Checkbox</option>
@@ -143,8 +69,7 @@
                             </div>
                             <div class="form-group hide questions_answers">
                                 <label for="no_of_options">No Of Answers</label>
-                                <select class="form-control no_of_options" name="q1_no_of_options">
-                                    <option value="0" >Select no of Answers</option>
+                                <select class="form-control no_of_options" name="q1_no_of_options" required>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -162,13 +87,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <a href="#" id="add-more" class="btn btn-info">Add More</a><a href="#" id="btn-remove"
-                                                                                          class="btn btn-warning pull-right">Remove</a>
+                            <a href="#" id="add-more" class="btn btn-info">Add Question</a>
+                            <a href="#" id="btn-remove" class="btn btn-warning pull-right">Remove Question</a>
                         </div>
                     </fieldset>
                 </div>
                 <div class="form-group">
-                    <button id="btnsubmit" class="btn btn-primary" form="trial_form">Save</button>
+                    <button id="btnsubmit" class="btn btn-primary" form="trial_form">Save Trial</button>
                 </div>
             </form>
         </div>

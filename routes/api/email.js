@@ -66,10 +66,10 @@ app.post("/send", function (req, res) {
                     "<br><br>" +
                     "Thanks for joining Neurobranch, welcome to the world of more accurate and meaningful clinical trials!" +
                     "<br>" +
-                    "Please click <a href=" + link + ">here</a> to verify your email and change the world." +
+                    "Please click <a href=" + link + " target=\"_blank\">here</a> to verify your email and change the world." +
                     "<br><br>" +
                     "(or copy and paste the following raw URL into your browser)" +
-                    "<br><a href=" + link + ">" + link + "</a>" +
+                    "<br><a href=" + link + " target=\"_blank\">" + link + "</a>" +
                     "<br><br>" +
                     "~ The Neurobranch Team"
                 };

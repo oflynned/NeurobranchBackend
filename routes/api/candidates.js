@@ -70,7 +70,7 @@ app.get('/api/get-candidate-trials/:id', function (req, res) {
         })
     });
 });
-app.get('/api/get-candidate-trials/:id/:state', function (req, res) {
+app.get('/api/get-candidate-trials/:id/state/:state', function (req, res) {
     Schemas.candidateAccount.getCandidateById(req.params.id, function (err, result) {
         let trials = result.subscribed.reduce(function (keys, element) {
             for (let key in element) {
