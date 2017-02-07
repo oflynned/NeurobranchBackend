@@ -1,0 +1,75 @@
+/**
+ * Created by alex on 03/02/2017.
+ */
+"use strict";
+
+let Schemas = require("../persistence/schemas");
+let express = require("express");
+let json2csv = require('json2csv');
+let fs = require('fs');
+let path = require('path');
+let mime = require('mime');
+
+
+let app = express();
+let router = express.Router();
+
+
+/*app.get('/users/download/:id',function (req,res)
+ {
+ Schemas.questionData.getQuestionsByTrialId(req.params.id, function (err, result) {
+ if (err) throw err;
+
+ var fileName = "result_"+result.title+".csv";
+ var filePath = "testingScripts/" + fileName;
+ //console.log("----RESULT ",result);
+ var fields = ['title', 'question_type', 'index', 'trialid','answers'];
+ //res.json(result);
+ var csv = json2csv({data:result, fields:fields});
+
+ fs.writeFile(filePath, csv, function (err) {
+ if (err) throw err;
+ console.log('filesaved');
+
+
+
+
+ });
+ });
+ });*/
+
+
+app.get('/users/download/:id', function (req, res) {
+    Schemas.questionData.getQuestionsByTrialId(req.params.id, function (err, trialidz) {
+        if (err) throw err;
+        console.log("----RESULT ",trialidz.title);
+        var fields = ['title', 'question_type', 'index', 'trialid','answers'];
+        var csv = json2csv({data:trialidz, fields:fields});
+        console.log("CSV", csv);
+
+        fs.writeFile('testingScripts/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', csv, function (err) {
+            if (err) throw err;
+
+            res.download('testingScripts/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title + '_neurobranch_' + trialidz.id + '.csv');
+
+            /*non blocking async delete*/
+            /*deletes download file after 10 sec*/
+            setTimeout(function () {
+                fs.unlink('testingScripts/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
+                    if (err) throw err;
+                    console.log('file deleted successfully');
+                });
+            }, 60000);
+
+        });
+    });
+});
+
+
+module.exports = app;
+
+
+
+
+
+
