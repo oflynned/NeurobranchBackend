@@ -9,44 +9,44 @@
             </div>
         </div>
         <!-- container for holding trial data -->
-    <div id="dashboard-content-holder">
-        <div class="row text-center">
-            <div class="col-md-6 text-left">
-                <div><strong>Tags:</strong>
-                    {{#each trial.tags}}
-                        "{{tag}}"
-                    {{/each}}
+        <div id="dashboard-content-holder">
+            <div class="row text-center">
+                <div class="col-md-6 text-left">
+                    <div><strong>Institute:</strong> {{trial.institute}}</div>
+                    <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
+                    {{#if trial.datestarted}}
+                        <div><strong>Date Started:</strong> {{trial.datestarted}}</div>
+                    {{/if}}
+                    {{#if trial.dateended}}
+                        <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
+                    {{/if}}
+
+                    {{#if is_researcher}}
+                        {{#if trial.datecreated}}
+                            <div>
+                                <br>
+                                Your trial currently has <strong>{{ver_candidates.length}}</strong> verified candidates.
+                            </div>
+                        {{/if}}
+                    {{/if}}
+
+                    <!-- > original download</-->
+                    <div>
+                        <a href="/users/download/{{trial.id}}"><br>Download csv</a>
+                    </div>
+
+                    <!-- > END OF DOWNLOAD CODE </-->
                 </div>
-                <div><strong>Type:</strong> {{trial.trialtype}}</div>
-                <div><strong>Institute:</strong> {{trial.institute}}</div>
-                <div><strong>Date Created:</strong> {{trial.datecreated}}</div>
-                {{#if trial.datestarted}}
-                    <div><strong>Date Started:</strong> {{trial.datestarted}}</div>
-                {{/if}}
-                {{#if trial.dateended}}
-                    <div><strong>Date Ended:</strong> {{trial.dateended}}</div>
-                {{/if}}
-                <!-- > DOWNLOAD CODE HERE </-->
+                <div class="col-md-6 text-left">
+                    <div><strong>State:</strong> {{trial.state}}</div>
+                    <div><strong>Trial Duration:</strong> {{trial.duration}} days</div>
+                    <div><strong>Candidate Quota:</strong> Minimum {{trial.candidatequota}} candidates</div>
+                    <div><strong>Question Frequency:</strong> {{trial.frequency}}</div>
+                    <br>
+                    <div>{{trial.briefdescription}}</div>
 
-                <!-- > original download</-->
-                <div>
-                    <a href="/users/download/{{trial.id}}"><br>Download csv</a>
-                </div>
-
-
-                <!-- > END OF DOWNLOAD CODE </-->
-            </div>
-            <div class="col-md-6 text-left">
-                <div><strong>State:</strong> {{trial.state}}</div>
-                <div><strong>Trial Duration:</strong> {{trial.duration}} days</div>
-                <div><strong>Candidate Quota:</strong> Minimum {{trial.candidatequota}} candidates</div>
-                <div><strong>Question Frequency:</strong> {{trial.frequency}}</div>
-                <br>
-                <div>{{trial.briefdescription}}</div>
-
-                {{#if is_researcher}}
-                    {{#if is_created}}
-                        {{#if can_be_activated}}
+                    {{#if is_researcher}}
+                        {{#if is_created}}
                             <form id="form_verify_{{userid}}"
                                   action="/api/set-trial-state/id/{{trial._id}}/state/active"
                                   method="post">
@@ -54,169 +54,123 @@
                                     Activate Trial
                                 </button>
                             </form>
-                        {{else}}
+                            <form id="form_verify_{{userid}}"
+                                  action="/api/delete-trial/{{trial._id}}"
+                                  method="post" disabled="">
+                                <button id="ver_{{userid}}" class="btn btn-danger">
+                                    Cancel Trial
+                                </button>
+                            </form>
+                        {{else if is_active}}
                             <form id="form_verify_{{userid}}"
                                   action="/api/set-trial-state/id/{{trial._id}}/state/active"
                                   method="post">
                                 <button id="ver_{{userid}}" class="btn btn-success" disabled>
-                                    Activate Trial
+                                    Trial Active
+                                </button>
+                            </form>
+                            <form id="form_verify_{{userid}}"
+                                  action="/api/delete-trial/{{trial._id}}"
+                                  method="post">
+                                <button id="ver_{{userid}}" class="btn btn-danger">
+                                    Cancel Trial
                                 </button>
                             </form>
                         {{/if}}
-                        <form id="form_verify_{{userid}}"
-                              action="/api/delete-trial/{{trial._id}}"
-                              method="post" disabled="">
-                            <button id="ver_{{userid}}" class="btn btn-danger">
-                                Cancel Trial
-                            </button>
-                        </form>
-                    {{else if is_active}}
-                        <form id="form_verify_{{userid}}"
-                              action="/api/set-trial-state/id/{{trial._id}}/state/active"
-                              method="post">
-                            <button id="ver_{{userid}}" class="btn btn-success" disabled>
-                                Trial Active
-                            </button>
-                        </form>
-                        <form id="form_verify_{{userid}}"
-                              action="/api/delete-trial/{{trial._id}}"
-                              method="post">
-                            <button id="ver_{{userid}}" class="btn btn-danger">
-                                Cancel Trial
-                            </button>
-                        </form>
                     {{/if}}
-                {{/if}}
-
-                <!--
-                    <form id="form_verify_{{userid}}"
-                          action="/api/set-trial-state/id/{{trial._id}}/state/created"
-                          method="post">
-                        <button id="ver_{{userid}}" class="btn btn-primary">
-                            Force Created Trial
-                        </button>
-                    </form>
-                    <form id="form_verify_{{userid}}"
-                          action="/api/set-trial-state/id/{{trial._id}}/state/active"
-                          method="post">
-                        <button id="ver_{{userid}}" class="btn btn-success">
-                            Force Activate Trial
-                        </button>
-                    </form>
-                    <form id="form_verify_{{userid}}"
-                          action="/api/delete-trial/{{trial._id}}"
-                          method="post">
-                        <button id="ver_{{userid}}" class="btn btn-danger">
-                            Force Delete Trial
-                        </button>
-                    </form>
-                    <form id="form_verify_{{userid}}"
-                          action="/api/set-trial-state/id/{{trial._id}}/state/ended"
-                          method="post">
-                        <button id="ver_{{userid}}" class="btn btn-info">
-                            Force End Trial
-                        </button>
-                    </form>-->
-            </div>
-        </div>
-
-        <div class="row text-left">
-            <div class="col-md-6">
-                <!-- about -->
-                <div class="page-header"><h3>About the trial</h3></div>
-                <div>{{trial.detaileddescription}}</div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="page-header">
-                    <h3>Questions</h3>
                 </div>
-                {{#if is_researcher}}
-                    <ol>
-                        {{#each questions}}
-                            <li><strong>Title:</strong> {{title}}</li>
-                            <strong>Type:</strong> {{question_type}}
-                        {{/each}}
-                    </ol>
-                {{else}}
-                    <div>
-                        Please sign in as this researcher in order to see more details
-                    </div>
-                {{/if}}
             </div>
-        </div>
 
-        {{#if is_researcher}}
-            {{#if trial.datecreated}}
-                Your trial currently has <strong>{{ver_candidates.length}}</strong> verified candidates, and requires a
-                minimum of <strong>{{trial.candidatequota}}</strong> to be started.<br>
-                See below for verifying or rejecting candidates.
-            {{/if}}
-        {{/if}}
-    </div>
-    <!-- stats -->
-    <div class="row">
-        <div class="col-md-6">
-            <div class="page-header">
-                <h3>Candidate Requests</h3>
-            </div>
-            {{#if is_researcher}}
-                {{#if req_candidates}}
-                    <ul>
-                        {{#each req_candidates}}
-                            <div class="row">
-                                <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a>
-                                    <form id="form_verify_{{userid}}"
-                                          action="/api/create-verified-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
-                                          method="post">
-                                        <button id="ver_{{userid}}" class="btn btn-success">
-                                            Verify
-                                        </button>
-                                    </form>
-                                    <form id="form_delete_{{userid}}"
-                                          action="/api/remove-requested-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
-                                          method="post">
-                                        <button id="del_{{userid}}" class="btn btn-danger">
-                                            Remove
-                                        </button>
-                                    </form>
-                                </li>
+            <!-- Reqs -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="page-header">
+                        <h3>Candidate Requests</h3>
+                    </div>
+                    {{#if is_researcher}}
+                        {{#if req_candidates}}
+                            <ul>
+                                {{#each req_candidates}}
+                                    <div class="row">
+                                        <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a>
+                                            <form id="form_verify_{{userid}}"
+                                                  action="/api/create-verified-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
+                                                  method="post">
+                                                <button id="ver_{{userid}}" class="btn btn-success">
+                                                    Verify
+                                                </button>
+                                            </form>
+                                            <form id="form_delete_{{userid}}"
+                                                  action="/api/remove-requested-candidate/trialid/{{../trial._id}}/candidateid/{{userid}}"
+                                                  method="post">
+                                                <button id="del_{{userid}}" class="btn btn-danger">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </div>
+                                {{/each}}
+                            </ul>
+                        {{else}}
+                            <div>
+                                No candidates have currently requested to join this trial
                             </div>
-                        {{/each}}
-                    </ul>
-                {{else}}
-                    <div>
-                        No candidates have currently requested to join this trial
-                    </div>
-                {{/if}}
-            {{else}}
-                <div>
-                    Please sign in as this researcher in order to see more details
+                        {{/if}}
+                    {{else}}
+                        <div>
+                            Please sign in as this researcher in order to see more details
+                        </div>
+                    {{/if}}
                 </div>
-            {{/if}}
-        </div>
-        <div class="col-md-6 text-left">
-            <div class="page-header">
-                <h3>Verified Candidates</h3>
+                <div class="col-md-6 text-left">
+                    <div class="page-header">
+                        <h3>Verified Candidates</h3>
+                    </div>
+                    {{#if is_researcher}}
+                        {{#if ver_candidates}}
+                            <ul>
+                                {{#each ver_candidates}}
+                                    <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a></li>
+                                {{/each}}
+                            </ul>
+                        {{else}}
+                            <div>
+                                No candidates have currently been verified as candidates for this trial
+                            </div>
+                        {{/if}}
+                    {{else}}
+                        <div>
+                            Please sign in as this researcher in order to see more details
+                        </div>
+                    {{/if}}
+                </div>
             </div>
-            {{#if is_researcher}}
-                {{#if ver_candidates}}
-                    <ul>
-                        {{#each ver_candidates}}
-                            <li><a href="/users/candidates/{{userid}}/{{../trial._id}}">{{userid}}</a></li>
-                        {{/each}}
-                    </ul>
-                {{else}}
-                    <div>
-                        No candidates have currently been verified as candidates for this trial
-                    </div>
-                {{/if}}
-            {{else}}
-                <div>
-                    Please sign in as this researcher in order to see more details
+
+            <div class="row text-left">
+                <div class="col-md-6">
+                    <!-- about -->
+                    <div class="page-header"><h3>About the trial</h3></div>
+                    <div>{{trial.detaileddescription}}</div>
                 </div>
-            {{/if}}
+
+                <div class="col-md-6">
+                    <div class="page-header">
+                        <h3>Questions</h3>
+                    </div>
+                    {{#if is_researcher}}
+                        <ol>
+                            {{#each questions}}
+                                <li><strong>Title:</strong> {{title}}</li>
+                                <strong>Type:</strong> {{question_type}}
+                            {{/each}}
+                        </ol>
+                    {{else}}
+                        <div>
+                            Please sign in as this researcher in order to see more details
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </div>
