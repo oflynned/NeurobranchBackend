@@ -9,6 +9,7 @@ let json2csv = require('json2csv');
 let fs = require('fs');
 let path = require('path');
 let mime = require('mime');
+let async = require('async');
 
 
 let app = express();
@@ -42,11 +43,14 @@ let router = express.Router();
 app.get('/users/download/:id', function (req, res) {
     Schemas.questionData.getQuestionsByTrialId(req.params.id, function (err, trialidz) {
         if (err) throw err;
-        console.log("----RESULT ",trialidz.title);
-        var fields = ['title', 'question_type', 'index', 'trialid','answers'];
-        var csv = json2csv({data:trialidz, fields:fields});
-        console.log("CSV", csv);
 
+
+
+        console.log("----RESULT ",trialidz.title);
+        var fields = ['title', 'question_type', 'index', 'trialid','answers', 'answers[0].answer'];
+        var csv = json2csv({data:trialidz, fields:fields , unwindPath:'answer ,answers.answer'});
+        console.log("CSV", csv);
+        //res.json(trialidz);
         fs.writeFile('testingScripts/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', csv, function (err) {
             if (err) throw err;
 
@@ -54,6 +58,8 @@ app.get('/users/download/:id', function (req, res) {
 
             /*non blocking async delete*/
             /*deletes download file after 10 sec*/
+
+            //res.json(trialidz);
             setTimeout(function () {
                 fs.unlink('testingScripts/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
                     if (err) throw err;
