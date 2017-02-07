@@ -10,7 +10,7 @@ exports.password = "v-<P5&B^GcSxV7tg";
 exports.TEN_MINUTES_MILLIS = 1000 * 60 * 60;
 
 //accessing addresses
-exports.PORT = 80;
+exports.PORT = 3000;
 exports.DB_PORT = 27017;
 exports.ADDRESS = "localhost";
 

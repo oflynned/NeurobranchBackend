@@ -26,7 +26,7 @@ app.post('/api/set-trial-state/id/:id/state/:state', function (req, res) {
     res.redirect('/users/trials/' + req.params.id);
 });
 
-//TODO DUPLICATION ERROR EXISTS HERE
+
 app.post('/api/create-trial', function (req, res) {
     let parameters = req.body;
 

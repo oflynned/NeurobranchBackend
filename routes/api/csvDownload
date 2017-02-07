@@ -10,64 +10,127 @@ let fs = require('fs');
 let path = require('path');
 let mime = require('mime');
 let async = require('async');
-
+let request = require("request");
+let http = require('http');
 
 let app = express();
-let router = express.Router();
 
+let MongoClient = require('mongodb').MongoClient;
+let assert = require('assert');
+let ObjectId = require('mongodb').ObjectID;
+let url = 'mongodb://localhost:27017/neurobranch_db';
 
-/*app.get('/users/download/:id',function (req,res)
- {
- Schemas.questionData.getQuestionsByTrialId(req.params.id, function (err, result) {
- if (err) throw err;
-
- var fileName = "result_"+result.title+".csv";
- var filePath = "testingScripts/" + fileName;
- //console.log("----RESULT ",result);
- var fields = ['title', 'question_type', 'index', 'trialid','answers'];
- //res.json(result);
- var csv = json2csv({data:result, fields:fields});
-
- fs.writeFile(filePath, csv, function (err) {
- if (err) throw err;
- console.log('filesaved');
-
-
-
-
- });
- });
- });*/
+let url2 = "http://neurobranchbeta.com/api/get-responses"
 
 
 app.get('/users/download/:id', function (req, res) {
-    Schemas.questionData.getQuestionsByTrialId(req.params.id, function (err, trialidz) {
+    Schemas.responseData.getResponseByTrialId(req.params.id, function (err, trialidz) {
         if (err) throw err;
 
 
+        var options = {
+            host: 'www.neurobranchbeta.com',
+            path: '/api/get-responses'
+        };
 
-        console.log("----RESULT ",trialidz.title);
-        var fields = ['title', 'question_type', 'index', 'trialid','answers', 'answers[0].answer'];
-        var csv = json2csv({data:trialidz, fields:fields , unwindPath:'answer ,answers.answer'});
-        console.log("CSV", csv);
-        //res.json(trialidz);
-        fs.writeFile('testingScripts/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', csv, function (err) {
-            if (err) throw err;
 
-            res.download('testingScripts/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', trialidz.title + '_neurobranch_' + trialidz.id + '.csv');
+        http.request(options, function (response) {
+            var str = '';
+            response.on('data', function (chunk) {
+                str += chunk;
+            });
+            response.on('end', function () {
 
-            /*non blocking async delete*/
-            /*deletes download file after 10 sec*/
 
-            //res.json(trialidz);
-            setTimeout(function () {
-                fs.unlink('testingScripts/' + trialidz.title + '_neurobranch_' + trialidz.id + '.csv', function (err) {
-                    if (err) throw err;
-                    console.log('file deleted successfully');
+                var fields = ['candidateid', 'window', 'index', 'question_type', 'trialid', 'answers[0].answer'];
+                var responses = JSON.parse(str);
+                json2csv({
+                    data: responses,
+                    fields: fields,
+                    unwindPath: 'response, response.answer'
+                }, function (err, csv) {
+                    //console.log(err);
+                    console.log(csv);
+                    //console.log("working", str);
+
+
+                /*
+                for(var jsonObject in responses) {
+                    //console.log(responses[jsonObject]);
+                    json2csv({
+                        data: responses[jsonObject],
+                        fields: fields,
+                        unwindPath: 'response, response.answer'
+                    }, function (err, csv) {
+                        //console.log(err);
+                        console.log(csv);
+                        //console.log("working", str);
+                    });
+                }*/
+
+
+
+
+                    //console.log("CSV", csv);
+                    //res.json(trialidz);
+                    fs.writeFile('testingScripts/' + str.trialid + '_neurobranch_' + '.csv', csv, function (err) {
+                        if (err) throw err;
+
+                        res.download('testingScripts/' + str.trialid + '_neurobranch_' + '.csv', str.trialid + '_neurobranch_' + '.csv');
+
+
+                        //res.json(trialidz);
+                        setTimeout(function () {
+                            fs.unlink('testingScripts/' + str.trialid + '_neurobranch_' + '.csv', function (err) {
+                                if (err) throw err;
+                                console.log('file deleted successfully');
+                            });
+                        }, 60000);
+                    });
+
                 });
-            }, 60000);
 
-        });
+            });
+
+
+        }).end();
+
+        /* var insertDocument = function(db, callback) {
+         db.collection('responses').insertOne( {
+         "candidateid": "5899f106c807ca1d77db4908",
+         "window": "2147483647",
+         "index": "2",
+         "question_type": "checkbox",
+         "trialid": "589766a2116532825c0a0dd8",
+         "__v": 0,
+         "response":[
+         {
+         "answer": "1"
+         },
+         {
+         "answer": ""
+         }
+
+         ]
+
+         }, function(err, result) {
+         assert.equal(err, null);
+         console.log("Inserted yoke fine");
+         callback();
+         });
+         };
+
+
+         MongoClient.connect(url, function(err, db) {
+         assert.equal(null, err);
+         insertDocument(db, function() {
+         db.close();
+         });
+         });*/
+
+        //console.log("----RESULT ",trialidz[0].title);
+
+
     });
 });
 
