@@ -5,11 +5,19 @@
 let Schedule = require('node-schedule');
 let TrialData = require("../../models/Trials/trialSchema");
 
-const updateFrequency = 1; // 1 min interval
+const dailyUpdate = 1;
+const weeklyUpdate = dailyUpdate * 7;
+const fortnightlyUpdate = weeklyUpdate * 2;
+const monthlyUpdate = weeklyUpdate * 4;
 
 // every minute invoke cron job
+const groomingRange = new Schedule.Range(0, 59, 1);
 let rule = new Schedule.RecurrenceRule();
-rule.minute = new Schedule.Range(0, 59, 1);
+rule.hour = groomingRange;
+
+function shouldUpdate(currentDay, lastTrialDay, frequency){
+    return currentDay - lastTrialDay >= frequency;
+}
 
 // cron scheduler for automation of trial state grooming
 function schedule() {
@@ -21,17 +29,45 @@ function schedule() {
             if (trials.length == 0) {
                 console.log("No trials to be updated");
             } else {
-                for (let trial in trials) {
-                    let currentTrial = parseInt(trials[trial]['currentduration'] / (1000 * 60));
-                    let currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
+                for (var trial in trials) {
+                    const MILLIS_TO_SECONDS = 1000;
+                    const MILLIS_TO_MINUTES = MILLIS_TO_SECONDS * 60;
+                    const MILLIS_TO_HOURS = MILLIS_TO_MINUTES * 60;
+                    const MILLIS_TO_DAYS = MILLIS_TO_HOURS * 24;
 
-                    //update window per day
-                    //1 min update
-                    if (currentDay - currentTrial >= updateFrequency) {
-                        TrialData.getTrialById(trials[trial]['id'], function (err, result) {
+                    var this_trial = trials[trial];
+                    var lastTrialDay = parseInt(this_trial['currentduration'] / MILLIS_TO_DAYS);
+                    var currentDay = parseInt((Date.now() / MILLIS_TO_DAYS));
+
+                    console.log(currentDay - lastTrialDay);
+
+                    var frequency = this_trial["frequency"];
+                    var updateFrequency = -1;
+
+                    console.log(frequency);
+
+                    switch (frequency) {
+                        case "Daily":
+                            updateFrequency = dailyUpdate;
+                            break;
+                        case "Weekly":
+                            updateFrequency = weeklyUpdate;
+                            break;
+                        case "Fortnightly":
+                            updateFrequency = fortnightlyUpdate;
+                            break;
+                        case "Monthly":
+                            updateFrequency = monthlyUpdate;
+                            break;
+                    }
+
+                    if (shouldUpdate(currentDay, lastTrialDay, updateFrequency)) {
+                        console.log(this_trial["title"] + " is being updated");
+                        TrialData.getTrialById(this_trial['id'], function (err, result) {
                             result.currentduration = Date.now();
-                            let window = parseInt(result.lastwindow);
+                            var window = parseInt(result.lastwindow);
                             window += 1;
+
                             result.lastwindow = window;
                             console.log("Updating record (" + result.title + ")");
 
