@@ -30,13 +30,13 @@ app.get('/api/get-verified-candidates', function (req, res) {
 app.get('/api/get-verified-candidates/trialid/:trialid', function (req, res) {
     Schemas.verifiedCandidatesData.getVerifiedCandidatesByTrialId(req.params.trialid, function (err, result) {
         if (err) throw err;
-        res.json(result.users);
+        res.json(result);
     });
 });
 app.get('/api/get-verified-candidates/listid/:_id', function (req, res) {
     Schemas.verifiedCandidatesData.getVerifiedCandidatesById(req.params._id, function (err, result) {
         if (err) throw err;
-        res.json(result.users);
+        res.json(result);
     });
 });
 

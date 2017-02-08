@@ -29,6 +29,7 @@ app.get('/users/download/:id', function (req, res) {
         for (var i = 0; i < max; i++) {
             fields.push('response[' + i + '].answer');
         }
+
         json2csv({
             data: responses,
             fields: fields

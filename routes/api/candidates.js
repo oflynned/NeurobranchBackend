@@ -108,12 +108,14 @@ app.get('/api/get-candidate-excluded-trials/:id', function (req, res) {
             return keys;
         }, []);
 
+        // candidate hasn't joined any trials, show all created trials
         if (trials.length == 0) {
-            Schemas.trialData.getTrials(function (err, trials) {
+            Schemas.trialData.getJoinableTrials(function (err, trials) {
                 res.json(trials);
             });
         } else {
-            //add candidate trials already requested to join but not verified
+            // else get all trials that the user hasn't joined AND is created
+            // add candidate trials already requested to join but not verified
             Schemas.trialData.getTrialsByExcluded(trials, function (err, trials) {
                 if (err) throw err;
                 res.json(trials);

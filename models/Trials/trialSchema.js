@@ -3,8 +3,8 @@
  */
 
 /**
-* This schema contains the specific meta data about a trial
-*/
+ * This schema contains the specific meta data about a trial
+ */
 
 var mongoose = require('mongoose');
 
@@ -34,8 +34,12 @@ var trialSchema = mongoose.Schema({
 
 var trialData = module.exports = mongoose.model('Trials', trialSchema);
 
-module.exports.getTrials = function (callback) {
-    trialData.find(callback).sort({$natural:-1});
+module.exports.getJoinableTrials = function (callback) {
+    trialData.find({state: 'created'}, callback).sort({$natural: -1});
+};
+
+module.exports.getAllTrials = function (callback) {
+    trialData.find(callback).sort({$natural: -1});
 };
 
 module.exports.getTrialsByState = function (state, callback) {
@@ -43,7 +47,7 @@ module.exports.getTrialsByState = function (state, callback) {
 };
 
 module.exports.getTrialsWithLimit = function (limit, callback) {
-    trialData.find(callback).skip(trialData - limit).sort({$natural:-1}).limit(limit);
+    trialData.find(callback).skip(trialData - limit).sort({$natural: -1}).limit(limit);
 };
 
 module.exports.createTrial = function (trialData, callback) {
@@ -78,28 +82,28 @@ module.exports.getTrialById = function (id, callback) {
     trialData.findOne({_id: id}, callback);
 };
 
-module.exports.getTrialsByList = function(list, callback) {
-    trialData.find({_id: {$in: list}}, callback).sort({$natural:-1});
+module.exports.getTrialsByList = function (list, callback) {
+    trialData.find({_id: {$in: list}}, callback).sort({$natural: -1});
 };
 
-module.exports.getTrialsByListState = function(list, state, callback) {
-    trialData.find({_id: {$in: list}, state: state}, callback).sort({$natural:-1});
+module.exports.getTrialsByListState = function (list, state, callback) {
+    trialData.find({_id: {$in: list}, state: state}, callback).sort({$natural: -1});
 };
 
 module.exports.getTrialsByListExcludingState = function (list, state, callback) {
-    trialData.find({_id: {$in: list}, state: {$nin: state}}, callback).sort({$natural:-1});
+    trialData.find({_id: {$in: list}, state: {$nin: state}}, callback).sort({$natural: -1});
 };
 
 module.exports.getTrialsByExcluded = function (list, callback) {
-    trialData.find({_id: {$nin: list}, state: 'created'}, callback).sort({$natural:-1});
+    trialData.find({_id: {$nin: list}, state: 'created'}, callback).sort({$natural: -1});
 };
 
 module.exports.getTrialsByResearcherId = function (researcherid, callback) {
-    trialData.find({researcherid: researcherid}, callback).sort({$natural:-1});
+    trialData.find({researcherid: researcherid}, callback).sort({$natural: -1});
 };
 
 module.exports.getLatestTrialByResearcher = function (researcherid, callback) {
-    trialData.findOne({researcherid: researcherid}, callback).sort({$natural:-1}).select("_id");
+    trialData.findOne({researcherid: researcherid}, callback).sort({$natural: -1}).select("_id");
 };
 module.exports.findAllTrials = function (callback) {
     trialData.find(callback);

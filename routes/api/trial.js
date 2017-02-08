@@ -102,7 +102,7 @@ app.post('/api/create-trial', function (req, res) {
 });
 
 app.get('/api/get-trials', function (req, res) {
-    Schemas.trialData.getTrials(function (err, result) {
+    Schemas.trialData.getAllTrials(function (err, result) {
         if (err) throw err;
         res.json(result);
     });
@@ -128,35 +128,4 @@ app.post('/api/delete-trial/:trialid', function (req, res) {
         });
     });
 });
-app.get('/api/update-trials-service', function (req, res) {
-    Schemas.trialData.getTrialsByState('active', function (err, trials) {
-        if (err) throw err;
-        for (let trial in trials) {
-            let currentTrial = parseInt(trials[trial]['currentduration'] / (1000 * 60));
-            let currentDay = parseInt((Date.now() + (1000 * 60)) / (1000 * 60));
-            console.log(currentDay - currentTrial + " mins difference");
-
-            //every 5 mins
-            if (currentDay - currentTrial > 5) {
-                Schemas.trialData.getTrialById(trials[trial]['id'], function (err, result) {
-                    result.currentduration = Date.now();
-                    let window = parseInt(result.lastwindow);
-                    window += 1;
-                    result.lastwindow = window;
-                    console.log(result.lastwindow + " " + result.duration);
-
-                    //check if window is now at end of trial duration
-                    if (parseInt(result.lastwindow) > parseInt(result.duration)) {
-                        result.state = "ended";
-                        result.dateended = Date.now();
-                    }
-
-                    result.save();
-                })
-            }
-        }
-        res.redirect('/');
-    });
-});
-
 module.exports = app;
