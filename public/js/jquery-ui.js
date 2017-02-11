@@ -5358,7 +5358,7 @@ $.extend(Datepicker.prototype, {
 					$.datepicker._gotoToday(id);
 				},
 				selectDay: function () {
-					$.datepicker._selectDay(id, +this.getAttribute("data-month"), +this.getAttribute("data-year"), this);
+					$.datepicker._selectDay(id, +this.getAttributes("data-month"), +this.getAttributes("data-year"), this);
 					return false;
 				},
 				selectMonth: function () {
@@ -5370,7 +5370,7 @@ $.extend(Datepicker.prototype, {
 					return false;
 				}
 			};
-			$(this).bind(this.getAttribute("data-event"), handler[this.getAttribute("data-handler")]);
+			$(this).bind(this.getAttributes("data-event"), handler[this.getAttributes("data-handler")]);
 		});
 	},
 

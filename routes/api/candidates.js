@@ -87,9 +87,8 @@ app.get('/api/get-candidate-trials/:id/state/:state', function (req, res) {
 app.get('/api/get-candidate-my-trials/:id', function (req, res) {
     Schemas.candidateAccount.getCandidateById(req.params.id, function (err, result) {
         let trials = result.subscribed.reduce(function (keys, element) {
-            for (let key in element) {
+            for (let key in element)
                 keys.push(element[key]);
-            }
             return keys;
         }, []);
 
@@ -98,6 +97,17 @@ app.get('/api/get-candidate-my-trials/:id', function (req, res) {
         })
     });
 });
+
+app.get('/api/get-last-candidate-response/:trialid/:candidateid', function (req, res) {
+    let candidateId = req.params.candidateid;
+    let trialId = req.params.trialid;
+
+    Schemas.responseData.getResponseMostRecentWindow(trialId, candidateId, function (err, response) {
+        if(response == undefined) response = -1;
+        res.json([{last_response_window: response}]);
+    })
+});
+
 app.get('/api/get-candidate-excluded-trials/:id', function (req, res) {
     Schemas.candidateAccount.getCandidateById(req.params.id, function (err, result) {
         //create trial list of already subscribed/verified to

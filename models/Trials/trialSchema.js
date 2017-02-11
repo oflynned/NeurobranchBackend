@@ -98,6 +98,10 @@ module.exports.getTrialsByExcluded = function (list, callback) {
     trialData.find({_id: {$nin: list}, state: 'created'}, callback).sort({$natural: -1});
 };
 
+module.exports.getTrialsByListStateNotInList = function (list, state, callback) {
+    trialData.find({_id: {$nin: list}, state: state}, callback).sort({$natural: -1});
+};
+
 module.exports.getTrialsByResearcherId = function (researcherid, callback) {
     trialData.find({researcherid: researcherid}, callback).sort({$natural: -1});
 };

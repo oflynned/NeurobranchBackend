@@ -43,6 +43,10 @@ module.exports.getResponseByCandidateId = function (candidateid, callback) {
     response.find({candidateid: candidateid}, callback);
 };
 
+module.exports.getResponseByCandidateIdTrialList = function (candidateid, trialList, callback) {
+    response.find({candidateid: candidateid, trialid: {$in: trialList}}, callback);
+};
+
 module.exports.getResponseMostRecentWindow = function (trialid, candidateid, callback) {
     response.findOne({trialid: trialid, candidateid: candidateid}, callback).sort({$natural:-1}).select("window");
 };
