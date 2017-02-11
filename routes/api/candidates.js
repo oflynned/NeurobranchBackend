@@ -103,8 +103,10 @@ app.get('/api/get-last-candidate-response/:trialid/:candidateid', function (req,
     let trialId = req.params.trialid;
 
     Schemas.responseData.getResponseMostRecentWindow(trialId, candidateId, function (err, response) {
-        if(response == undefined) response = -1;
-        res.json([{last_response_window: response}]);
+        // push -1 as the last response window if none are found
+        if(response.length == 0) res.json([{last_response_window: -1}]);
+        // otherwise retrieve the inner array & object
+        else res.json([{last_response_window: response[0]["window"]}]);
     })
 });
 

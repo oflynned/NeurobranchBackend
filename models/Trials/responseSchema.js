@@ -48,7 +48,7 @@ module.exports.getResponseByCandidateIdTrialList = function (candidateid, trialL
 };
 
 module.exports.getResponseMostRecentWindow = function (trialid, candidateid, callback) {
-    response.findOne({trialid: trialid, candidateid: candidateid}, callback).sort({$natural:-1}).select("window");
+    response.find({trialid: trialid, candidateid: candidateid}, callback).sort({$natural:-1}).limit(1).select("window");
 };
 
 module.exports.getResponseByTrialId = function (trialid, callback) {
