@@ -15,7 +15,7 @@ exports.DB_PORT = 27017;
 exports.ADDRESS = "localhost";
 
 //sensitive info -- change this before we publish
-exports.SECRET = "secret";
+exports.SECRET = "p*+q#&7h(cc))ts&-#m5y!sj33!%j=xi1m=j-_@s-d90#gn##_";
 
 //routes
 exports.INDEX_ROUTE = "./routes/index";
